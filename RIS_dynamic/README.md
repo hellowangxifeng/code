@@ -1,276 +1,268 @@
-# RIS_dynamic：动态海况下浮动 RIS 与粗糙海面直达链路的 MC 对比（交付说明）
+# RIS_dynamic：动态海况下浮动 RIS 与粗糙海面直达链路的 MC 对比（v3）
 
 ## 0. 概述
 
-`W_RIS` / `RIS_phase` 中的“无 RIS 直接传播”基线用的是**静止海面**（平面 $z=0$）。本目录把它换成**同一海况下的粗糙海面直达链路**：
+`RIS_phase` 中"无 RIS 直接传播"（No RIS direct）用的是**静止海面**：Fig1 的直接通信列用裸水—气平面折射 MC 包（`rp_mc_water_air`），湍流/入射角扫描用连续弹道模型（`rp_direct_wave`）。RIS 板本身也是静止的水平板（`wris_reference`，$R_{\mathrm{RIS}}=I_3$）。
 
-- 每个风况只生成一组方向波谱分量，同时驱动 RIS 六自由度运动（`sea_wave/RIS_float`）和直达链路穿过的水–气界面。
-- 每一帧中，两条链路共用同一个 TX 位姿、光束、水体、MC 种子和物理接收机（RX）。
-- 直达链路逐帧用 Monte Carlo 计算：水下 HG 多次散射，粗糙界面上做 Snell 折射、Fresnel 透射和全反射，再进入空气到达 RX。
-- 旧的静止海面直达链路作为第三条曲线一起算出，方便说明“静止→粗糙”带来的变化。
+本目录在**同一海况**下重新比较两条链路：
 
-**交付状态：代码写完后没有运行过。** 结果图和 CSV 需要运行者按第 4 节生成。`results/v1_previous/` 中的三张 PNG 来自本目录上一版代码，只供对照（见 §8 第 4 条）。
-
-**没有修改的部分**：`W_RIS`、`RIS_phase`、`sea_wave`、`yimiao` 下的文件一律没动，本目录只调用它们。
-
----
-
-## 1. 相对旧基线和上一版（v1）的改动
-
-| 项目 | 旧基线（W_RIS/RIS_phase） | 本目录 v2 |
+| 链路 | RIS_phase（原） | RIS_dynamic（本目录） |
 |---|---|---|
-| 直达链路的海面 | 静止平面 $z=0$ | 同一海况、同一时刻的冻结粗糙海面（与 RIS 运动用同一组波分量） |
-| 直达链路的方法 | 静止界面 | 逐帧 MC：HG 散射，按光线顺序找首次穿越，矢量 Snell、Fresnel、TIR，透射后被波峰再遮挡 |
-| 静止海面基线 | — | 保留为 `flat` 链路，同 TX 运动、同种子逐帧计算（`c.comparison.flatBaseline`） |
-| RIS 链路 | — | 沿用 W_RIS 的 MC 和 RIS_phase 的 LC 调相光线追迹，算法不变 |
+| 无 RIS 直接传播 | 静止平面 $z=0$，弹道或已存 MC 包 | **逐帧 MC**：水下 HG 多次散射 → 冻结粗糙海面 $\eta(x,y,t_f)$（局部法向、矢量 Snell、Fresnel、全反射）→ 波峰再遮挡 → 空气 → 接收机 |
+| RIS 链路 | 静止水平板 | 板随 `sea_wave/RIS_float` 六自由度运动，**LC 相位冻结**为静水设计值，逐帧 MC |
+| 海况 | 无 | 每个风速一组方向波谱分量，**同时**驱动板的运动和直达链路穿过的海面 |
+| 接收机 | 各方案对准自身光斑质心 | 同样对准静水质心，但**一次对准、不随波浪跟踪** |
+| FOV | 主光线判据（$\psi\le\Theta$） | **逐光线**判据（粗糙海面使到达方向发散，主光线判据不再成立） |
+| 统计 | 抖动 + 角误差 + EGG×GG | 上述全部 + **时间平均**（海况作为又一个随机变量） |
 
-v2 相对 v1（本目录的上一版）的工程改动：
+除此之外，光源、水体、玻璃/LC 阵列、器件角度量化、相位族（Steering-only / Flat top / Robust）、接收机抖动/角误差/孔径、EGG×GG 湍流、OOK 热噪声和 SNR 门限全部沿用 `RIS_phase/rp_stage2_config`，并直接调用 `RIS_phase` 的函数（`rp_stage2_scene`、`rp_phase`、`rp_finite_phase`、`rp_trace`、`rp_link_metrics` 等）。
 
-1. 拆成 `algorithm/`（计算）、`plots/`（画图）和 `tests/`（回归测试），画图代码只读 MAT 文件。
-2. 新增一键入口 `main_ris_dynamic.m`，参数集中在一个区块里。
-3. 新增静止海面基线 `flat`。
-4. 新增时间统计：均值、中位数、最值、闪烁指数、中断概率、零命中比例、RIS 相对两条直达链路的增益（dB），输出 `wris_dynamic_cases.csv`。
-5. 新增两张图：功率 CDF（fig2）和随风速的统计图（fig5）。原来的三张图都加了 `flat` 曲线。
-6. RIS 链路新增两项诊断：板上表面出射点低于入射海面的功率（`risOverwashedExitW`），以及可选的波峰遮挡（`c.comparison.risWaveBlocking`，默认关闭）。
-7. 按风况保存 checkpoint，中断后重跑会接着算。config 或 `algorithm/*.m` 有任何改动，旧 checkpoint 自动作废。
-8. 计算前先检查 MATLAB 版本和依赖函数路径。所有日志写入 `run_log.txt`。
-9. 探测面光强图改存 `single`，MAT 体积减半。功率等标量仍为 `double`。
+**没有修改 `RIS_phase`、`W_RIS`、`sea_wave`、`yimiao` 下的任何文件**：本目录只调用它们，所有缓存、checkpoint 和结果都写在 `RIS_dynamic/results/`。
 
-在相同参数下，`direct` 和 `ris` 两条链路的物理算法、随机种子与 v1 完全一致（见 §8 第 4 条）。
+**交付状态：代码写完后没有运行过**（编写环境没有 MATLAB）。已做静态检查：代码块与括号配平、所有被调用的项目函数都存在、调用签名与 `RIS_phase`/`W_RIS`/`sea_wave` 的源码一致。请按第 4 节先跑测试和 smoke，再跑 production。上一版（v2，基于 W_RIS 的功率—时间对比）已整体替换。
 
 ---
 
-## 2. 目录结构
+## 1. 比较的七条链路
+
+结果数组中链路维 `k` 的顺序固定为 `rd_schemes()`：
+
+| k | key | 图例 | 说明 |
+|---|---|---|---|
+| 1 | `direct` | No RIS direct | 无 RIS，直接穿过（静止或粗糙）海面 |
+| 2 | `steering` | Steering-only | `rp_phase`：每个单元尽量指向世界 $+z$ |
+| 3 | `flat_top` | Flat top | `rp_finite_phase('flat_top')`，目标宽度最接近 10 cm |
+| 4 | `robust_aber` | Robust ABER | robust 族中静水 ABER 最小 |
+| 5 | `robust_op` | Robust OP | robust 族中静水 OP 最小 |
+| 6 | `max_power` | Max mean power | 可行设计中静水平均接收功率最大 |
+| 7 | `sea_aware` | Sea-aware ABER | **新增**：在独立海面实现上按时间平均 ABER 选宽度（第 2.6 节） |
+
+静水选择规则与 `rp_stage2_distance` + `rp_stage2_select` 相同：每个（族, 宽度）在方向余量内取 ABER 最小的中心余量；可行性要求短轴半径和等效半径 $\ge 4$ cm、轴比 $\le 1.35$、$R_{50}\ge 2$ cm、倾角在最小可行倾角 $+1.5^\circ$ 以内。
+
+---
+
+## 2. 模型与公式
+
+### 2.1 同一海况驱动海面与 RIS
+
+每个风速 $U$ 用 `RIS_wave_components` 生成 Neumann 谱、$\cos^2$ 方向分布的分量 $\{a_j,\omega_j,\mathbf k_j\}$（随机相位由 `c.ris.seed` 固定）：
+
+$$
+\eta(\mathbf x,t)=\operatorname{Re}\sum_j a_j\,e^{i(\omega_j (t_0+t)-\mathbf k_j\cdot\mathbf x)},\qquad
+H_s=4\sqrt{\tfrac12\sum_j |a_j|^2}.
+$$
+
+同一组分量传给 `RIS_float` 求板的六自由度运动（位姿 $R(t)$、下表面中心 $\mathbf p_b(t)$），也传给 `rd_surface` 生成直达链路在第 $f$ 帧穿过的冻结海面 $\eta(\mathbf x,t_f)$。海面在光束穿越点附近 $\pm 3$ m 内用 12.5 mm 网格三次插值（最短波长约 0.17 m），网格外用精确 Fourier 求和。
+
+### 2.2 直达链路 Monte Carlo（`rd_direct_mc`）
+
+光源与水下输运和 `W_RIS/wris_mc` 完全一致：束腰位置 $\mathbf u_0\sim\mathcal N(0,w_0^2/4)$、斜率 $\boldsymbol\tau\sim\mathcal N(0,\theta_d^2/4)$，自由程 $\ell=-\ln U/c_w$，碰撞时吸收 $w\,a_w/c_w$、剩余 $w\,b_w/c_w$，HG 散射（$g=0.924$ 时直接调用 `yimiao/Hen_Green`），俄罗斯轮盘，源平面背向逃逸，路径/散射次数上限。
+
+光子在其直线段上**首次**向上穿过 $z=\eta(x,y,t_f)$ 的位置（上界步进 + 二分，容差 2 μm）发生折射。局部法向和切向波矢为
+
+$$
+\hat{\mathbf n}=\frac{(-\partial_x\eta,-\partial_y\eta,1)}{\sqrt{1+|\nabla\eta|^2}},\qquad
+\mathbf q=n_w\big[\hat{\mathbf d}-(\hat{\mathbf d}\cdot\hat{\mathbf n})\hat{\mathbf n}\big],\qquad q=|\mathbf q|.
+$$
+
+$q\ge n_a$ 时全反射；否则空气中方向和透射率为
+
+$$
+\hat{\mathbf d}_a=\frac{\mathbf q+\sqrt{n_a^2-q^2}\,\hat{\mathbf n}}{n_a},\qquad
+T=1-\tfrac12\left(|r_s|^2+|r_p|^2\right)\quad(\texttt{rp\_fresnel}).
+$$
+
+反射/全反射功率终止并记账（没有再追踪回水中的多次界面作用）。透射光线若在离开波浪层 $|z|\le\max|\eta|$ 之前再次进入水中（波峰遮挡），也记为损失（`c.surface.crestBlocking`）。能量账本
+
+$$
+P_{\mathrm{trans}}+P_{\mathrm{refl}}+P_{\mathrm{TIR}}+P_{\mathrm{abs}}+P_{\mathrm{back}}+P_{\mathrm{trunc}}=N+\Delta_{\mathrm{roulette}}
+$$
+
+逐帧检查，残差 $>10^{-9}$ 会给出警告。
+
+静水基线用同一函数、平面 $z=0$（`rd_flat_surface`），因此"静止 → 粗糙"的变化只来自海面，不来自算法差异。
+
+### 2.3 浮动 RIS 链路（`rd_ris_packets` + `rd_trace`）
+
+1. 第 $f$ 帧的板位姿由 `rp_geometry` 从 `RIS_float` 读取；TX **固定不动**（两条链路共用）。
+2. `wris_mc` 把光子输运到**运动中**的 1 m × 1 m 下表面（同一种子同时用于直达链路，公共随机数）。
+3. 包转到板坐标系，水→玻璃 Snell + Fresnel，到 LC 屏高度 $h_i$，只保留落在 14.4 mm 透光区内的包（与 `rp_illuminate` 同一套取整和掩模）。
+4. 每个单元施加**静水设计时的**量化仿射相位（`rd_slim_phase` 只保留 `rp_trace` 需要的字段），由 `rp_trace` 完成玻璃→空气折射并直线传播到世界水平面 $Z_R$。
+
+包功率始终是原始 MC 权重 $P_0w/N$，不做确定性重加权，因此 RIS 和直达两条链路使用同一种无偏估计。
+
+单元口径 14.4 mm、传播 5–10 m 时 $\lambda z/D\approx0.3$ mm，远小于 5 cm 接收孔径，几何光线足以描述动态下的光斑漂移和截获。`RIS_phase` 波动模型给出的像素内干涉细节在这里不重现。
+
+### 2.4 固定接收机与逐光线 FOV（`rd_receiver` + `rd_capture`）
+
+每条链路的接收机在静水下对准自身弹道光斑质心 $\mathbf C$（`RIS_phase` 约定），之后**不随波浪跟踪**。名义视轴 $\hat{\mathbf r}$ 从板上表面中心（直达链路用 TX 光轴与 $z=0$ 的交点）指向 $\mathbf C$。抖动与角误差样本与 `rp_aperture_channel` 完全相同：
+
+$$
+\boldsymbol\delta_s=\sigma_p\mathbf z^{\mathrm{pos}}_s,\qquad
+\mathbf e_s=\boldsymbol\mu_\theta+\sigma_\theta\mathbf z^{\mathrm{ang}}_s,\qquad
+\psi_s=|\mathbf e_s|,\qquad
+\hat{\mathbf n}_s=\cos\psi_s\,\hat{\mathbf r}+\sin\psi_s\,\frac{e_{s1}\hat{\mathbf e}_1+e_{s2}\hat{\mathbf e}_2}{\psi_s}.
+$$
+
+第 $j$ 个包在接收面上的落点为 $\mathbf X_j$、方向为 $\hat{\mathbf d}_j$、功率为 $w_j$。它与样本 $s$ 的圆盘平面（过 $\mathbf P_s=(\mathbf C+\boldsymbol\delta_s,Z_R)$、法向 $\hat{\mathbf n}_s$）交于 $\mathbf Y=\mathbf X_j+t\hat{\mathbf d}_j$，其中
+
+$$
+t=\frac{\hat{\mathbf n}_s\cdot(\mathbf P_s-\mathbf X_j)}{\hat{\mathbf n}_s\cdot\hat{\mathbf d}_j},\qquad
+G_s=\frac1{P_0}\sum_j w_j\,\mathbf 1\{|\mathbf Y-\mathbf P_s|\le a_R\}\,\mathbf 1\{\hat{\mathbf d}_j\cdot\hat{\mathbf n}_s\ge\cos\Theta\}.
+$$
+
+这是 `RIS_phase` 倾斜圆盘积分的光子包形式，区别在于 FOV 对**每条光线**判断。粗糙海面使直达光的到达方向显著发散，主光线判据会高估直达链路。为保证公平，RIS 链路也用同一判据，所以静水数值与 `RIS_phase` 会略有不同（见第 8 节第 1 条）。
+
+为提速，先把落点相差 < 2 mm、方向余弦相差 < 2×10⁻³ 的包合并（功率和质心精确守恒），再按样本块做包围盒剪枝。
+
+### 2.5 通信指标：时间作为又一个随机变量（`rd_metrics`）
+
+每帧的增益样本 $\{G_{s,f}\}$ 交给 `rp_link_metrics`：均值为 1 的 EGG（海洋）× Gamma-Gamma（大气）衰落 $H$，热噪声 OOK，$\mathrm{SNR}=(\mathcal R P_tG H/\sigma_n)^2$。再对帧等权平均：
+
+$$
+\mathrm{ABER}(P_t)=\frac1{N_f}\sum_{f=1}^{N_f}\frac1{N_s}\sum_{s=1}^{N_s}\mathbb E_H\!\left[\tfrac12\operatorname{erfc}\!\frac{\mathcal R P_t G_{s,f}H}{2\sqrt2\,\sigma_n}\right],\qquad
+\mathrm{OP}(P_t)=\frac1{N_f}\sum_f\frac1{N_s}\sum_s\Pr\!\left(H<\frac{P_{\mathrm{th}}}{P_tG_{s,f}}\right).
+$$
+
+即对时间、接收机抖动/角误差和湍流的联合平均。$G=0$ 的样本（光被全反射、光斑漂出孔径或落在 FOV 外）给出 BER = 1/2、中断。对 RIS 链路，帧间波动来自板的倾斜/升沉造成的光斑漂移；对直达链路，帧间波动来自海面斜率造成的折射偏转和全反射。
+
+### 2.6 海况感知宽度选择（新增，`rd_train`）
+
+静水最优宽度在波浪下不一定最优：光斑太窄，板一倾斜就漂出孔径；太宽则功率密度不足。`rd_train` 把静水候选库（每个族、每个宽度一个设计）放到**另一组独立的海面实现**上（波相位种子 `c.ris.seed + 1000`），按时间平均 ABER（或 OP）重选，结果作为第 7 条链路，再在评估海面上和其他方案一起比较。训练与评估用不同的海面实现，可以避免"在测试集上调参"带来的乐观偏差。
+
+### 2.7 入射角扫描
+
+与 `RIS_phase` Fig10 规则相同：每个入射角重算场景和载波，沿用 40° 下选定的族/宽度/余量。超过静水临界角 $\arcsin(n_a/n_w)=48.75^\circ$ 时，静水直达链路没有弹道光，接收机改用粗糙海面的长期平均光斑质心对准（`rd_pilot`）。这时可以直接看到粗糙海面如何把被全反射截断的直达链路部分"放出来"。
+
+---
+
+## 3. 目录结构
 
 ```text
 RIS_dynamic/
-├─ main_ris_dynamic.m          一键入口（参数区 → 计算 → 画图）
-├─ README.md                   本文档
-├─ algorithm/                  计算，不画图
-│  ├─ run_wris_dynamic.m       主计算：逐风况/逐帧/逐角度，保存 MAT/CSV/checkpoint
-│  ├─ wrd_config.m             全部默认参数（production / smoke）
-│  ├─ wrd_setup.m              添加路径（W_RIS、RIS_phase、sea_wave、yimiao/fig3-7）
-│  ├─ wrd_check_dependencies.m 版本与依赖检查
-│  ├─ wrd_surface.m            当前帧冻结的 Fourier 海面：网格三次插值 + 网格外精确求和
-│  ├─ wrd_flat_surface.m       静止海面 z=0（旧基线），与 wrd_surface 同一接口
-│  ├─ wrd_crossing.m           光线与海面的首次穿越（上界步进 + 二分）
-│  ├─ wrd_direct_mc.m          直达链路 MC（水下 HG + 海面折射/TIR + 空气段）
-│  ├─ wrd_ris_mc.m             RIS 链路（W_RIS 的 wris_mc + RIS_phase 的 rp_trace）
-│  ├─ wrd_receive.m            与公共 RX 平面求交，可选波峰遮挡
-│  ├─ wrd_score.m              孔径 + FOV 计分、MC 标准误、探测面光强图
-│  └─ wrd_summary.m            帧表与时间统计表
-├─ plots/                      画图，只读 results/*.mat
-│  ├─ plot_wris_dynamic.m      画图入口
-│  ├─ wrd_fig_power.m          fig1 功率-时间
-│  ├─ wrd_fig_cdf.m            fig2 功率 CDF
-│  ├─ wrd_fig_tir.m            fig3 全反射占比与海面坡度
-│  ├─ wrd_fig_maps.m           fig4 探测面光强
-│  ├─ wrd_fig_summary.m        fig5 统计量-风速
-│  └─ wrd_fig_*.m              公共样式、保存、图例、坐标范围
-├─ tests/WrdPhysicsTest.m      9 项物理/记账回归测试（不调用 RIS_float，耗时很短）
-└─ results/                    输出目录（运行后生成；*.mat/*.csv/*.fig 被 .gitignore 排除）
-   └─ v1_previous/             上一版的三张 PNG，仅供对照
+├─ main_ris_dynamic.m        一键入口（参数区 → 计算 → 画图）
+├─ README.md
+├─ algorithm/                计算，不画图
+│  ├─ rd_run.m               主流程：设计 → 训练 → 各海况 → 入射角 → 统计，checkpoint
+│  ├─ rd_config.m            全部参数（production / smoke）
+│  ├─ rd_setup.m / rd_check.m  路径、版本、工具箱与参数检查
+│  ├─ rd_design.m            静水设计与选择（调用 RIS_phase）
+│  ├─ rd_train.m             海况感知宽度选择
+│  ├─ rd_condition.m         单个海况的逐帧配对 MC
+│  ├─ rd_motion.m            波谱分量 + RIS_float（缓存）
+│  ├─ rd_surface.m / rd_flat_surface.m / rd_crossing.m   粗糙/静止海面与首次穿越
+│  ├─ rd_direct_mc.m         直达链路 MC
+│  ├─ rd_ris_packets.m / rd_trace.m / rd_slim_phase.m    RIS 链路
+│  ├─ rd_to_plane.m / rd_compress.m / rd_spot.m / rd_map.m
+│  ├─ rd_receiver.m / rd_capture.m / rd_metrics.m        接收机与通信指标
+│  ├─ rd_links.m / rd_pilot.m / rd_evaluate.m
+│  └─ rd_cached.m / rd_code_hash.m / rd_physical.m / ...  checkpoint 工具
+├─ plots/                    画图，只读 results/ris_dynamic.mat
+│  ├─ plot_ris_dynamic.m     画图入口
+│  ├─ rd_plot_options.m      所有画图选项（可覆盖）
+│  └─ rd_fig_*.m             各图与公共样式
+├─ tests/RdPhysicsTest.m     9 项快速物理/记账测试
+└─ results/                  运行后生成（*.mat / *.csv / *.fig 被 .gitignore 排除，PNG 会入库）
+   ├─ ris_dynamic.mat        轻量结果结构 R（画图只读它）
+   ├─ ris_dynamic_*.csv      汇总表
+   ├─ run_log.txt
+   ├─ figures/               fig1–fig8
+   ├─ checkpoints/           各阶段原始结果（含逐帧增益样本）
+   └─ cache/                 RIS_phase 设计场景 MC 与 RIS_float 运动缓存
 ```
-
-`RIS_dynamic` 必须与 `W_RIS`、`RIS_phase`、`sea_wave`、`yimiao`（旧副本中叫 `3yimiao` 也可以）放在同一个 `code` 目录下。
 
 ---
 
-## 3. 运行环境
+## 4. 运行步骤
 
-- MATLAB **R2022a 或更新版本**（原工程使用 R2024b），代码用到 `clim`、`tiledlayout`、`exportgraphics`、`arguments`。
-- 只需要基础 MATLAB，**不需要任何工具箱**。
-- 磁盘：production 结果 MAT 估计在百 MB 量级。另有每个风况一个 checkpoint。
-- 运行时间：**没有实测过**。先跑 smoke，看 `run_log.txt` 里的耗时，再决定是否在空闲机器上跑 production。耗时主要来自 `RIS_float`、每帧的海面网格和 3 条链路 × 每帧 $10^5$ 个光子包。光子包数由 `c.mc.photons` 设置。
+环境：MATLAB **R2022a 及以上**，**Statistics and Machine Learning Toolbox**（`sobolset`、`ncx2cdf`，与 `RIS_phase` 相同）。`RIS_dynamic` 必须和 `RIS_phase`、`W_RIS`、`sea_wave`、`yimiao` 放在同一个 `code` 目录下。
+
+在 MATLAB 中把当前目录切到 `...\code\RIS_dynamic`。
+
+**步骤 0：测试（约 1 分钟）**
+
+```matlab
+addpath('algorithm','plots'); rd_setup();
+r = runtests('tests/RdPhysicsTest.m'); table(r)
+```
+
+9 项应全部通过：平行光截获 $=I_h\pi a^2/d_z$、逐光线 FOV、抖动移位、平面 Snell + Fresnel、超临界全反射、`rd_surface` 与 `RIS_wave_field` 一致、粗糙海面能量账本闭合、包合并守恒、时间平均指标。
+
+**步骤 1：smoke（几分钟）**
+
+`main_ris_dynamic.m` 中设 `profile = 'smoke'`，按 F5。smoke 只有 1 个高度（7.5 m）、1 个风速（3 m/s）、3 帧、少量光子，入射角扫描只有 40° 和 50°（50° 用于走一遍"超临界 → pilot 对准"的分支）。图面稀疏是正常的，这一步只检查流程。
+
+**步骤 2：production**
+
+设 `profile = 'production'`，按 F5。中途中断后再运行即可，已完成的阶段会从 `results/checkpoints/` 复用（日志显示 `reusing checkpoint`）。修改物理参数或 `algorithm/` 中的物理代码后，相关 checkpoint 自动作废；只改 `rd_evaluate`、画图或 `c.metrics` 不会触发重算。
+
+**步骤 3：只改图**
+
+`doCompute = false`，修改 `plotOptions` 后运行；或直接：
+
+```matlab
+plot_ris_dynamic('results/ris_dynamic.mat',struct('curveWinds',[0 4 6],'formats',{{'png','pdf'}}));
+```
+
+**需要交回的文件**：`results/figures/*.png`、`results/ris_dynamic_*.csv`、`results/run_log.txt`（MAT 太大可以不传）。
 
 ---
 
-## 4. 运行步骤（交给运行者）
-
-在 MATLAB 里把当前目录切到 `...\code\RIS_dynamic`。
-
-### 步骤 0：回归测试（预计 1 分钟内）
-
-```matlab
-addpath('algorithm'); wrd_setup();
-r = runtests('tests/WrdPhysicsTest.m'); table(r)
-```
-
-9 项应全部 `Passed`：Fourier 海面插值、多次穿越取第一次、静止平面、平面 Snell + Fresnel、超临界角全反射、斜面让超临界光线透射、孔径/FOV 计分、静止 RIS 链路能达到 RX、时间统计公式。
-
-### 步骤 1：smoke 试跑（检查环境，预计数分钟）
-
-打开 `main_ris_dynamic.m`，设置 `profile = 'smoke'`，按 F5 运行。也可以在命令行执行：
-
-```matlab
-addpath('algorithm','plots'); wrd_setup();
-run_wris_dynamic('smoke');
-plot_wris_dynamic(fullfile('results','smoke','wris_dynamic.mat'));
-```
-
-`results/smoke/` 下应生成 `wris_dynamic.mat`、两个 CSV、`run_log.txt` 和 `fig1`–`fig5` 的 PNG/FIG。smoke 只有 2000 个光子包、3 帧，图面稀疏是正常的，这一步只用来检查流程。
-
-### 步骤 2：production 正式计算
-
-在 `main_ris_dynamic.m` 中设置 `profile = 'production'`，按 F5 运行。输出在 `results/`。
-
-如果中途中断，直接再运行一次即可，已完成的风况会从 `results/checkpoints/` 复用，日志里会显示 `reusing checkpoint`。
-
-### 步骤 3：只改图、不重算
-
-在 `main_ris_dynamic.m` 中设置 `doCompute = false`，修改 `plotOptions`（字体、字号、分辨率、光强图时刻），然后运行。也可以直接执行：
-
-```matlab
-plot_wris_dynamic('results/wris_dynamic.mat', struct('fontSize',12,'mapTimeS',15));
-```
-
-### 需要交回的文件
-
-`results/` 下的 `fig1`–`fig5`（PNG + FIG）、`wris_dynamic_cases.csv`、`wris_dynamic_frames.csv`、`run_log.txt`、`wris_dynamic.mat`。
-
----
-
-## 5. 主要参数（`algorithm/wrd_config.m`）
+## 5. 主要参数（`algorithm/rd_config.m`）
 
 | 参数 | 默认值 | 含义 |
 |---|---|---|
-| `c.comparison.conditions` | `[3 50; 5 50]` | 风况 [风速 m/s, 风向 °]，取自 `wris_config` |
-| `c.comparison.rotationXYDeg` | `[0 40; 0 49]` | TX 光轴：+z 先绕世界 x、再绕世界 y 旋转（°）；水中名义入射角 40°、49°（临界角约 48.75°） |
-| `c.ris.duration / dt / startTime` | 20 s / 0.05 s / 25 s | RIS 运动积分区间（与 W_RIS 相同） |
-| `c.comparison.frameStep` | 0.5 s | 光学帧间隔，必须是 `dt` 的整数倍，0–20 s 共 41 帧 |
-| `c.comparison.flatBaseline` | `true` | 是否同时计算静止海面直达基线 |
-| `c.comparison.risWaveBlocking` | `false` | RIS→RX 光线是否也检查被波峰遮挡（敏感性分析） |
-| `c.mc.photons` | 100000 | 每条链路每帧的光子包数 |
-| `c.receiver.center` | `[8.3 0 5]` m | 固定 RX，约为 40° 入射在静水中折射后、在 $z=5$ m 处的落点 |
-| `c.receiver.normal` | 指向 RX 的单位向量 | RX 视轴，即沿名义水面原点到 RX 的到达方向 |
-| `c.receiver.radius / fovDeg` | 0.05 m / 15° | 孔径半径和 FOV 半角 |
-| `c.receiver.mapEdges` | ±6 m，240 格 | 探测面光强图的范围 |
-| `c.surface.gridStep / gridHalfWidth` | 0.075 m / 40 m | 海面插值网格，网格外用精确 Fourier 求和 |
-| `c.surface.marchStep / rootTolerance` | 0.04 m / 2 μm | 首次穿越的最小步长和二分容差 |
-| `c.metrics.outageThresholdW` | 1e-6 W（−30 dBm） | 中断门限，**应按实际接收机灵敏度设置**。只影响统计和画图，不影响 MC |
-| `c.run.resume` | `true` | 是否复用 checkpoint |
-
-光源（1 W、532 nm、10 mrad 发散、高斯束腰）、水体（`c0.151`，HG $g=0.924$）、TX 运动（W_RIS 的 OU 航位推算）、RIS 器件（40×40 单元，节距 25 mm，透光 14.4 mm，±15.426°，量化 0.021°）全部继承自 `wris_config` / `rp_config`，保证与 W_RIS / RIS_phase 一致。
-
----
-
-## 6. 计算模型
-
-### 6.1 共同输入（每个风况一次）
-
-1. `RIS_wave_components` 生成 Neumann 谱 + $\cos^2$ 方向分布的分量 $\{a_j,\omega_j,\mathbf k_j\}$，种子为 `c.ris.seed`。
-2. 同一组分量传给 `RIS_float`，得到 RIS 六自由度运动。直达链路的海面也由同一组分量重建：
-   $$\eta(\mathbf x,t)=\operatorname{Re}\sum_j a_j\,e^{\,i(\omega_j (t_0+t)-\mathbf k_j\cdot\mathbf x)}$$
-   其中 $t_0$ 为 `startTime`。这个海面是**入射海面**，不含浮板的扰动。
-3. TX 运动沿用 `wris_tx_motion`（W_RIS 的模型和种子），各角度分别计算。RX 固定不动。
-4. 每一帧（时刻 $t_k$），三条链路使用同一个 `rp_geometry` 快照和同一个 MC 种子（公共随机数）。各帧也复用这个种子，以减小时间曲线上的 MC 抖动。
-
-光传播远快于海面变化，所以每帧把海面和 RIS 位姿当作冻结。
-
-### 6.2 粗糙海面直达链路（`wrd_direct_mc`）
-
-- **发射**：高斯 Wigner 采样，位置和斜率相互独立，与 `wris_mc` 一致。每个光子包初始权重为 1，功率为 $P_0/N$。
-- **水下输运**：自由程 $s=-\ln U/c$，隐式俘获（碰撞后权重乘以 $b/c$，吸收量记入能量账），HG 相函数（$g=0.924$，直接调用原工程的 `Hen_Green`），俄罗斯轮盘赌，路径上限，源平面背向逃逸。这些都与 W_RIS 相同。
-- **首次穿越**（`wrd_crossing`）：在碰撞**之前**，先在本段自由程内搜索 $z-\eta(x,y)=0$ 的第一个根：
-  1. 用振幅上界 $|\eta|\le A$ 把搜索范围限制在 $|z|\le A$ 的板层内。
-  2. 如果 $d_z>|d_x|S_x+|d_y|S_y$（$S$ 为坡度上界），间隙函数单调，只检查端点。否则按“安全步长” $\max(\Delta_{\min},-\text{gap}/\text{bound})$ 逐步推进，保证不会跳过根，最小步长为 `marchStep`。
-  3. 括住根后用二分法求到 `rootTolerance` 精度。
-- **界面**：局部法向 $\mathbf n=(-\eta_x,-\eta_y,1)/\|\cdot\|$。切向分量 $\mathbf q=n_w(\mathbf d-(\mathbf d\cdot\mathbf n)\mathbf n)$。
-  - 若 $|\mathbf q|\ge n_a$，发生全反射（TIR）。
-  - 否则透射方向为 $\mathbf d_a=(\mathbf q+\sqrt{n_a^2-|\mathbf q|^2}\,\mathbf n)/n_a$，透射率为非偏振 Fresnel 系数 $T=1-(R_s+R_p)/2$（`rp_fresnel`）。
-  - 首次界面上的反射和 TIR 能量记入能量账后终止。这部分光回到水中，对空中 RX 的贡献可以忽略。
-- **空气段**：沿 $\mathbf d_a$ 直线传到 RX 平面。如果途中再次进入海面（被波峰挡住），这部分功率计入 `directWaveBlockedW`，不进入 RX。
-- **能量账**：透射 + 反射 + TIR + 吸收 + 背逃 + 截断 − 轮盘赌修正 = $N$。每帧断言相对残差小于 $10^{-9}$。
-
-### 6.3 静止海面基线（`flat`）
-
-调用同一个 `wrd_direct_mc`，只是把海面换成 `wrd_flat_surface`（$\eta\equiv0$）。TX 运动、种子和 RX 都相同，这就是旧的“无 RIS 直接传播”在动态 TX 下的版本。
-
-### 6.4 浮动 RIS 链路（`wrd_ris_mc`）
-
-- 水下部分直接调用 `W_RIS/wris_mc`，在当前帧的动态板坐标系中求下表面落点、方向和权重。
-- 水→玻璃 Fresnel 透射后，按到液晶层中面的位置分配到单元，单元透光区外的光被挡掉。
-- 每个受照单元的目标方向由“TX→单元中心”和“单元中心→RX 中心”两段多层中心光线确定（`rp_layer_path`），再经过器件梯度限幅和 0.021° 量化（`rp_command`）。这相当于**每帧理想更新调相**。
-- `rp_trace` 计算玻璃→空气传播和 Fresnel 透射，然后用与直达链路相同的 RX 判据计分。
-- 板上方按“空气”处理。出射点低于入射海面（覆水）的功率单独记为 `risOverwashedExitW`，RIS 的露底/覆水样点比例也随结果保存。
-
-### 6.5 RX 判据（三条链路完全相同）
-
-光线与 RX 平面（法向为 `c.receiver.normal`）求交：
-
-- 交点到 RX 中心的距离 ≤ `radius`，且到达方向满足 $\mathbf d\cdot\mathbf n_{rx}\ge\cos(\text{FOV})$ 的包，计入 RX 功率 `RxW`。
-- 只满足孔径、不检查 FOV 的功率另存为 `ApertureNoFovW`。
-
-单帧 MC 标准误为 $\mathrm{SE}=P_0\sqrt{(\sum w^2-(\sum w)^2/N)/(N(N-1))}$。探测面光强图是 FOV 门之前的辐照度。
-
-### 6.6 时间统计（`wrd_summary`）
-
-对每个（风况，角度，链路），用 $K$ 个帧等权统计：
-
-- 均值 $\bar P$、标准差、中位数、最值
-- 闪烁指数 $\sigma_I^2=\langle P^2\rangle/\bar P^2-1$
-- 中断概率 $P_{out}=\Pr(P<P_{th})$
-- 零命中比例（该帧没有任何光子包被接收）
-- RIS 增益 $10\log_{10}(\bar P_{RIS}/\bar P_{direct})$，分别相对粗糙海面和静止海面直达链路
-
-结果中**没有**叠加 EGG 湍流闪烁，功率随时间的起伏只来自海面、RIS 位姿和 TX 运动。
+| `c.scene.distancesM` | `[7.5 10]` | 接收面高度（板上表面以上，m） |
+| `c.scene.incidenceDeg` | 40 | 水中入射角，方位角沿用 RIS_phase |
+| `c.sea.windsMps` | `[2 3 4 5 6]` | 风速；静水 $U=0$ 自动加在最前 |
+| `c.sea.windDirectionDeg` | 50 | 风向（与 W_RIS/RIS_phase 一致） |
+| `c.ris.duration / dt` | 30 s / 0.05 s | 每个风速的运动时长与积分步长 |
+| `c.dynamic.frameStepS` | 0.5 s | 光学帧间隔，61 帧 |
+| `c.dynamic.photons` | 5×10⁵ | 每条链路每帧的光子包数 |
+| `c.dynamic.samples` | 2048 | 每帧接收机抖动/角误差样本（Sobol） |
+| `c.dynamic.calmFrames` | 3 | 静水独立 MC 重复次数 |
+| `c.study.fovHalfAngleRad` | 0.130 | FOV 半角（RIS_phase Fig2/3 取值） |
+| `c.study.positionSigmaM / angleSigmaRad / angleBiasRad` | 0.08 / 0.025 / [0.025 0] | 继承自 RIS_phase |
+| `c.study.turbulence / atmosphere` | weak / weak | 设计和训练使用的湍流 |
+| `c.metrics.turbulence` | {weak,weak; strong,strong} | 后处理中计算的湍流组合（第一行为主图） |
+| `c.surface.gridStep / gridHalfWidth` | 12.5 mm / 3 m | 海面插值网格 |
+| `c.surface.crestBlocking` | true | 直达光被波峰再遮挡 |
+| `c.training.*` | ABER，独立海面，1 s 帧，2×10⁵ 光子 | 海况感知选择 |
+| `c.incidence.anglesDeg / windMps` | [30 … 54] / 5 | 入射角扫描 |
+| `c.metrics.fixedPowerDBm` | 30 | 汇总表和 Fig6/7 的发射功率 |
 
 ---
 
-## 7. 输出文件
+## 6. 输出图
 
 | 文件 | 内容 |
 |---|---|
-| `wris_dynamic.mat` | 变量 `results`：`config`；`cases{角度行, 风况列}`，每个元素含 `frames(k).direct/.flat/.ris/.geometry/...`；`frameTable`；`caseTable`；`codeHash`；`elapsedSeconds` |
-| `wris_dynamic_frames.csv` | 每帧一行：海面高度/坡度，RIS 倾角和湿干比例；各链路的 `RxW/RxSEW/RxHits/RxBallisticW/RxScatterW/ApertureNoFovW`；直达链路的 `Tir/SeaIncident/Transmitted/WaveBlocked`；RIS 的 `BoardIncident/Active/Transmitted/Saturated/OverwashedExit`；能量残差 |
-| `wris_dynamic_cases.csv` | 每个（风况，角度，链路）一行：`meanW, stdW, medianW, minW, maxW, meanDbm, scintillationIndex, outageProbability, zeroHitFraction, rmsFrameSEW, ballisticShare, risOverRoughDirectDb, risOverFlatDirectDb, significantWaveHeightM` |
-| `fig1_rx_power_time` | 各链路 RX 功率随时间变化，误差棒为 95% MC 区间，× 表示该帧零命中，点线为中断门限 |
-| `fig2_rx_power_cdf` | RX 功率的经验 CDF，曲线与门限线交点的纵坐标即中断概率 |
-| `fig3_sea_tir` | 直达链路到达海面的功率中 TIR 所占比例（粗糙 vs 静止），以及板中心处的海面坡度 |
-| `fig4_rx_maps` | 最大风况、$t$ = `mapTimeS` 时，三条链路的探测面光强（共用色标），白圈为 RX 孔径 |
-| `fig5_summary_wind` | 时间平均功率（误差棒为最小–最大帧）和中断概率随风速的变化，每个入射角一列 |
-| `run_log.txt` | 完整控制台日志，含进度和耗时 |
-| `checkpoints/condition_*.mat` | 每个风况的中间结果，可以删除，删除后会重算 |
+| `fig1_irradiance_maps` | z = 7.5 m 接收面光强：静水 / U = 5 m/s 某一帧 / U = 5 m/s 时间平均；列为直达、Steering-only、Flat top、Robust ABER、Sea-aware。实线圆为孔径，虚线圆为 RMS 抖动半径 |
+| `fig2_aber_vs_power` | ABER–$P_t$，行为高度，列为静水 / 3 m/s / 5 m/s；点线为指向 FOV 地板 |
+| `fig3_op_vs_power` | OP–$P_t$，同上 |
+| `fig4_time_series` | U = 5 m/s：各链路逐帧增益、逐帧 OP、RIS 倾角 / 光束处海面坡度 / 直达弹道光全反射比例 |
+| `fig5_power_cdf` | 瞬时接收功率 CDF（实线粗糙，虚线静水），显示深衰落尾部 |
+| `fig6_wind_speed` | 固定 $P_t$ 下 ABER、OP 随风速变化 |
+| `fig7_incidence_angle` | 固定 $P_t$ 下 ABER、OP 随入射角变化（实线 U = 5 m/s，虚线静水，点线为临界角） |
+| `fig8_sea_aware_width` | 训练海面上时间平均 ABER/OP 随静水等效光斑半径的变化，实心点为选中的设计 |
+
+样式按 RIS_phase 第二阶段：Times New Roman、10 pt、每个子图 2.67 × 2.37 in，图例放在坐标区上方，不遮挡曲线。字号、尺寸、格式（png/pdf/fig）、展示的风速/高度都在 `plots/rd_plot_options.m` 中修改，不需要重算。
 
 ---
 
-## 8. 验收检查清单
+## 7. 计算量（估计，未实测）
 
-1. 步骤 0 的 9 项测试全部通过。
-2. 运行过程中没有报 `wrd:Energy` 错误，即每帧能量账都已闭合。
-3. `wris_dynamic_frames.csv` 中 `directEnergyResidual`、`risWaterEnergyResidual` 的绝对值都小于 1e-9。
-4. **与 v1 对照**：`direct`、`ris` 两条链路的算法和种子与 v1 相同，所以 production 的 `roughDirect` / `ris` 时间均值应复现下表（v1 在原机器上的结果）。如果差异明显超过 MC 误差，说明运行环境或依赖代码有变化，需要排查。
-
-   | 风速 (m/s) | 名义入射角 | 直达平均 RX 功率 (mW) | RIS 平均 RX 功率 (mW) | 直达平均 TIR 比例 |
-   | ---: | ---: | ---: | ---: | ---: |
-   | 3 | 40° | 2.334 | 67.042 | 4.1% |
-   | 5 | 40° | 1.355 | 66.634 | 4.5% |
-   | 3 | 49° | 0.006 | 66.841 | 53.0% |
-   | 5 | 49° | 0.007 | 66.717 | 47.3% |
-
-5. 物理上应满足的定性规律：
-   - 49° 超过临界角，`flat` 链路应几乎全部 TIR，RX 功率接近 0 或零命中。粗糙海面的坡度会打开部分帧，所以 `roughDirect` 不为 0 但很低。
-   - 40° 时 `flat` 是稳定的基准，`roughDirect` 会随坡度明显起伏，风速越大均值越低、闪烁指数越大。
-   - RIS 链路逐帧重新对准 RX，均值高且起伏小。
+production 的耗时主要来自：5 个风速 × 61 帧 × 2 条 MC（各 5×10⁵ 包，直达链路还要做海面穿越搜索），以及每帧 14 次接收机截获。按经验估计为数小时量级，入射角扫描再加约 1–2 小时。建议先看 smoke 的 `run_log.txt` 中每帧耗时再外推。时间不够时可以优先减少 `c.sea.windsMps`、增大 `c.dynamic.frameStepS`，或者关掉 `c.incidence.enabled`。
 
 ---
 
-## 9. 已知限制
+## 8. 已知限制与建议（论文相关）
 
-- 几何光学粒子模型给出的是辐照度和功率，没有相干衍射或散斑。光斑亚结构需要另用波动传播计算。
-- 直达链路在首次界面上的反射和 TIR 直接终止，不追踪“反射→水下再散射→再透射”这类高阶路径（对空中 RX 的贡献很小）。
-- 首次穿越的最小步长为 4 cm，更细的多重穿越可能被跳过；网格海面在 ±40 m 内为三次插值。临界角附近功率很低的尾部，应结合 `RxHits` 和 MC 误差一起解读。
-- RIS 链路假设板上方是空气、板下方是水（三层光路）。覆水时刻的结果仍按名义三层光路计算，应结合 `risTopWetSampleFraction` 和 `risOverwashedExitW` 解读。海面模型是**入射海面**，不含浮板扰动。
-- 默认不考虑 RIS→RX 段的波峰遮挡（RIS 位于海面上），可以用 `risWaveBlocking=true` 做敏感性分析。直达链路始终考虑波峰遮挡。
-- 每帧使用同一个 MC 种子：曲线更平滑，但各帧的 MC 误差相互关联。时间统计主要反映海况变化，`rmsFrameSEW` 给出单帧 MC 误差的量级。
-- 默认中断门限 1e-6 W 只是占位值，应按实际接收机灵敏度修改。改后只需重画图，`caseTable` 需要重算统计（重新运行时会复用 checkpoint，很快）。
-
----
-
-## 10. 常见问题
-
-- **`wrd:Setup` / `wrd:Dependencies`**：目录相对位置不对，或者路径上有同名函数覆盖了原工程函数。按报错提示核对 `code/` 下的文件夹。
-- **`RIS_float:Option` Unknown option**：`c.ris` 里多了 `get_default_RIS_params` 不认识的字段，不要往 `c.ris` 里添加自定义字段。
-- **改了参数但结果没变**：checkpoint 按“物理参数 + 风况 + 算法代码哈希”匹配，参数变了会自动重算。如果仍有疑问，删除 `results/checkpoints/` 后重跑。
-- **只想改图**：设置 `doCompute = false`，或直接调用 `plot_wris_dynamic`，不会触发任何 MC 计算。
-- **打开 .fig 看不到窗口**：保存时已设置 `CreateFcn` 强制可见。如果仍不可见，用 `openfig('xxx.fig','visible')` 打开。
+1. **FOV 判据变了。** RIS_phase 用主光线判据（$\psi_s\le\Theta$ 即全收），这里改为逐光线判据。对静止的 RIS 光斑，二者差别来自 1 m 口径造成的到达角展宽（约 ±50 mrad）；对粗糙海面直达光，差别是本质性的。建议论文统一采用逐光线判据，必要时 RIS_phase 静态图也按此重算一遍，避免静/动两部分口径不一致。
+2. **公平性。** 两条链路共用 TX、光束、水体、每帧 MC 种子、接收机模型和湍流；接收机都对准各自静水质心，且都不跟踪。两点不对称：直达链路计入波峰遮挡，RIS 链路没有计入浮框侧壁遮挡、上浪和板附近波峰遮挡（RIS 出射光离竖直方向约 30°，直达光约 59°，前者掠过波峰的机会小得多）。另外未射到 1 m 板上的光直接丢弃，没有当作旁路直达光。论文中应说明这些假设。
+3. **TX 固定。** W_RIS 中的 TX 航位推算运动没有引入，这样两条链路的差异只来自海面和板。如需加入，两条链路应共用同一 TX 轨迹。
+4. **统计置信度。** 每个风速只有一组 30 s 的波浪实现。正式出图前建议增加时长或多组 `c.ris.seed`，并用批均值给出置信区间（结果中已保存逐帧指标 `R.main.frames{iw}.aberFrames/opFrames`，可以直接计算）。
+5. **EGG/GG 与显式波浪不要重复计入。** EGG 表示气泡/温盐引起的水下闪烁，GG 用的是路径等效形状参数；波浪引起的衰落已经显式建模，正文中应说明 GG 参数不包含海面波动的贡献。
+6. **RIS_float 的适用范围。** 模型是小角度近似六自由度模型，`R.main.maxTiltDeg` 和 `R.main.smallAngleValid` 记录了每个风速的最大倾角和是否小于 10°。风速较高时请先检查这两个量，再解读结果。
+7. **海况感知选择可以作为一个贡献点。** Fig8 直接回答"波浪越大，最优光斑应该多宽"。由于训练和评估用的是不同的海面实现，Sea-aware 曲线不是在测试数据上调出来的。
+8. **相位冻结**是保守设定：LC 不随波浪重新指向。如果后续要讨论闭环指向（例如用板的 IMU 姿态逐帧更新命令），可以在 `rd_condition` 中按 `g.RRis` 重算命令；当前接口已经支持。
