@@ -44,6 +44,29 @@
 
 ## 日常同步
 
+在 `code` 目录运行一键脚本：
+
+```powershell
+.\sync.cmd
+```
+
+或指定提交说明：
+
+```powershell
+.\sync.cmd -Message "修了相位计算"
+```
+
+`sync.cmd` 只对当前进程临时放开 PowerShell 脚本限制，不修改系统安全设置。
+也可以直接运行 `.\sync.ps1`，但需要先执行一次：
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+脚本会自动排除 `.gitignore` 中的大数据，并拒绝超过 50 MB 的文件。
+
+手动方式：
+
 ```powershell
 cd C:\Users\Spidey\Desktop\code
 git add -A
