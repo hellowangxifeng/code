@@ -19,6 +19,8 @@ ix = discretize(hits(:,1),edges);
 iy = discretize(hits(:,2),edges);
 inMap = isfinite(ix) & isfinite(iy);
 shape = repmat(numel(edges)-1,1,2);
-out.mapWm2 = accumarray([iy(inMap),ix(inMap)],weights(inMap),shape)*scale/diff(edges(1:2))^2;
+% Rows = detector v, columns = detector u. Stored in single precision to keep
+% the saved MAT small; all powers above remain double.
+out.mapWm2 = single(accumarray([iy(inMap),ix(inMap)],weights(inMap),shape)*scale/diff(edges(1:2))^2);
 out.mapPowerW = sum(weights(inMap))*scale;
 end
