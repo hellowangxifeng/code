@@ -1,5 +1,5 @@
 classdef RdPhysicsTest < matlab.unittest.TestCase
-    %RDPHYSICSTEST Fast physics / bookkeeping checks of RIS_dynamic (no RIS_float).
+    %RDPHYSICSTEST Fast physics / bookkeeping checks of RIS_dynamic (no RIS_float, no wave run).
     %   r = runtests('tests/RdPhysicsTest.m'); table(r)
     properties
         c
@@ -59,7 +59,7 @@ classdef RdPhysicsTest < matlab.unittest.TestCase
         function flatSurfaceSnellFresnel(tc)
             c = clearWater(tc.c);
             g = sourceGeometry(40);
-            air = rd_direct_mc(c,g,rd_flat_surface(),7);
+            air = rd_direct_mc(c,g,flatSurface(),7);
             q = c.optics.nWater*sind(40);
             tc.verifyEqual(vecnorm(air.dir(:,1:2),2,2),repmat(q/c.optics.nAir,numel(air.power),1), ...
                 'AbsTol',1e-4);
@@ -71,7 +71,7 @@ classdef RdPhysicsTest < matlab.unittest.TestCase
         function flatSurfaceTotalInternalReflection(tc)
             c = clearWater(tc.c);
             g = sourceGeometry(55);
-            air = rd_direct_mc(c,g,rd_flat_surface(),7);
+            air = rd_direct_mc(c,g,flatSurface(),7);
             tc.verifyEmpty(air.power);
             tc.verifyEqual(air.ballisticTirFraction,1,'AbsTol',1e-12);
             tc.verifyLessThan(abs(air.energyResidual),1e-12);
@@ -110,20 +110,62 @@ classdef RdPhysicsTest < matlab.unittest.TestCase
             tc.verifyEqual(vecnorm(out.dir,2,2),ones(numel(out.power),1),'AbsTol',1e-12);
         end
 
-        function timeAverageOfFrameMetrics(tc)
+        function exactFovTailInMetrics(tc)
+            % Samples outside the FOV are replaced by the exact Rice mass p_F.
             c = tc.c;
-            G = 0.01*rand(64,3);
-            G(1:5,2) = 0;
-            rx = struct('fovOutageExact',0,'fovOutageSample',0);
-            P = [1e-3 1e-2 1];
-            m = rd_metrics(c,G,rx,P);
-            aber = zeros(3,numel(P));
-            for f = 1:3
-                r = rp_link_metrics(c,struct('gain',G(:,f),'fovOutageExact',0,'fovOutageSample',0),P);
-                aber(f,:) = r.aber;
-            end
-            tc.verifyEqual(m.aber,mean(aber,1),'AbsTol',1e-15);
-            tc.verifyEqual(m.meanGain,mean(G(:)),'RelTol',1e-12);
+            G = 0.01*rand(64,1);
+            psi = [zeros(60,1);ones(4,1)];
+            P = [1e-3 1e-1 10];
+            m = rd_link_metrics(c,G,psi,P,'weak','weak');
+            cc = c; cc.study.turbulence = 'weak'; cc.study.atmosphere = 'weak';
+            r = rp_link_metrics(cc,struct('gain',G(1:60),'fovOutageExact',0,'fovOutageSample',0), ...
+                P,c.metrics.order);
+            pF = m.fovOutageExact;
+            tc.verifyGreaterThan(pF,0);
+            tc.verifyEqual(m.aber,(1-pF)*r.aber+pF/2,'AbsTol',1e-15);
+            tc.verifyEqual(m.op,(1-pF)*r.op+pF,'AbsTol',1e-15);
+        end
+
+        function neighbourCoherenceMatchesRisPhase(tc)
+            % With every pair inside the neighbour rings, the result equals
+            % RIS_phase/rp_pixel_intensity on the same dense fields.
+            rng(3);
+            pixels = 40; K = 9;
+            fields = complex(randn(pixels,K),randn(pixels,K));
+            sx = 400*randn(pixels,K); sy = 400*randn(pixels,K);
+            [i,j] = ndgrid(1:3,1:3);
+            support = repmat({(1:pixels).'},1,K);
+            values = num2cell(fields,1); slopeX = num2cell(sx,1); slopeY = num2cell(sy,1);
+            I = rd_pixel_intensity(support,values,slopeX,slopeY,pixels,[0.01 0.01],[i(:),j(:)],2);
+            I0 = rp_pixel_intensity(fields,sx,sy,[0.01 0.01],0);
+            tc.verifyEqual(I,I0,'RelTol',1e-10,'AbsTol',1e-12);
+        end
+
+        function selectionRules(tc)
+            % Flat and Robust minimise their own family; Max mean power maximises <P_r>.
+            family = ["steering","flat_top","flat_top","robust","robust"];
+            A = [.4 .4; .1 .2; .2 .05; .3 .01; .05 .3];
+            O = A; M = repmat([1;2;3;4;5],1,2);
+            ch = rd_select(A,O,M,family,true(1,5),'per_power',1);
+            tc.verifyEqual(squeeze(ch(2,:,1)),[1 1]);
+            tc.verifyEqual(squeeze(ch(3,:,1)),[2 3]);
+            tc.verifyEqual(squeeze(ch(4,:,1)),[5 4]);
+            tc.verifyEqual(squeeze(ch(5,:,1)),[5 5]);
+            frozen = rd_select(A,O,M,family,true(1,5),'design_power',2);
+            tc.verifyEqual(squeeze(frozen(3,:,1)),[3 3]);
+        end
+
+        function requiredPowerRanking(tc)
+            c = tc.c;
+            P = 0:1:40;
+            base = @(shift) min(0.5,10.^(-(P-shift)/5));
+            curves.aber = [0.5*ones(1,numel(P));base(20);base(12);base(5);base(10)];
+            curves.op = curves.aber;
+            r = rd_rank(curves,P,c);
+            tc.verifyEqual(r.aber.winners,4);
+            tc.verifyTrue(r.aber.clear);
+            tc.verifyEqual(r.aber.requiredDBm(1),Inf);
+            tc.verifyEqual(r.aber.gainOverSteeringDB,15,'AbsTol',1e-9);
         end
     end
 end
@@ -160,6 +202,14 @@ end
 function g = sourceGeometry(incidenceDeg)
 R = [cosd(incidenceDeg) 0 sind(incidenceDeg); 0 1 0; -sind(incidenceDeg) 0 cosd(incidenceDeg)];
 g = struct('RTx',R,'dTx',R(:,3),'pTx',[0;0;-5]);
+end
+
+function sea = flatSurface()
+% Still-water plane z = 0 through the same rough-surface interface code.
+motion.parameters.startTime = 0;
+motion.wave = struct('omega',0,'coefficient',0,'kx',0,'ky',0);
+settings = struct('gridStep',1,'gridHalfWidth',0,'marchStep',1,'rootTolerance',1e-9);
+sea = rd_surface(motion,0,settings,[0;0]);
 end
 
 function m = toySea()

@@ -4,7 +4,11 @@ function files = plot_ris_dynamic(matFile,options)
 %   files = plot_ris_dynamic(matFile)
 %   files = plot_ris_dynamic(matFile,options)     see rd_plot_options for fields
 %   Only the light structure R written by rd_run is read, so figures can be
-%   restyled at any time without touching the Monte Carlo checkpoints.
+%   restyled at any time without touching the optics checkpoints.
+%     Fig1 irradiance at the RX             Fig5 OP, height x wind grid
+%     Fig2 ABER / OP, main condition        Fig6 complex field vs Monte Carlo
+%     Fig3 ocean EGG x atmospheric GG       Fig7 required P_t vs height
+%     Fig4 ABER, height x wind grid
 here = fileparts(mfilename('fullpath'));
 if nargin<1 || isempty(matFile)
     matFile = fullfile(fileparts(here),'results','ris_dynamic.mat');
@@ -15,19 +19,8 @@ loaded = load(matFile,'R');
 R = loaded.R;
 o = rd_plot_options(R,options,matFile);
 if ~isfolder(o.outputFolder), mkdir(o.outputFolder); end
-files = strings(0,1);
-files = [files;rd_fig_irradiance(R,o)];
-files = [files;rd_fig_curves(R,o,'aber')];
-files = [files;rd_fig_curves(R,o,'op')];
-files = [files;rd_fig_timeseries(R,o)];
-files = [files;rd_fig_cdf(R,o)];
-files = [files;rd_fig_wind(R,o)];
-if isstruct(R.incidence) && ~isempty(R.incidence)
-    files = [files;rd_fig_incidence(R,o)];
-end
-if height(R.trainingTable)>0
-    files = [files;rd_fig_width(R,o)];
-end
+files = [rd_fig_irradiance(R,o);rd_fig_main(R,o);rd_fig_turbulence(R,o); ...
+    rd_fig_grid(R,o,'aber');rd_fig_grid(R,o,'op');rd_fig_validation(R,o);rd_fig_required(R,o)];
 fprintf('Figures written to %s:\n',o.outputFolder);
 fprintf('  %s\n',files);
 end

@@ -1,7 +1,10 @@
 function pk = rd_trace(c,g,L,p,Z)
-%RD_TRACE LC packets -> frozen tile phase ramps -> glass/air -> plane z = Z.
-%   Uses RIS_phase/rp_trace unchanged with the CURRENT board pose g and the
-%   phase p designed on the motionless board (rd_slim_phase).
+%RD_TRACE MC packets on the LC screen -> loaded tile phases -> glass/air -> plane z = Z.
+%   Geometric optics of RIS_phase/rp_trace (local phase gradient, Snell and
+%   Fresnel at the glass/air face) for the frozen pose g and the design p.
+%   L comes from RD_RIS_PACKETS (raw, unweighted MC power); ballistic and
+%   scattered packets are both traced, so the result is the full-MC
+%   counterpart of the complex field of RD_WAVE.
 g.rxPlaneZ = Z;
 lookup = zeros(max([p.unitIds(:);L.unitId(:);1]),1);
 lookup(p.unitIds) = 1:numel(p.unitIds);

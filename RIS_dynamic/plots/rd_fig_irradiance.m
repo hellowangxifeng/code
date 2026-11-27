@@ -1,76 +1,62 @@
 function files = rd_fig_irradiance(R,o)
-%RD_FIG_IRRADIANCE Fig1: receiver-plane irradiance, calm vs rough sea.
-%   Rows: calm sea; one rough-sea frame; rough-sea time mean.
-%   Columns: o.mapSchemes. Axes are centred on each link's fixed receiver.
-%   Solid circle: receiver aperture; dashed circle: RMS position jitter
-%   radius sqrt(2) sigma_p. Colour: log10 irradiance on a common scale.
+%RD_FIG_IRRADIANCE Fig1: receiver-plane irradiance of the six links at the main condition.
+%   One frozen sea instant, one RX plane. Every panel is centred on the
+%   common receiver (cm); colour = log10 irradiance on ONE scale for all
+%   panels, so the gain of RIS modulation over the no-RIS link is visible.
+%   Direct: MC through the rough surface; RIS designs: complex field
+%   (ballistic Fresnel/CZT + scattered halo), the designs picked at the
+%   design power with the main fading row. Solid circle: RX aperture;
+%   dashed ellipse: second-moment spot waist (RIS_phase eq. 70).
+iz = rd_fig_index(R.distancesM,o.mainDistanceM);
+iw = rd_fig_index(R.winds,o.mainWindMps);
+q = R.cond(iz,iw);
+maps = q.maps;
+center = q.targetXY;
+bins = 201;
+axisM = linspace(-o.mapHalfWidthM,o.mapHalfWidthM,bins);
+[X,Y] = meshgrid(center(1)+axisM,center(2)+axisM);
+shown = cell(1,numel(maps));
+peak = 0;
+for j = 1:numel(maps)
+    I = interp2(maps(j).x,maps(j).y,double(maps(j).field),X,Y,'linear',0);
+    shown{j} = I;
+    peak = max(peak,max(I(:)));
+end
 files = strings(0,1);
-keys = R.schemes.keys;
-wanted = o.mapSchemes(ismember(o.mapSchemes,keys));
-ks = cellfun(@(key) find(strcmp(keys,key),1),wanted);
-if isempty(ks), return; end
-iz = rd_fig_index(R.distancesM,o.mapDistanceM);
-calm = find(R.winds==0,1);
-windy = find(R.winds>0);
-rows = struct('iw',calm,'field','mean','label','Calm sea');
-if ~isempty(windy)
-    iw = windy(rd_fig_index(R.winds(windy),o.mapWindMps));
-    rows(2) = struct('iw',iw,'field','snapshot','label', ...
-        sprintf('U = %g m/s, t = %.1f s',R.winds(iw),R.main.maps{iw}.snapshotTimeS));
-    rows(3) = struct('iw',iw,'field','mean','label',sprintf('U = %g m/s, time mean',R.winds(iw)));
-end
-peak = -Inf;
-for r = 1:numel(rows)
-    maps = R.main.maps{rows(r).iw}.(rows(r).field);
-    if isempty(maps), continue; end
-    values = maps(:,:,iz,ks);
-    peak = max(peak,max(double(values(:))));
-end
 if ~(peak>0), return; end
 cmax = log10(peak);
 cmin = cmax-o.mapDecades;
 a = R.config.rx.apertureRadius;
-sigma = R.config.study.positionSigmaM;
 theta = linspace(0,2*pi,181);
-[fig,layout] = rd_fig_new(numel(rows),numel(ks),o,1.75,1.75);
-for r = 1:numel(rows)
-    block = R.main.maps{rows(r).iw};
-    for jc = 1:numel(ks)
-        k = ks(jc);
-        ax = nexttile(layout);
-        if isempty(block.(rows(r).field)), axis(ax,'off'); continue; end
-        I = double(block.(rows(r).field)(:,:,iz,k));
-        half = block.halfWidthM(iz,k);
-        bins = size(I,1);
-        axisCM = 100*(((1:bins)-0.5)/bins*2*half-half);
-        imagesc(ax,axisCM,axisCM,log10(max(I,10^cmin)));
-        set(ax,'YDir','normal');
-        axis(ax,'equal');
-        axis(ax,'tight');
-        clim(ax,[cmin cmax]);
-        colormap(ax,o.mapColormap);
-        hold(ax,'on');
-        plot(ax,100*a*cos(theta),100*a*sin(theta),'w-','LineWidth',0.9);
-        plot(ax,100*sqrt(2)*sigma*cos(theta),100*sqrt(2)*sigma*sin(theta),'w--','LineWidth',0.8);
-        set(ax,'FontName',o.fontName,'FontSize',o.fontSize,'Layer','top');
-        if r==1
-            title(ax,R.schemes.names{k},'FontName',o.fontName,'FontSize',o.fontSize, ...
-                'FontWeight','normal');
-        end
-        if jc==1
-            ylabel(ax,{rows(r).label,'y (cm)'},'FontName',o.fontName,'FontSize',o.fontSize);
-        end
-        if r==numel(rows)
-            xlabel(ax,'x (cm)','FontName',o.fontName,'FontSize',o.fontSize);
-        end
+[fig,layout] = rd_fig_new(2,3,o,1.85,1.85);
+for j = 1:numel(maps)
+    ax = nexttile(layout);
+    imagesc(ax,100*axisM,100*axisM,log10(max(shown{j},10^cmin)));
+    set(ax,'YDir','normal');
+    axis(ax,'equal'); axis(ax,'tight');
+    clim(ax,[cmin cmax]);
+    colormap(ax,o.mapColormap);
+    hold(ax,'on');
+    plot(ax,100*a*cos(theta),100*a*sin(theta),'w-','LineWidth',1.0);
+    if ~isempty(maps(j).spotCovariance)
+        [V,L] = eig((maps(j).spotCovariance+maps(j).spotCovariance.')/2);
+        ring = (V*diag(2*sqrt(max(diag(L),0)))*[cos(theta);sin(theta)]).'+maps(j).spotCenter-center;
+        plot(ax,100*ring(:,1),100*ring(:,2),'w--','LineWidth',0.8);
     end
+    set(ax,'FontName',o.fontName,'FontSize',o.fontSize,'Layer','top', ...
+        'XLim',100*o.mapHalfWidthM*[-1 1],'YLim',100*o.mapHalfWidthM*[-1 1]);
+    title(ax,maps(j).label,'FontName',o.fontName,'FontSize',o.fontSize,'FontWeight','normal');
+    text(ax,0.04,0.95,sprintf('\\langleG\\rangle = %.2e',maps(j).meanGainField),'Units','normalized', ...
+        'Color','w','FontName',o.fontName,'FontSize',o.fontSize-1,'VerticalAlignment','top');
+    if mod(j,3)==1, ylabel(ax,'y (cm)'); end
+    if j>3, xlabel(ax,'x (cm)'); end
 end
 cb = colorbar(ax);
 cb.Layout.Tile = 'east';
 cb.Label.String = 'log_{10} irradiance (W m^{-2})';
 cb.FontName = o.fontName;
 cb.FontSize = o.fontSize;
-title(layout,sprintf('Receiver plane z = %g m',R.distancesM(iz)),'FontName',o.fontName, ...
-    'FontSize',o.fontSize+1);
-files = rd_fig_save(fig,'fig1_irradiance_maps',o);
+title(layout,sprintf('z = %g m, U = %g m/s, frozen t^* = %.1f s, P_t = 1 W reference', ...
+    q.distanceM,q.wind,q.pose.timeS),'FontName',o.fontName,'FontSize',o.fontSize);
+files = rd_fig_save(fig,'fig1_irradiance_rx',o);
 end

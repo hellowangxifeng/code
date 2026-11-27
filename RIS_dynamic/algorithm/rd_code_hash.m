@@ -1,32 +1,38 @@
-function h = rd_code_hash(names)
-%RD_CODE_HASH SHA-256 of the source files that produce the transported numbers.
-%   rd_code_hash()        RIS_dynamic physics files + reused project functions
-%   rd_code_hash(names)   only the listed functions (resolved with WHICH)
-% Post-processing / run-control files are excluded, so editing them never
-% invalidates the expensive Monte Carlo checkpoints.
-if nargin==0
-    here = fileparts(mfilename('fullpath'));
-    files = dir(fullfile(here,'rd_*.m'));
-    skip = {'rd_run.m','rd_evaluate.m','rd_check.m','rd_config.m','rd_setup.m', ...
-        'rd_cached.m','rd_code_hash.m','rd_physical.m','rd_schemes.m','rd_entry_table.m'};
-    local = sort(setdiff({files.name},skip));
-    paths = fullfile(here,local);
-    names = {'rp_stage2_scene','rp_study_scene','rp_mc','rp_illuminate','rp_bsf_ballistic', ...
-        'rp_incident_field','rp_phase','rp_vertical_command','rp_carrier_landing','rp_paraxial', ...
-        'rp_finite_phase','rp_zero_phase','rp_command','rp_trace','rp_phase_profile', ...
-        'rp_fresnel','rp_layer_path','rp_geometry','rp_link_metrics','rp_fading_response', ...
-        'rp_turbulence','rp_link_samples','rp_gauss_legendre','wris_mc','wris_reference', ...
-        'wris_intersect','wris_metrics','RIS_float','RIS_wave_components','RIS_wave_field', ...
-        'RIS_flotation','RIS_rotation','RIS_radiation','RIS_sidewall_load', ...
-        'get_default_RIS_params','get_default_sea_params','Hen_Green','Table_abc'};
-    paths = [paths(:);cellfun(@which,names(:),'UniformOutput',false)];
+function h = rd_code_hash(group)
+%RD_CODE_HASH SHA-256 of the source files that produce one kind of number.
+%   rd_code_hash('field')   RIS designs, complex field and their MC check
+%   rd_code_hash('direct')  no-RIS rough-surface Monte Carlo
+%   rd_code_hash(names)     only the listed functions (resolved with WHICH)
+% Post-processing files (metrics, selection, ranking, plots) are never
+% hashed, so editing them never invalidates an expensive checkpoint.
+common = {'rd_scene','rd_motion','rd_receiver','rd_capture','rd_compress','rd_map', ...
+    'rd_transport','rp_geometry','rp_link_samples','rp_fresnel','wris_mc','wris_reference', ...
+    'wris_intersect','RIS_float','RIS_wave_components','RIS_wave_field','RIS_flotation', ...
+    'RIS_rotation','RIS_radiation','RIS_sidewall_load','get_default_RIS_params', ...
+    'get_default_sea_params','Hen_Green','Table_abc'};
+if iscell(group)
+    names = group;
 else
-    paths = cellfun(@which,names(:),'UniformOutput',false);
+    switch group
+        case 'field'
+            names = [common,{'rd_candidate','rd_phase','rd_rx_direction','rd_wave', ...
+                'rd_pixel_intensity','rd_trace','rd_ris_packets','rp_mc','rp_illuminate', ...
+                'rp_bsf_ballistic','rp_incident_field','rp_phase','rp_vertical_command', ...
+                'rp_carrier_landing','rp_paraxial','rp_command','rp_trace','rp_phase_profile', ...
+                'rp_layer_path','rp_receiver_window','rp_fourier_window','rp_deposit_power', ...
+                'rp_spot_stats','rp_aperture_channel','rp_gauss_legendre'}];
+        case 'direct'
+            names = [common,{'rd_condition','rd_direct_mc','rd_surface','rd_crossing', ...
+                'rd_to_plane','rd_rx_direction','rp_carrier_landing'}];
+        otherwise
+            error('rd:HashGroup','Unknown hash group "%s".',group);
+    end
 end
+paths = cellfun(@which,names(:),'UniformOutput',false);
 digest = java.security.MessageDigest.getInstance('SHA-256');
 for j = 1:numel(paths)
     if isempty(paths{j}) || ~isfile(paths{j})
-        digest.update(unicode2native(sprintf('missing:%d',j),'UTF-8'));
+        digest.update(unicode2native(sprintf('missing:%s',names{j}),'UTF-8'));
     else
         digest.update(unicode2native(fileread(paths{j}),'UTF-8'));
     end

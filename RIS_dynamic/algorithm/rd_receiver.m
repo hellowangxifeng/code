@@ -2,14 +2,15 @@ function rx = rd_receiver(c,origin,center,Z,s,options)
 %RD_RECEIVER One fixed physical receiver and its jitter / pointing samples.
 %   rx = rd_receiver(c,origin,center,Z,samples) places a disc of radius
 %   c.rx.apertureRadius at (center, Z) on the horizontal receiver plane.
-%   Its nominal boresight r points from origin (the board top centre, or
-%   the calm-sea crossing point of the TX axis for the direct link) to the
-%   disc centre. Samples follow RIS_phase/rp_aperture_channel exactly:
+%   Its nominal boresight r points from origin (above the frozen lower-face
+%   centre by the glass thickness, as rp_aperture_channel) to the disc
+%   centre; ALL links share this receiver. Samples follow
+%   RIS_phase/rp_aperture_channel exactly:
 %     offset_s = sigma_p * z_pos                      (horizontal, per axis)
 %     e_s      = mu_theta + sigma_theta * z_ang,  psi_s = |e_s|
 %     n_s      = cos(psi_s) r + sin(psi_s) (e_s1 e1 + e_s2 e2)/psi_s
 %   with (e1,e2,r) the right-handed basis e1 = y x r / |.|, e2 = r x e1.
-%   The receiver does NOT follow the waves; it is aligned once.
+%   The receiver does not follow the waves; it is aligned once per condition.
 if nargin<6, options = c.study; end
 n = s.n;
 rx = struct('center',reshape(center,1,2),'Z',Z,'origin',reshape(origin,1,3), ...

@@ -1,12 +1,11 @@
 function p = rd_physical(c)
 %RD_PHYSICAL Fields of c that change computed numbers (checkpoint fingerprint).
-% Paths, run control, plotting and post-processing statistics are excluded.
-% The wind LIST is excluded too: every condition, training and pilot
-% fingerprint records its own wind, so adding or removing a wind speed
-% never invalidates the calm-sea designs or the other winds.
-drop = {'output','run','plot','cache','root','paths','profile','metrics'};
+% Paths, run control, plotting, post-processing statistics and the grid
+% LISTS are excluded: every condition / design fingerprint records its own
+% wind and height, so adding a wind or a height never invalidates the others.
+drop = {'output','run','plot','cache','root','paths','profile','metrics','rank','main'};
 p = rmfield(c,intersect(fieldnames(c),drop));
-if isfield(p,'sea') && isfield(p.sea,'windsMps')
-    p.sea = rmfield(p.sea,'windsMps');
-end
+p.sea = rmfield(p.sea,intersect(fieldnames(p.sea),{'windsMps'}));
+p.scene = rmfield(p.scene,intersect(fieldnames(p.scene),{'distancesM'}));
+p.study = rmfield(p.study,intersect(fieldnames(p.study),{'turbulence','atmosphere','powerDBm'}));
 end

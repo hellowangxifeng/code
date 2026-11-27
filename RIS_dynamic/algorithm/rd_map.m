@@ -1,13 +1,15 @@
-function I = rd_map(pk,center,halfWidth,bins)
-%RD_MAP Horizontal irradiance (W/m^2) on a square grid centred on the receiver.
-% Rows = y, columns = x, cell centres at ((1:bins)-0.5)/bins*2*halfWidth-halfWidth.
-I = zeros(bins,bins);
-if isempty(pk.power) || any(~isfinite(center)), return; end
-edges = linspace(-halfWidth,halfWidth,bins+1);
-ix = discretize(pk.xy(:,1)-center(1),edges);
-iy = discretize(pk.xy(:,2)-center(2),edges);
+function I = rd_map(pk,xEdges,yEdges)
+%RD_MAP Horizontal irradiance (W/m^2) of landed packets on a rectangular grid.
+% Rows = y cells, columns = x cells; packets outside the edges are ignored.
+nx = numel(xEdges)-1;
+ny = numel(yEdges)-1;
+I = zeros(ny,nx);
+if isempty(pk.power), return; end
+ix = discretize(pk.xy(:,1),xEdges);
+iy = discretize(pk.xy(:,2),yEdges);
 in = ~isnan(ix) & ~isnan(iy);
 if any(in)
-    I = accumarray([iy(in),ix(in)],pk.power(in),[bins bins])/(edges(2)-edges(1))^2;
+    I = accumarray([iy(in),ix(in)],pk.power(in),[ny nx]) / ...
+        ((xEdges(2)-xEdges(1))*(yEdges(2)-yEdges(1)));
 end
 end

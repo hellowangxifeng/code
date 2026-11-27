@@ -1,182 +1,160 @@
-function R = rd_evaluate(c,designs,training,main,incidence)
-%RD_EVALUATE Turn stored instantaneous gains into ABER / OP / CDF / tables.
-%   Light result structure R (read by the plots; no packets, no phases):
-%     R.main.aber, R.main.op       [wind x z x link x turbulence x power]
-%     R.main.meanGain, zeroFraction, scintillation, medianGainDB  [wind x z x link]
-%     R.main.cdf                   [wind x z x link x edge], gain in dB
-%     R.main.frames{wind}          time series (tilt, slope, TIR, frame ABER/OP)
-%     R.main.maps{wind}            receiver-plane irradiance (calm / snapshot / mean)
-%     R.incidence.aber, .op        [angle x {calm, wind} x z x link x power]
-%     R.summary, R.designTable, R.trainingTable, R.incidenceTable
-%   Links follow rd_schemes(); winds include the calm sea (U = 0) first.
-sch = rd_schemes();
-if strcmpi(c.training.objective,'op'), sch.names{end} = 'Sea-aware OP'; end
-if ~c.training.enabled, sch.names{end} = 'Sea-aware (= Robust ABER)'; end
-K = numel(sch.keys);
-P = c.study.powerDBm(:).';
-powerW = 10.^(P/10)/1000;
+function R = rd_evaluate(c,C)
+%RD_EVALUATE Channel statistics, scheme selection, rankings and the light result R.
+%   C{iz,iw} from rd_condition. For every condition and every fading row
+%   {ocean, atmosphere} of c.metrics.turbulence:
+%     * ABER, OP, <P_r> of every design from its complex-field gains and of
+%       the direct link from its MC gains (rd_link_metrics, same samples);
+%     * the design used by each scheme at each power (rd_select);
+%     * curves of the five schemes and the required-power ranking (rd_rank).
+%   For the main fading row the same selections are also evaluated with the
+%   MC gains of the RIS designs (validation curves).
+P = c.metrics.powerDBm;
+Pw = 10.^(P/10)/1000;
 np = numel(P);
-turbulence = c.metrics.turbulence;
-nt = size(turbulence,1);
-z = c.scene.distancesM;
-nz = numel(z);
-winds = cellfun(@(b) b.wind,main);
-nw = numel(winds);
-edges = c.metrics.cdfEdgesDB(:).';
-fixed = c.metrics.fixedPowerDBm;
-
-R = struct('config',c,'schemes',sch,'powerDBm',P,'distancesM',z,'winds',winds, ...
-    'turbulence',{turbulence});
-M = struct();
-M.aber = nan(nw,nz,K,nt,np); M.op = M.aber;
-M.meanGain = nan(nw,nz,K); M.zeroFraction = M.meanGain; M.scintillation = M.meanGain;
-M.medianGainDB = M.meanGain; M.centroidWanderM = M.meanGain;
-M.cdfEdgesDB = edges; M.cdf = nan(nw,nz,K,numel(edges));
-M.fovFloor = nan(nz,K); M.receiverCenter = nan(nz,K,2);
-M.frames = cell(1,nw); M.maps = cell(1,nw);
-M.Hs = nan(1,nw); M.maxTiltDeg = nan(1,nw); M.smallAngleValid = true(1,nw);
-rows = {};
+T = c.metrics.turbulence;
+nt = size(T,1);
+[~,design] = min(abs(P-c.metrics.designPowerDBm));
+[nz,nw] = size(C);
+keys = {'direct','steering','flat_top','robust_aber','robust_op','max_power'};
+labels = {'Direct (no RIS)','Steering-only','Flat top','Robust ABER','Robust OP','Max mean power'};
+list = cell(nz,nw);
+candidateRows = cell(nz,nw);
+validationRows = cell(nz,nw);
+rankRows = cell(nz,nw);
 for iw = 1:nw
-    b = main{iw};
-    nf = numel(b.frames.t);
-    fr = b.frames;
-    fr.meanGainFrames = nan(nf,nz,K);
-    fr.aberFrames = nan(nf,np,nz,K,'single');
-    fr.opFrames = fr.aberFrames;
-    fr.planePowerW = b.planePowerW;
-    fr.centroidXY = b.centroidXY;
     for iz = 1:nz
-        for k = 1:K
-            rx = b.receivers{iz,k};
-            if iw==1
-                M.fovFloor(iz,k) = rx.fovOutageExact;
-                M.receiverCenter(iz,k,:) = reshape(rx.center,1,1,2);
-            end
-            G = b.gain(:,:,iz,k);
-            if ~rx.available || all(isnan(G(:))), continue; end
-            for it = 1:nt
-                cc = c;
-                cc.study.turbulence = turbulence{it,1};
-                cc.study.atmosphere = turbulence{it,2};
-                mm = rd_metrics(cc,G,rx,powerW);
-                M.aber(iw,iz,k,it,:) = mm.aber;
-                M.op(iw,iz,k,it,:) = mm.op;
-                if it==1
-                    fr.aberFrames(:,:,iz,k) = single(mm.aberFrames);
-                    fr.opFrames(:,:,iz,k) = single(mm.opFrames);
-                    fr.meanGainFrames(:,iz,k) = mm.meanGainFrames;
-                end
-                rows(end+1,:) = {winds(iw),b.Hs,z(iz),string(sch.keys{k}),string(sch.names{k}), ...
-                    it,string(turbulence{it,1}),string(turbulence{it,2}), ...
-                    10*log10(max(mm.meanGain,realmin)),NaN,NaN,NaN, ...
-                    at(mm.aber,P,fixed),at(mm.op,P,fixed)}; %#ok<AGROW>
-            end
-            g = double(G(:));
-            dB = 10*log10(g);
-            M.meanGain(iw,iz,k) = mean(g);
-            M.zeroFraction(iw,iz,k) = mean(g<=0);
-            M.scintillation(iw,iz,k) = var(g)/max(mean(g)^2,realmin);
-            M.medianGainDB(iw,iz,k) = median(dB);
-            M.cdf(iw,iz,k,:) = reshape(mean(dB<=edges,1),1,1,1,[]);
-            xy = reshape(b.centroidXY(:,:,iz,k),nf,2);
-            xy = xy(all(isfinite(xy),2),:);
-            if size(xy,1)>1, M.centroidWanderM(iw,iz,k) = sqrt(sum(var(xy,1,1))); end
-            for r = size(rows,1)-nt+1:size(rows,1)
-                rows{r,10} = M.medianGainDB(iw,iz,k);
-                rows{r,11} = M.zeroFraction(iw,iz,k);
-                rows{r,12} = M.scintillation(iw,iz,k);
+        q = C{iz,iw};
+        E = q.candidates;
+        K = numel(E);
+        family = string({E.family});
+        spots = [E.spot];
+        feasible = [spots.minorRadiusM]>=c.study.minimumWidthM & ...
+            [spots.equivalentRadiusM]>=c.study.minimumWidthM & ...
+            [spots.axisRatio]<=c.study.maximumAxisRatio & [spots.r50M]>=0.02;
+        feasible(family=="steering") = true;
+        psi = double(q.psi);
+        accepted = psi<=c.study.fovHalfAngleRad;
+        curves = cell(1,nt); choices = cell(1,nt); ranks = cell(1,nt);
+        fprintf('[evaluate] U = %g m/s, z = %g m\n',q.wind,q.distanceM);
+        for t = 1:nt
+            [A,O,M] = metrics(c,E,'gainField',psi,Pw,T(t,:));
+            d = rd_link_metrics(c,q.direct.gain,psi,Pw,T{t,1},T{t,2});
+            ch = rd_select(A,O,M,family,feasible,c.metrics.policy,design);
+            curves{t} = assemble(A,O,M,d,ch);
+            choices{t} = int16(ch);
+            ranks{t} = rd_rank(curves{t},P,c);
+            if t==1
+                [AM,OM,MM] = metrics(c,E,'gainMC',psi,Pw,T(t,:));
+                mcCurves = assemble(AM,OM,MM,d,ch);
+                main = struct('A',A(:,design),'O',O(:,design),'AM',AM(:,design),'OM',OM(:,design));
             end
         end
-    end
-    M.frames{iw} = fr;
-    M.maps{iw} = struct('mean',b.meanMap,'snapshot',b.snapshotMap,'snapshotTimeS',b.snapshotTimeS, ...
-        'halfWidthM',b.mapHalfWidthM,'bins',c.maps.bins);
-    M.Hs(iw) = b.Hs;
-    if isfield(b.validity,'maxTiltDeg'), M.maxTiltDeg(iw) = b.validity.maxTiltDeg; end
-    if isfield(b.validity,'smallAngleUnder10Deg'), M.smallAngleValid(iw) = b.validity.smallAngleUnder10Deg; end
-end
-R.main = M;
-names = {'windMps','HsM','distanceM','scheme','name','turbulenceId','ocean','atmosphere', ...
-    'meanGainDB','medianGainDB','zeroFraction','scintillation','aberFixed','opFixed'};
-if isempty(rows), rows = cell(0,numel(names)); end
-R.summary = cell2table(rows,'VariableNames',names);
-R.summary.Properties.Description = sprintf('ABER/OP at %g dBm; gains pooled over frames and jitter',fixed);
-
-% ----- Designs -----
-designRows = {};
-for iz = 1:nz
-    d = designs{iz};
-    T = rd_entry_table(d.ris);
-    T.distanceM = repmat(z(iz),height(T),1);
-    designRows{end+1} = T; %#ok<AGROW>
-end
-R.designTable = vertcat(designRows{:});
-R.designs = cellfun(@(d) struct('distanceM',d.distanceM,'Z',d.Z,'screening',d.screening, ...
-    'bankTable',d.bankTable,'selected',rd_entry_table(d.ris),'direct',d.direct), ...
-    designs,'UniformOutput',false);
-
-% ----- Sea-aware training -----
-trainingRows = {};
-for iw = 1:numel(training)
-    T = training{iw};
-    for iz = 1:numel(T)
-        for j = 1:numel(T(iz).bankIds)
-            trainingRows(end+1,:) = {T(iz).windMps,T(iz).distanceM,string(T(iz).family{j}), ...
-                T(iz).widthM(j),T(iz).margin(j),T(iz).equivalentRadiusM(j),T(iz).aber(j), ...
-                T(iz).op(j),T(iz).meanGain(j),T(iz).bankIds(j)==T(iz).chosen}; %#ok<AGROW>
+        ch = choices{1};
+        picks = [0,ch(2,design,1),ch(3,design,1),ch(4,design,1),ch(4,design,2),ch(5,design,1)];
+        maps = struct('key',keys,'label',labels,'candidate',num2cell(picks), ...
+            'x',[],'y',[],'field',[],'mc',[],'spotCenter',[],'spotCovariance',[], ...
+            'meanGainField',[],'meanGainMC',[]);
+        h = q.direct.mapHalfWidthM;
+        bins = size(q.direct.map,1);
+        axisM = ((1:bins)-0.5)/bins*2*h-h;
+        maps(1).x = q.targetXY(1)+axisM; maps(1).y = q.targetXY(2)+axisM;
+        maps(1).field = q.direct.map; maps(1).mc = q.direct.map;
+        maps(1).meanGainField = mean(double(q.direct.gain(accepted)));
+        maps(1).meanGainMC = maps(1).meanGainField;
+        for j = 2:numel(maps)
+            e = E(picks(j));
+            maps(j).x = e.x; maps(j).y = e.y; maps(j).field = e.mapField; maps(j).mc = e.mapMC;
+            maps(j).spotCenter = e.spot.centerXY; maps(j).spotCovariance = e.spot.covarianceM2;
+            maps(j).meanGainField = mean(double(e.gainField(accepted)));
+            maps(j).meanGainMC = mean(double(e.gainMC(accepted)));
         end
-    end
-end
-if isempty(trainingRows), trainingRows = cell(0,10); end
-R.trainingTable = cell2table(trainingRows,'VariableNames',{'windMps','distanceM','family', ...
-    'widthM','margin','equivalentRadiusM','aber','op','meanGain','chosen'});
+        r = struct();
+        r.distanceM = q.distanceM; r.wind = q.wind; r.Z = q.Z;
+        r.targetXY = q.targetXY; r.rxRay = q.rxRay; r.q0 = q.q0; r.pose = q.pose;
+        r.fovOutageExact = q.fovOutageExact;
+        r.family = family; r.width = [E.width]; r.feasible = feasible;
+        r.curves = curves; r.mcCurves = mcCurves; r.choice = choices; r.rank = ranks;
+        r.maps = maps;
+        r.direct = rmfield(q.direct,{'gain','map'});
+        r.direct.meanGain = maps(1).meanGainField;
+        list{iz,iw} = r;
 
-% ----- Incidence sweep -----
-R.incidence = [];
-R.incidenceTable = table();
-if ~isempty(incidence.anglesDeg)
-    A = incidence.anglesDeg;
-    na = numel(A);
-    I = struct('anglesDeg',A,'windMps',incidence.windMps,'aber',nan(na,2,nz,K,np), ...
-        'op',nan(na,2,nz,K,np),'meanGain',nan(na,2,nz,K),'zeroFraction',nan(na,2,nz,K), ...
-        'ballisticTirFraction',nan(na,2),'directTransmittedW',nan(na,2), ...
-        'criticalAngleDeg',asind(c.optics.nAir/c.optics.nWater));
-    incRows = {};
-    for ia = 1:na
-        for k2 = 1:2
-            b = incidence.blocks{ia,k2};
-            I.ballisticTirFraction(ia,k2) = mean(b.frames.ballisticTirFraction);
-            I.directTransmittedW(ia,k2) = mean(b.frames.directTransmittedW);
-            for iz = 1:nz
-                for k = 1:K
-                    rx = b.receivers{iz,k};
-                    G = b.gain(:,:,iz,k);
-                    if ~rx.available || all(isnan(G(:))), continue; end
-                    mm = rd_metrics(c,G,rx,powerW);
-                    I.aber(ia,k2,iz,k,:) = mm.aber;
-                    I.op(ia,k2,iz,k,:) = mm.op;
-                    I.meanGain(ia,k2,iz,k) = mm.meanGain;
-                    I.zeroFraction(ia,k2,iz,k) = mean(G(:)<=0);
-                    incRows(end+1,:) = {A(ia),b.wind,z(iz),string(sch.keys{k}), ...
-                        10*log10(max(mm.meanGain,realmin)),I.zeroFraction(ia,k2,iz,k), ...
-                        at(mm.aber,P,fixed),at(mm.op,P,fixed)}; %#ok<AGROW>
-                end
+        gF = arrayfun(@(e) mean(double(e.gainField(accepted))),E);
+        gM = arrayfun(@(e) mean(double(e.gainMC(accepted))),E);
+        candidateRows{iz,iw} = table(repmat(q.wind,K,1),repmat(q.distanceM,K,1),(1:K).', ...
+            family.',[E.width].',feasible.',[spots.equivalentRadiusM].',[spots.minorRadiusM].', ...
+            [spots.axisRatio].',[spots.r50M].',[spots.r90M].',[E.saturatedPowerFraction].', ...
+            [E.maxCommandDeg].',gF.',gM.',(gM./gF-1).',[E.outsideMapFraction].', ...
+            ([E.beamletTruncatedPowerW]./[E.pupilPowerW]).', ...
+            arrayfun(@(e) e.coherenceRingPowerW(1)/max(e.mapPowerW,realmin),E).', ...
+            [E.mapPowerW].',[E.mcMapPowerW].',main.A,main.AM,main.O,main.OM,[E.elapsedSeconds].', ...
+            'VariableNames',{'windMps','distanceM','design','family','targetWidthM','feasible', ...
+            'equivalentRadiusM','minorRadiusM','axisRatio','r50M','r90M','saturatedPowerFraction', ...
+            'maxCommandDeg','meanGainField','meanGainMC','relativeDifferenceMC','outsideMapFraction', ...
+            'beamletTruncatedFraction','ring1CrossPowerFraction','mapPowerFieldW','mapPowerMCW', ...
+            'aberFieldAtDesign','aberMCAtDesign','opFieldAtDesign','opMCAtDesign','elapsedSeconds'});
+        ids = picks(2:end).';
+        validationRows{iz,iw} = table(repmat(q.wind,5,1),repmat(q.distanceM,5,1), ...
+            string(keys(2:end)).',ids,gF(ids).',gM(ids).',(gM(ids)./gF(ids)-1).', ...
+            [main.A(ids(1:3));main.O(ids(4));main.A(ids(5))], ...
+            [main.AM(ids(1:3));main.OM(ids(4));main.AM(ids(5))], ...
+            'VariableNames',{'windMps','distanceM','scheme','design','meanGainField','meanGainMC', ...
+            'relativeDifferenceMC','riskFieldAtDesign','riskMCAtDesign'});
+        rows = cell(nt,1);
+        for t = 1:nt
+            parts = cell(2,1);
+            for k = 1:2
+                name = {'aber','op'};
+                rk = ranks{t}.(name{k});
+                parts{k} = table(repmat(q.wind,5,1),repmat(q.distanceM,5,1),repmat(t,5,1), ...
+                    repmat(string(T{t,1}),5,1),repmat(string(T{t,2}),5,1),repmat(string(upper(name{k})),5,1), ...
+                    (1:5).',rk.requiredDBm(:),ismember((1:5).',rk.winners),repmat(rk.clear,5,1), ...
+                    repmat(rk.gainOverSteeringDB,5,1),repmat(rk.gainOverDirectDB,5,1), ...
+                    'VariableNames',{'windMps','distanceM','turbulenceId','ocean','atmosphere', ...
+                    'metric','scheme','requiredDBm','winner','clear','bestGainOverSteeringDB', ...
+                    'bestGainOverDirectDB'});
             end
+            rows{t} = vertcat(parts{:});
         end
+        rankRows{iz,iw} = vertcat(rows{:});
     end
-    R.incidence = I;
-    if ~isempty(incRows)
-        R.incidenceTable = cell2table(incRows,'VariableNames',{'incidenceDeg','windMps', ...
-            'distanceM','scheme','meanGainDB','zeroFraction','aberFixed','opFixed'});
-    end
-    R.incidenceDesigns = incidence.designs;
+end
+R = struct();
+R.version = c.version;
+R.created = char(datetime('now','Format','yyyy-MM-dd HH:mm:ss'));
+R.config = c;
+R.powerDBm = P;
+R.designPowerDBm = P(design);
+R.distancesM = c.scene.distancesM;
+R.winds = c.sea.windsMps;
+R.mainIndex = [find(R.distancesM==c.main.distanceM,1),find(R.winds==c.main.windMps,1)];
+R.turbulence = T;
+R.schemeNames = {'Direct (no RIS)','Steering-only','Flat top','Robust ABER/OP','Max mean power'};
+R.schemeShort = {'Dir','Str','Flat','Rob','MaxP'};
+R.cond = reshape([list{:}],nz,nw);
+R.candidateTable = vertcat(candidateRows{:});
+R.validationTable = vertcat(validationRows{:});
+R.rankTable = vertcat(rankRows{:});
+schemes = string(R.schemeNames).';
+R.rankTable.schemeName = schemes(R.rankTable.scheme);
+end
+
+function [A,O,M] = metrics(c,E,field,psi,Pw,row)
+K = numel(E);
+A = zeros(K,numel(Pw)); O = A; M = A;
+for k = 1:K
+    m = rd_link_metrics(c,E(k).(field),psi,Pw,row{1},row{2});
+    A(k,:) = m.aber; O(k,:) = m.op; M(k,:) = m.meanPowerW;
 end
 end
 
-function v = at(curve,P,fixed)
-curve = double(curve(:)).';
-ok = isfinite(curve);
-v = NaN;
-if nnz(ok)<2, return; end
-v = 10.^interp1(P(ok),log10(max(curve(ok),1e-300)),fixed,'linear',NaN);
+function cv = assemble(A,O,M,d,ch)
+np = size(A,2);
+cv = struct('aber',zeros(5,np),'op',zeros(5,np),'meanPowerW',zeros(5,np));
+cv.aber(1,:) = d.aber; cv.op(1,:) = d.op; cv.meanPowerW(1,:) = d.meanPowerW;
+for s = 2:5
+    ia = sub2ind(size(A),ch(s,:,1),1:np);
+    io = sub2ind(size(A),ch(s,:,2),1:np);
+    cv.aber(s,:) = A(ia); cv.op(s,:) = O(io); cv.meanPowerW(s,:) = M(ia);
+end
 end

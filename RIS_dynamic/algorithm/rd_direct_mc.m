@@ -5,7 +5,7 @@ function air = rd_direct_mc(c,g,sea,seed)
 %   transports them through the water column (implicit capture, HG phase
 %   function, Russian roulette, source-plane back escape, path/scatter caps)
 %   until their FIRST upward crossing of the boundary z = eta(x,y,t) given by
-%   sea (RD_SURFACE for the rough sea, RD_FLAT_SURFACE for the calm sea).
+%   sea (RD_SURFACE: the frozen sea of RD_SCENE; a zero-amplitude sea is still water).
 %
 %   At the crossing point the local normal n = [-grad eta, 1]/|.| gives
 %     q = n_w |d - (d.n) n|          (tangential wave vector / k0)
