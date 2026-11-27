@@ -214,7 +214,7 @@ plot_ris_dynamic('results/ris_dynamic.mat',struct('curveWinds',[0 4 6],'formats'
 |---|---|---|
 | `c.scene.distancesM` | `[7.5 10]` | 接收面高度（板上表面以上，m） |
 | `c.scene.incidenceDeg` | 40 | 水中入射角，方位角沿用 RIS_phase |
-| `c.sea.windsMps` | `[2 3 4 5 6]` | 风速；静水 $U=0$ 自动加在最前 |
+| `c.sea.windsMps` | `[3 4 5 6]` | 风速，`RIS_float` 只接受 3–25 m/s；静水 $U=0$ 自动加在最前 |
 | `c.sea.windDirectionDeg` | 50 | 风向（与 W_RIS/RIS_phase 一致） |
 | `c.ris.duration / dt` | 30 s / 0.05 s | 每个风速的运动时长与积分步长 |
 | `c.dynamic.frameStepS` | 0.5 s | 光学帧间隔，61 帧 |
@@ -252,7 +252,7 @@ plot_ris_dynamic('results/ris_dynamic.mat',struct('curveWinds',[0 4 6],'formats'
 
 ## 7. 计算量（估计，未实测）
 
-production 的耗时主要来自：5 个风速 × 61 帧 × 2 条 MC（各 5×10⁵ 包，直达链路还要做海面穿越搜索），以及每帧 14 次接收机截获。按经验估计为数小时量级，入射角扫描再加约 1–2 小时。建议先看 smoke 的 `run_log.txt` 中每帧耗时再外推。时间不够时可以优先减少 `c.sea.windsMps`、增大 `c.dynamic.frameStepS`，或者关掉 `c.incidence.enabled`。
+production 的耗时主要来自：4 个风速 × 61 帧 × 2 条 MC（各 5×10⁵ 包，直达链路还要做海面穿越搜索），以及每帧 14 次接收机截获。按经验估计为数小时量级，入射角扫描再加约 1–2 小时。建议先看 smoke 的 `run_log.txt` 中每帧耗时再外推。时间不够时可以优先减少 `c.sea.windsMps`、增大 `c.dynamic.frameStepS`，或者关掉 `c.incidence.enabled`。
 
 ---
 

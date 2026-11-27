@@ -15,7 +15,7 @@ doPlot    = true;
 %% ---------------- parameters (defaults in algorithm/rd_config.m) ----------------
 c = rd_config(profile);
 % c.scene.distancesM     = [7.5 10];        % receiver heights (m)
-% c.sea.windsMps         = [2 3 4 5 6];     % sea states (calm U = 0 is always added)
+% c.sea.windsMps         = [3 4 5 6];       % sea states, 3-25 m/s (calm U = 0 is always added)
 % c.dynamic.frameStepS   = 0.5;             % optical frame step (s)
 % c.ris.duration         = 30;              % motion record per wind (s)
 % c.dynamic.photons      = 5e5;             % MC packets per link and frame

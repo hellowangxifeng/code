@@ -32,7 +32,7 @@ c.receiver.pilotFrames = 12;            % rough-sea frames used for pilot alignm
 c.receiver.pilotPhotons = 1e5;
 
 %% Sea states: one directional sea per wind drives the RIS AND the direct surface
-c.sea.windsMps = [2 3 4 5 6];           % wind speeds (m/s); calm sea is added as U = 0
+c.sea.windsMps = [3 4 5 6];             % wind speeds (m/s), RIS_float range 3-25; calm U = 0 is added
 c.sea.windDirectionDeg = 50;            % as W_RIS / RIS_phase conditions
 c.ris.windAngleDeg = c.sea.windDirectionDeg;
 c.ris.duration = 30;                    % s of six-DOF motion per wind
