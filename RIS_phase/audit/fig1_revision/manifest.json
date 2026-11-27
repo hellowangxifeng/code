@@ -1,0 +1,68 @@
+{
+  "status": "passed",
+  "scope": "Fig1 revision only",
+  "tests": 24,
+  "code_issues": 0,
+  "visual_review": "passed; final PNG viewed after standalone rebuild",
+  "input_study_sha256": "5d41536c26cd9b48555b7b6ea601a39e46f7b0854a609f1ee97bcb9ffb147e48",
+  "original_optical_input_signature": "e14bb04435d0367608a4a0824ca16d6e1eaddd9ccb8afc9727583e3443b026ec",
+  "unchanged_ris_maps": "all 9 wave and spot structs compared exactly to saved study inputs in MATLAB",
+  "sources": {
+    "rp_mc_water_air.m": "1145eecfc9d5f580b11f97d2406acc0f7d7195746cb8027e01a297720234e5b0",
+    "rp_spot_ellipse.m": "bfd0b38734fb7b9c2171427860e84f0d1083b5c9c8f076f21ed2389cb353059f",
+    "Fig1PhysicsTest.m": "55997b83684c08f2bfdea00570f038de7ecc1dc55a55738ceac4e144e2aa7bd8",
+    "run_fig1_revision.m": "93cb7cba839f480fa81a4483e032fa01a995835ae3351020049c8a21509d647b",
+    "plots/rp_fig1_mc_map.m": "841dd16b093036bf06f6820e965965eccacc822dd4e540d7863708143c1f8a7d",
+    "plots/rp_stage2_plot_irradiance.m": "fe7f2b47e9bf6b28c9a4bfc7a7c2192414a2076290c00af3c10716983b83d29f",
+    "plots/rp_stage2_graphics_audit.m": "a2c41e07d9ae0bc540315a6c4b77cab50fd2d1894eaeb98c9e3ad99ef13c6311",
+    "plots/rp_stage2_report.m": "5000b7cf95daa5098b176ef25cd16a2e3bbebd096ab3883aa6f21163e804d7dc",
+    "audit/fig1_revision/verify_fig1_revision.m": "7ed80a45967494677641a8729302ad225df921ba2e29b90baa0b9c6edf8d0251"
+  },
+  "outputs": {
+    "Fig1_irradiance.png": "cabdac38980b389b2411457f03f4d7af5046dee8e2f6c1e33116001eba3dc222",
+    "Fig1_irradiance.fig": "efaeb3e23f0cba8e82d7c1fbe2842edc7c18f69af0d03f3d7710e3adcabb1a38",
+    "Fig1_data.mat": "318fec499a01fc6188419d4bfed7dc46b2505c8fd8cbdb945c4835199aa9d0c4",
+    "Fig1_summary.csv": "33c503b3ae2edacd34eb084947f08a98855e9468c23fa682f202325099541770"
+  },
+  "removed_redundancy": [
+    "scalar equivalent-radius circle drawing",
+    "solid black contour outline",
+    "white double-stroke cross drawing",
+    "zero-phase tiled-RIS branch in Fig1"
+  ],
+  "temporary_files_removed": [
+    {
+      "path": "plots\\stage2\\Fig1_preview.png",
+      "sha256": "6a114a789e2abaa5533fa73072e7605f12fe48d850980671c209cf77aeab6f43",
+      "reason": "temporary preview superseded by verified final 300 dpi output"
+    }
+  ],
+  "current_readme_sha256": "ef1ece0d8dcd3dd5a6c185db01ba229b9ec6319dd285b0ed8b6ba2f7a56ea804",
+  "historical_stage2_artifact_audit": "not applicable to this revision: README was revised at 19:05 before this goal began; its original-stage SHA assertion intentionally remains unchanged",
+  "requirement_evidence": {
+    "ellipse_algorithm_and_dashes": [
+      "rendered_ellipses.csv",
+      "verification.json",
+      "tests.csv"
+    ],
+    "complete_display_and_all_MC_tails": [
+      "display_verification.csv",
+      "mc_verification.csv",
+      "VISUAL_QA.md"
+    ],
+    "bare_water_air_MC_and_lower_peak": [
+      "Fig1_summary.csv",
+      "verification.json",
+      "tests.csv"
+    ],
+    "same_three_RIS_inputs": [
+      "bitwise MATLAB wave/spot comparison against study.mat; all 9 original maps unchanged"
+    ],
+    "old_redundant_Fig1_code_removed": [
+      "scalar equivalent-radius circle drawing",
+      "solid black contour outline",
+      "white double-stroke cross drawing",
+      "zero-phase tiled-RIS branch in Fig1"
+    ]
+  }
+}

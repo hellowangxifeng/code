@@ -1,0 +1,276 @@
+PAGE 1
+IEEE INTERNET OF THINGS JOURNAL, VOL. 13, NO. 4, 15 FEBRUARY 2026
+7119
+Deep Learning for Dynamic Slant Channel
+Modeling in Underwater Wireless
+Optical Communications
+Dongling Xu , Xiang Yi , Senior Member, IEEE, Anna Maria Vegni , Senior Member, IEEE,
+Yalc¸ın Ata , Senior Member, IEEE, and Peng Yue , Member, IEEE
+Abstract—Underwater
+wireless
+optical
+communication
+(UWOC) enables high-speed, low-latency links for the Internet
+of Underwater Things (IoUT), but remains highly vulnerable to
+complex and dynamic channel impairments. In practice, slant
+transmission paths frequently occur due to spatial oﬀsets between
+underwater sensors and marine surface vehicles (MSVs), where
+the link quality is jointly aﬀected by MSV-induced misalignment,
+depth-dependent attenuation, and oceanic turbulence. Most
+existing models address these factors independently or under
+static assumptions, limiting their applicability. To address this
+challenge, this article proposes a novel modeling and simulation
+framework that jointly captures the coupled eﬀects of dynamic
+posture,
+stratiﬁed
+absorption
+and
+scattering,
+and
+spatially
+varying turbulence along slant UWOC paths. A parallelized
+wave optics simulation (WOS) platform is developed using
+Argo ﬂoat data to reﬂect realistic ocean conditions. Leveraging
+this dataset, a convolutional neural network-based fast channel
+simulation method (CNN-FCSM) is designed, achieving over
+98% prediction accuracy of received optical intensity, while
+reducing runtime by more than 90% compared with WOS.
+Comprehensive
+evaluations
+demonstrate
+that
+the
+proposed
+approach enables accurate and scalable estimation of average
+bit error rate (ABER) and outage probability (OP) without
+relying on predeﬁned statistical fading models, oﬀering a robust
+tool for dynamic UWOC analysis and IoUT system design in
+complex underwater environments.
+Index Terms—Channel characterization, convolutional neural
+network (CNN), performance prediction, slant underwater opti-
+cal communication.
+I. INTRODUCTION
+O
+CEANS cover 71% of Earth and hold vast potential;
+yet, 95% remains unexplored, underscoring the need for
+sustainable marine exploration. With the rapid growth of the
+Received
+13
+October
+2025;
+revised
+12
+November
+2025;
+accepted 24 November 2025. Date of publication 28 November 2025;
+date of current version 5 February 2026. This work was supported in part
+by the National Key Research and Development Program of China under
+Grant 2022YFC2808101; in part by the National Natural Science Foundation
+of China under Grant 61505155 and Grant 62071385; and in part by the
+PRIN 2022 LAGO-ON (Optical Wireless Undewater Positioning for Marine
+Monitoring) Project, funded by Italian Ministry of University and Research.
+(Corresponding author: Peng Yue.)
+Dongling Xu, Xiang Yi, and Peng Yue are with the State Key Laboratory
+of Integrated Service Networks, Xidian University, Xi’an, Shaanxi 710071,
+China (e-mail: pengy@xidian.edu.cn).
+Anna Maria Vegni is with the Department of Industrial, Electronics and
+Mechanical Engineering, Roma Tre University, 00146 Rome, Italy.
+Yalc¸ın Ata is with the Department of Electrical and Electronics Engineering,
+OSTIM Technical University, Yenimahalle, 06374 Ankara, Turkey, and also
+with SCOPT Inc., Boston, MA 02108 USA.
+Digital Object Identiﬁer 10.1109/JIOT.2025.3638694
+Internet of Underwater Things (IoUT), sensing data volumes
+are rapidly increasing, exceeding the capacity of traditional
+acoustic links due to limited bandwidth and high latency [1].
+To overcome these constraints, underwater wireless optical
+communication (UWOC) has emerged as a promising solution,
+oﬀering high data rate, low latency, and secure transmission
+[2]. UWOC is particularly critical for real-time data oﬄoading
+from deep-sea nodes to surface gateways, though establishing
+reliable long-range links remains a major challenge.
+UWOC channels are highly vulnerable to dynamic and slant
+transmission conditions that undermine link reliability. Plat-
+form motion and water currents cause frequent misalignment,
+while slant paths extend propagation distance and intensify
+fading and attenuation [3]. These eﬀects collectively degrade
+signal quality, underscoring the need for channel models that
+explicitly account for dynamic and slant conditions in IoUT
+deployment.
+A. Related Works
+Most prior works on UWOC channel modeling have
+focused on ﬁxed transmission conﬁgurations, particularly
+horizontal and vertical links. Horizontal conﬁgurations are
+typical for near-ground sensor networks, where the trans-
+mitter and receiver are positioned at the same depth. The
+absence of vertical variability allows for simpliﬁed mod-
+eling of turbulence-induced fading, such as log-normal,
+gamma–gamma, K, and exponentiated Weibull distribution
+[4], [5], [6], [7]. Vertical UWOC modeling has also received
+attention, particularly in the context of depth-dependent atten-
+uation and turbulence. Several studies have investigated light
+absorption and scattering using depth-varying chlorophyll-
+based models [8], [9], leading to analytical impulse response
+ﬁtting using various parametric distributions, such as double
+gamma [10], beta prime [11], a combination of exponential
+and arbitrary power function [12]. Many studies approxi-
+mate the vertical turbulence link as a series of horizontally
+uniform layers and apply identical fading statistics across
+them [13], [14], [15], [16], [17]. However, this approach
+overlooks the cumulative and correlated nature of wavefront
+distortion through stratiﬁed turbulence. Despite these eﬀorts,
+the prior work has largely overlooked slant UWOC geometries,
+which are prevalent in practical deployments involving marine
+surface vehicless (MSVs) and deep-sea nodes. Such links are
+2327-4662 © 2025 IEEE. All rights reserved, including rights for text and data mining, and training of artiﬁcial intelligence and
+similar technologies. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:28:12 UTC from IEEE Xplore.  Restrictions apply. 
+
+PAGE 12
+7130
+IEEE INTERNET OF THINGS JOURNAL, VOL. 13, NO. 4, 15 FEBRUARY 2026
+water types increases with the standard deviation increasing,
+indicating that the larger the degree of MSV oﬀset is, the more
+sensitive the OP changes with the chlorophyll concentration
+of the water type.
+V. CONCLUSION
+In this article, a dynamic slant UWOC channel model that
+comprehensively accounts for depth-dependent absorption,
+scattering, slant oceanic turbulence, and the posture-induced
+misalignment is developed. To facilitate accurate light propa-
+gation modeling and reduce computational cost, we optimized
+the implementation of WOS with a parallelized algorithm.
+Given the inherent mathematical complexity of the WOS
+approach, we proposed a DL-based CNN-FCSM. It is impor-
+tant to emphasize that the proposed CNN-FCSM is not
+designed for channel optimization, but rather for computa-
+tional acceleration of multiparameter physical simulations. The
+CNN-FCSM serves as a physics-informed surrogate model that
+rapidly predicts received optical intensity across diverse envi-
+ronmental and geometric conﬁgurations without the need for
+iterative optical simulation. Unlike purely data-driven closed
+box models, the proposed CNN-FCSM is trained on datasets
+generated by WOS with input parameters taken from Argo
+ﬂoat measurements. This ensures that the model captures both
+theoretical rigor and measurement-informed realism. The pro-
+posed CNN-FCSM reduces computational cost by over 90%
+compared with WOS while maintaining above 98% prediction
+accuracy, making it an eﬃcient tool for UWOC performance
+evaluation. Its predictions closely match WOS-derived OP
+and ABER results, conﬁrming its reliability and suitability
+for real-time, power-constrained IoUT applications. While
+the present study focuses on simulation-based validation, we
+fully recognize the importance of experimental veriﬁcation for
+practical deployment. To this end, we are currently developing
+an experimental test platform for dynamic slant-path UWOC.
+In future work, we will use the measured data to further
+validate and reﬁne the CNN-FCSM predictions, extending
+the framework toward a comprehensive simulation-experiment
+hybrid model for UWOC system evaluation.
+REFERENCES
+[1]
+R. Jason, E. Sartor, and J. Lipton, “Underwater opportunities,” Nature
+Photon., vol. 17, no. 9, p. 733, 2023.
+[2]
+S. Guan, J. Wang, C. Jiang, R. Duan, Y. Ren, and T. Q. S. Quek,
+“MagicNet: The maritime giant cellular network,” IEEE Commun. Mag.,
+vol. 59, no. 3, pp. 117–123, Mar. 2021.
+[3]
+A. S. Abrar and M. S. D. Rani, “Underwater visible light communi-
+cation: Recent advancements and channel modeling,” J. Opt., p. 1617,
+Jul. 2025.
+[4]
+X. Yi, Z. Li, and Z. Liu, “Underwater optical communication perfor-
+mance for laser beam propagation through weak oceanic turbulence,”
+Appl. Opt., vol. 54, no. 6, pp. 1273–1278, 2015.
+[5]
+M. Sharifzadeh and M. Ahmadirad, “Performance analysis of underwater
+wireless optical communication systems over a wide range of optical
+turbulence,” Opt. Commun., vol. 427, pp. 609–616, Nov. 2018.
+[6]
+Y. Fu and Y. Du, “Performance of heterodyne diﬀerential phase-
+shift-keying underwater wireless optical communication systems in
+Gamma–Gamma-distributed turbulence,” Appl. Opt., vol. 57, no. 9,
+pp. 2057–2063, 2018.
+[7]
+X. Xu, Y. Li, P. Huang, M. Ju, and G. Tan, “BER performance of
+UWOC with APD receiver in wide range oceanic turbulence,” IEEE
+Access, vol. 10, pp. 25203–25218, 2022.
+[8]
+L. J. Johnson, R. J. Green, and M. S. Leeson, “Underwater optical
+wireless communications: Depth dependent variations in attenuation,”
+Appl. Opt., vol. 52, no. 33, pp. 7867–7873, 2013.
+[9]
+L. J. Johnson, R. J. Green, and M. S. Leeson, “The impact of link
+orientation in underwater optical wireless communication systems,” in
+Proc. Oceans - St. John’s, Sep. 2014, pp. 1–8.
+[10] S. Tang, Y. Dong, and X. Zhang, “Impulse response modeling for under-
+water wireless optical communication links,” IEEE Trans. Commun.,
+vol. 62, no. 1, pp. 226–234, Jan. 2014.
+[11] R. Boluda-Ruiz, P. Rico-Pinazo, B. Castillo-V´azquez, A. Garc´ıa-
+Zambrana, and K. Qaraqe, “Impulse response modeling of underwater
+optical scattering channels for wireless communication,” IEEE Photon.
+J., vol. 12, no. 4, pp. 1–14, Aug. 2020.
+[12] Y. Li, M. S. Leeson, and X. Li, “Impulse response modeling for
+underwater optical wireless channels,” Appl. Opt., vol. 57, no. 17,
+pp. 4815–4823, 2018.
+[13] R. Sharma and Y. N. Trivedi, “Performance analysis of vertical multihop
+cooperative underwater visible light communication system with imper-
+fect channel state information,” Opt. Eng., vol. 61, no. 4, Apr. 2022,
+Art. no. 046106.
+[14] M. Elamassie and M. Uysal, “Vertical underwater VLC links over
+cascaded gamma-gamma turbulence channels with pointing errors,” in
+Proc. IEEE Int. Black Sea Conf. Commun. Netw. (BlackSeaCom), Jun.
+2019, pp. 1–5.
+[15] M. Elamassie and M. Uysal, “Vertical underwater visible light com-
+munication links: Channel modeling and performance analysis,” IEEE
+Trans. Wireless Commun., vol. 19, no. 10, pp. 6948–6959, Oct. 2020.
+[16] Y. Lou, J. Cheng, D. Nie, and G. Qiao, “Performance of vertical
+underwater wireless optical communications with cascaded layered
+modeling,” IEEE Trans. Veh. Technol., vol. 71, no. 5, pp. 5651–5655,
+May 2022.
+[17] Z. Rahman, N. V. Tailor, S. M. Zafaruddin, and V. K. Chaubey, “Uniﬁed
+performance assessment of optical wireless communication over multi-
+layer underwater channels,” IEEE Photon. J., vol. 14, no. 5, pp. 1–14,
+Oct. 2022.
+[18] X. Ji, H. Yin, L. Jing, Y. Liang, and J. Wang, “Modeling and per-
+formance analysis of oblique underwater optical communication links
+considering turbulence eﬀects based on seawater depth layering,” Opt.
+Exp., vol. 30, no. 11, pp. 18874–18888, 2022.
+[19] I. C. Ijeh, M. A. Khalighi, and S. Hranilovic, “Parameter optimiza-
+tion for an underwater optical wireless vertical link subject to link
+misalignments,” IEEE J. Ocean. Eng., vol. 46, no. 4, pp. 1424–1437,
+Oct. 2021.
+[20] I. C. Ijeh, M. A. Khalighi, M. Elamassie, S. Hranilovic, and M. Uysal,
+“Outage probability analysis of a vertical underwater wireless optical
+link subject to oceanic turbulence and pointing errors,” J. Opt. Commun.
+Netw., vol. 14, no. 6, pp. 439–453, Jun. 2022.
+[21] Y. Dong, S. Tang, and X. Zhang, “Eﬀect of random sea surface on
+downlink underwater wireless optical communications,” IEEE Commun.
+Lett., vol. 17, no. 11, pp. 2164–2167, Nov. 2013.
+[22] I. C. Ijeh, O. Haddad, and M. Ali Khalighi, “Ergodic capacity of
+a vertical underwater wireless optical communication link subject to
+misalignment,” in Proc. 4th West Asian Symp. Opt. Millimeter-wave
+Wireless Commun. (WASOWC), May 2022, pp. 1–5.
+[23] H. Zhang, Y. Dong, and L. Hui, “On capacity of downlink underwater
+wireless optical MIMO systems with random sea surface,” IEEE Com-
+mun. Lett., vol. 19, no. 12, pp. 2166–2169, Dec. 2015.
+[24] A. S. Ghazy, S. Hranilovic, and M.-A. Khalighi, “Angular MIMO
+for underwater wireless optical communications: Link modeling and
+tracking,” IEEE J. Ocean. Eng., vol. 46, no. 4, pp. 1391–1407, Oct.
+2021.
+[25] Y. M. Shishter, R. Young, and F. H. Ali, “Modelling the intensity
+distribution of underwater optical wave propagation in the presence of
+turbulence and air bubbles,” Optik, vol. 270, Nov. 2022, Art. no. 170006.
+[26] H. M. Oubei et al., “Simple statistical channel model for weak
+temperature-induced turbulence in underwater wireless optical commu-
+nication systems,” Opt. Lett., vol. 42, no. 13, pp. 2455–2458, 2017.
+[27] M. V. Jamali et al., “Statistical studies of fading in underwater wire-
+less optical channels in the presence of air bubble, temperature, and
+salinity random variations,” IEEE Trans. Commun., vol. 66, no. 10,
+pp. 4706–4723, Oct. 2018.
+[28] E. Zedini, H. M. Oubei, A. Kammoun, M. Hamdi, B. S. Ooi, and M.-
+S. Alouini, “Uniﬁed statistical channel model for turbulence-induced
+fading in underwater wireless optical communication systems,” IEEE
+Trans. Commun., vol. 67, no. 4, pp. 2893–2907, Apr. 2019.
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:28:12 UTC from IEEE Xplore.  Restrictions apply. 

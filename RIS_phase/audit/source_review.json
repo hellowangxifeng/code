@@ -1,0 +1,1992 @@
+[
+  {
+    "path": "RIS_phase\\README.md",
+    "lines": 49,
+    "headings": [
+      "## 1. RIS 器件的基本参数",
+      "## 2. 任务目标"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "RIS_phase\\RIS_phase_BSF复光场与双曲正切相位推导.md",
+    "lines": 314,
+    "headings": [
+      "# BSF 入射复光场、双曲正切梯度调相与 RX 完整场",
+      "## 1. 坐标、归一化与入射场",
+      "## 2. 从下表面传播至玻璃内 LC 屏",
+      "## 3. 图一与图二的梯度和曲率",
+      "### 二维可积扩展",
+      "## 4. 相位屏如何同时调控弹道与散射",
+      "## 5. RX 处完整复光场：散射 + 非散射",
+      "### 5.1 给定散射相干模式时的完整实现",
+      "### 5.2 非相干散射集合下的平均接收强度",
+      "## 6. 本次对比口径"
+    ],
+    "project_calls": [
+      "rp_compare_fresnel_line",
+      "rp_compare_models",
+      "rp_config",
+      "rp_plot",
+      "rp_run",
+      "rp_setup"
+    ]
+  },
+  {
+    "path": "RIS_phase\\RIS_phase_水下湍流与相干散斑建模说明.md",
+    "lines": 822,
+    "headings": [
+      "# RIS_phase：水下湍流、波前畸变与相干散斑的建模方法",
+      "## 第一步：明确需要增加的计算",
+      "## 第二步：理解光强、相位和复场",
+      "### 2.1 光强记录能量，相位记录振荡状态",
+      "### 2.2 相干计算为什么需要相位",
+      "### 2.3 波前和波前畸变",
+      "### 2.4 相干性取决于光源和探测条件",
+      "## 第三步：理解湍流怎样改变光",
+      "### 3.1 折射率在空间和时间上变化",
+      "### 3.2 折射率起伏首先改变累积相位",
+      "### 3.3 相位变化在传播中转化为光强变化",
+      "### 3.4 湍流和颗粒散射应分别描述",
+      "## 第四步：确认现有代码需要替换的位置",
+      "## 第五步：先确定湍流模型的输入",
+      "### 5.1 需要描述的是空间统计",
+      "### 5.2 参数分成四组",
+      "### 5.3 怎样选择水下功率谱",
+      "## 第六步：由水体统计生成随机相位屏",
+      "### 6.1 相位屏代表一段水体的累积作用",
+      "### 6.2 从三维谱到二维相位谱",
+      "### 6.3 生成相位屏的顺序",
+      "### 6.4 处理网格没有覆盖的低频变化",
+      "## 第七步：让光在相位屏之间传播",
+      "### 7.1 先在光束坐标中建立传播方程",
+      "### 7.2 用分步方法依次计算",
+      "### 7.3 平均介质中的传播怎样算",
+      "### 7.4 衰减应该怎样加入",
+      "### 7.5 怎样处理原来的 EGG 强度增益",
+      "## 第八步：把传播结果正确送到倾斜 RIS 上",
+      "### 8.1 近轴应相对于光轴判断",
+      "### 8.2 斜面转换必须同时处理三件事",
+      "### 8.3 水、玻璃和空气界面也要保留复场",
+      "## 第九步：重新计算 RIS 入射功率和调制后的场",
+      "### 9.1 先固定发射功率，再让接收功率自然变化",
+      "### 9.2 按实际口径积分",
+      "### 9.3 加载 RIS 相位",
+      "### 9.4 原传播器需要重新验证",
+      "## 第十步：如果需要散射光的相干散斑，继续增加什么",
+      "### 10.1 散斑来自多条相干传播贡献的叠加",
+      "### 10.2 为什么记录路径长度仍然不够",
+      "### 10.3 可以采用两种已有方向",
+      "### 10.4 使用现有散斑程序时要核对均值",
+      "### 10.5 联合湍流时要保持同一水体状态",
+      "### 10.6 什么时候可以继续加非相干散射背景",
+      "## 第十一步：确定 RIS 是一次调相，还是实时补偿",
+      "### 11.1 建立湍流模型与补偿湍流是两项工作",
+      "### 11.2 保持当前“一次调相”的研究要求",
+      "### 11.3 实时补偿怎样获得所需相位",
+      "### 11.4 当前器件只能实现受限的空间相位",
+      "### 11.5 纯相位补偿的范围",
+      "## 第十二步：建立时间变化和探测平均",
+      "### 12.1 独立随机状态适合计算分布",
+      "### 12.2 可检验冻结流近似",
+      "### 12.3 控制必须快于有效信道变化",
+      "### 12.4 探测器记录的是空间和时间积分",
+      "## 第十三步：重新定义湍流下的覆盖结果",
+      "### 13.1 保留当前面积达标条件",
+      "### 13.2 增加随机状态下的可靠性",
+      "### 13.3 同时保存功率和起伏指标",
+      "## 第十四步：按物理层次逐项验证",
+      "### 14.1 无湍流时恢复原基准",
+      "### 14.2 相位屏统计是否正确",
+      "### 14.3 无损传播是否守恒",
+      "### 14.4 传播统计是否符合选定模型",
+      "### 14.5 数值结果是否收敛",
+      "### 14.6 区分 MC 抽样误差与物理随机性",
+      "### 14.7 相干散斑需要单独验证",
+      "### 14.8 最终用测量核对物理参数",
+      "## 第十五步：按依赖顺序实施到当前工程",
+      "### 15.1 先保存无湍流基准",
+      "### 15.2 增加统一的入射复场数据",
+      "### 15.3 独立完成水下传播模块",
+      "### 15.4 接入斜面与界面传播",
+      "### 15.5 替换所有高斯场重建与功率重分配",
+      "### 15.6 按研究要求选择控制方式",
+      "### 15.7 需要时再加入相干颗粒散射",
+      "### 15.8 最后输出可解释的结果",
+      "## 依据与继续阅读"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "RIS_phase\\RIS_phase_相位调控算法_通俗重写版.md",
+    "lines": 1951,
+    "headings": [
+      "# RIS_phase 相位调控算法：从光学基础到完整计算流程（重写版）",
+      "# 一、先明确：这个程序到底在计算什么？",
+      "## 1.1 从发射机到接收机，光经历了什么",
+      "## 1.2 先分清三种不同的“光强图”",
+      "## 1.3 原方案有一个必须说明的硬件假设",
+      "# 二、MC 之外，需要先掌握的光学知识",
+      "## 2.1 波长、折射率和相位",
+      "## 2.2 为什么计算干涉需要“复振幅”",
+      "## 2.3 相位梯度为什么会改变传播方向",
+      "## 2.4 线性相位与二次相位的区别",
+      "## 2.5 折射、全反射和方向角",
+      "## 2.6 高斯光束：束腰、光斑半径、波前曲率",
+      "## 2.7 衍射与干涉：为什么 RX 上会出现条纹和旁瓣",
+      "## 2.8 傅里叶变换、Fresnel 近似、FFT 分别负责什么",
+      "# 三、计算目标：什么叫“最大圆形覆盖”？",
+      "### 为什么存在能量上界？",
+      "# 四、坐标系、折射和分层光路怎样计算",
+      "## 4.1 为什么需要两套坐标",
+      "## 4.2 在玻璃和空气中，光线怎样前进",
+      "## 4.3 已知起点、终点，怎样反推出穿过各层的方向",
+      "# 五、MC 输出如何变成 RIS 单元的输入",
+      "## 5.1 MC 给出什么",
+      "## 5.2 Fig1 的 MC 光强怎样计算",
+      "## 5.3 束腰和 RIS 处光斑为什么会差很多",
+      "## 5.4 斜入射时，为什么要画椭圆",
+      "## 5.5 RIS 单元怎样编号、哪些单元被照亮",
+      "## 5.6 每个单元的功率与参考点",
+      "# 六、RIS 怎样根据入射方向和 RX 位置计算相位",
+      "## 6.1 第一步：算出希望单元出射的方向",
+      "## 6.2 第二步：为什么要限幅、量化",
+      "## 6.3 第三步：怎样让光斑既转向又扩大",
+      "## 6.4 第四步：各单元的相位常数为什么也重要",
+      "# 七、从“期望扩束”反推二维相位曲率",
+      "## 7.1 需要的数学知识：矩阵、特征值、协方差",
+      "## 7.2 为什么还要计算光程的二阶项",
+      "## 7.3 这些二阶矩阵从哪里来",
+      "## 7.4 角度量化为什么会导致接收中心偏移",
+      "## 7.5 多个单元的接收中心怎样影响整体光斑",
+      "## 7.6 已知希望的光斑尺度，怎样求曲率矩阵",
+      "## 7.7 为什么要检查整个单元的梯度",
+      "# 八、MC 已给出光强，为什么还要构造“入射复光场”？",
+      "## 8.1 MC 能提供功率，却无法单独给出干涉所需的全部相位",
+      "## 8.2 高斯光束的相位从哪里来",
+      "## 8.3 高斯模型的功率怎样与 MC 结果一致",
+      "## 8.4 玻璃/空气界面还会损失多少功率",
+      "# 九、RIS 调相以后，怎样用波动光学计算 RX 光强",
+      "## 9.1 先理解“一个单元对 RX 的贡献”",
+      "## 9.2 写 Fresnel 积分前，需要整理一个容易重复计相位的问题",
+      "## 9.3 每个单元的 Fresnel 型波动积分",
+      "### 为什么会出现傅里叶变换？",
+      "## 9.4 程序为什么要旋转计算网格",
+      "## 9.5 为什么要检查功率守恒",
+      "## 9.6 为什么不能简单地把各单元的光强直接相加",
+      "## 9.7 接收像素为什么会平均掉部分干涉条纹",
+      "## 9.8 散射光怎样参与最终接收图",
+      "# 十、程序如何检验实际出射方向与 RX 覆盖范围",
+      "## 10.1 对每个光子使用实际加载梯度",
+      "## 10.2 怎样判断出射光能否进入空气",
+      "## 10.3 已知出射方向，怎样算 RX 平面交点",
+      "## 10.4 固定光强阈值后，怎样寻找最大圆",
+      "## 10.5 为什么还要“加密接收网格”",
+      "# 十一、目标方向可达性图究竟表示什么",
+      "## 11.1 为什么方向图的坐标轴不是“水平方向角、垂直方向角”",
+      "## 11.2 固定入射方向后，怎样计算每一个目标的理想梯度",
+      "## 11.3 四类颜色的含义和判定顺序",
+      "## 11.4 可达区域为什么经常又窄又偏",
+      "## 11.5 为什么放大图的边界看起来过于整齐或呈像素块",
+      "# 十二、实际应该怎样阅读 Fig1、Fig2 和方向图",
+      "## 12.1 Fig1：RIS 下表面的 MC 入射光强",
+      "## 12.2 Fig2：加载同一组相位后的 RX 接收光斑",
+      "## 12.3 方向可达性图：先看坐标，再看四种分类",
+      "# 十三、需要做哪些验证，才能判断算法结果可信",
+      "## 13.1 曲率关闭对照实验",
+      "## 13.2 二阶 Fresnel 近似需要额外核对",
+      "## 13.3 应该分别提高哪些数值参数",
+      "# 十四、源代码文件在整个计算链条中的位置",
+      "# 十五、把所有公式放回一条容易理解的主线",
+      "## 15.1 输入",
+      "## 15.2 一次候选相位的计算顺序",
+      "## 15.3 五个最容易混淆的问题",
+      "### 问题一：RIS 的入射相位是不是 MC 直接算出的？",
+      "### 问题二：为什么 MC 热力图没有衍射暗环，Fig2 却可能有？",
+      "### 问题三：RIS 给每个单元算一个角度，为什么还要算曲率？",
+      "### 问题四：方向可达性图的绿色区域是不是最终光斑覆盖区域？",
+      "### 问题五：为什么某个候选的理论设计半径很大，最终验证半径可能很小甚至为零？",
+      "# 十六、阅读原文和检查代码时要保持的模型边界",
+      "## 附录 A：常用符号速查",
+      "## 附录 B：本次重写与原文的对应关系"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "RIS_phase\\rp_aperture_channel.m",
+    "lines": 48,
+    "headings": [
+      "function h=rp_aperture_channel(c,g,w,center,s,options)",
+      "%RP_APERTURE_CHANNEL Tilted finite detector integral, FOV and Rayleigh jitter."
+    ],
+    "project_calls": [
+      "rp_aperture_channel",
+      "rp_gauss_legendre"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_audit.m",
+    "lines": 29,
+    "headings": [
+      "function s=rp_audit(s)",
+      "%RP_AUDIT World-z pointing, actual spot shape and incoherent scattering."
+    ],
+    "project_calls": [
+      "rp_audit"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_bsf_ballistic.m",
+    "lines": 46,
+    "headings": [
+      "function intensity = rp_bsf_ballistic(c,g,xy,height)",
+      "%RP_BSF_BALLISTIC PDF Eq.(8), including finite waist and exact ray-area mapping."
+    ],
+    "project_calls": [
+      "rp_bsf_ballistic",
+      "rp_fresnel",
+      "rp_layer_path"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_calibrate_input_field.m",
+    "lines": 12,
+    "headings": [
+      "function mc = rp_calibrate_input_field(mc,a)",
+      "%RP_CALIBRATE_INPUT_FIELD Compatibility interface; the BSF field has no fitted scale."
+    ],
+    "project_calls": [
+      "rp_calibrate_input_field"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_carrier_landing.m",
+    "lines": 23,
+    "headings": [
+      "function [xy,valid] = rp_carrier_landing(c,g,reference,q)",
+      "%RP_CARRIER_LANDING Exact layered ray from one phase-screen point to world RX plane."
+    ],
+    "project_calls": [
+      "rp_carrier_landing"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_check_config.m",
+    "lines": 65,
+    "headings": [
+      "function rp_check_config(c)",
+      "%RP_CHECK_CONFIG Check coupled physical and sampling parameters before simulation."
+    ],
+    "project_calls": [
+      "rp_check_config"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_command.m",
+    "lines": 16,
+    "headings": [
+      "function [gradient,commandDeg,saturated] = rp_command(c,ideal)",
+      "%RP_COMMAND Apply the same independent-axis clamp and quantisation to all designs."
+    ],
+    "project_calls": [
+      "rp_command"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_compare_fresnel_line.m",
+    "lines": 93,
+    "headings": [
+      "function result = rp_compare_fresnel_line(comparison)",
+      "%RP_COMPARE_FRESNEL_LINE Resolved 1-D complex diffraction, not an array RX map.",
+      "function f=integralLine(N,c,g,a,p,m,directionId)"
+    ],
+    "project_calls": [
+      "rp_compare_fresnel_line",
+      "rp_fresnel",
+      "rp_incident_field",
+      "rp_phase_profile",
+      "rp_select_stress_unit"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_compare_models.m",
+    "lines": 71,
+    "headings": [
+      "function result = rp_compare_models(c)",
+      "%RP_COMPARE_MODELS Frozen six-scene comparison; no scene-specific retuning.",
+      "function [worst,fraction]=gradientAudit(c,a,p)"
+    ],
+    "project_calls": [
+      "rp_compare_models",
+      "rp_config",
+      "rp_illuminate",
+      "rp_phase",
+      "rp_phase_profile",
+      "rp_plot_phase_comparison",
+      "rp_run",
+      "rp_trace"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_compare_wave.m",
+    "lines": 59,
+    "headings": [
+      "function result = rp_compare_wave(result,scene)",
+      "%RP_COMPARE_WAVE Full-array wave comparison in one common, explicitly saved window.",
+      "function label=stringComponent(component)"
+    ],
+    "project_calls": [
+      "rp_compare_wave",
+      "rp_footprint",
+      "rp_receiver_window",
+      "rp_wave"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_config.m",
+    "lines": 78,
+    "headings": [
+      "function c = rp_config()",
+      "%RP_CONFIG Physical, discretisation and plot parameters for finite RIS beams."
+    ],
+    "project_calls": [
+      "rp_config",
+      "rp_setup",
+      "wris_config",
+      "wris_device"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_deposit_power.m",
+    "lines": 38,
+    "headings": [
+      "function intensity=rp_deposit_power(frequency,power,c,g,reference,qCenter,lambda,x,y)",
+      "%RP_DEPOSIT_POWER Conservatively map spectral-bin power through exact layered rays."
+    ],
+    "project_calls": [
+      "rp_carrier_landing",
+      "rp_deposit_power"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_diffraction_check.m",
+    "lines": 129,
+    "headings": [
+      "function audit = rp_diffraction_check(c,panel)",
+      "%RP_DIFFRACTION_CHECK Compare the outgoing quadratic OPL against exact layered OPL.",
+      "function [exact,quadratic,receiverLocal,warped]=integralAt(N,receiver,m,c,g,a,p,ref,center)"
+    ],
+    "project_calls": [
+      "rp_diffraction_check",
+      "rp_fresnel",
+      "rp_incident_field",
+      "rp_layer_path",
+      "rp_paraxial",
+      "rp_phase_profile"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_direction_classes.m",
+    "lines": 46,
+    "headings": [
+      "function d = rp_direction_classes(c,sx,sy)",
+      "%RP_DIRECTION_CLASSES Classify local air target directions for one fixed water incidence."
+    ],
+    "project_calls": [
+      "rp_command",
+      "rp_direction_classes",
+      "rp_fresnel"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_finite_phase.m",
+    "lines": 69,
+    "headings": [
+      "function p=rp_finite_phase(c,g,a,family,width,margin,baseline)",
+      "%RP_FINITE_PHASE Quantized affine tiles, finite target transport and piston.",
+      "function v=weightedQuantile(x,w,f)"
+    ],
+    "project_calls": [
+      "rp_carrier_landing",
+      "rp_command",
+      "rp_finite_phase",
+      "rp_incident_field",
+      "rp_paraxial",
+      "rp_phase"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_footprint.m",
+    "lines": 70,
+    "headings": [
+      "function f = rp_footprint(c,g,p,w)",
+      "%RP_FOOTPRINT Measure the loaded beam; coverage is a diagnostic, never a steering target."
+    ],
+    "project_calls": [
+      "rp_footprint"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_fourier_window.m",
+    "lines": 32,
+    "headings": [
+      "function [F,fx,fy,df] = rp_fourier_window(values,spacing,padding,bounds,maximumPoints)",
+      "%RP_FOURIER_WINDOW Exact sampled Fourier integral on a selected frequency window."
+    ],
+    "project_calls": [
+      "rp_fourier_window"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_fresnel.m",
+    "lines": 13,
+    "headings": [
+      "function transmission = rp_fresnel(nFrom,nTo,q)",
+      "%RP_FRESNEL Unpolarised Fresnel power transmission, zero for TIR/invalid modes."
+    ],
+    "project_calls": [
+      "rp_fresnel"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_gauss_legendre.m",
+    "lines": 11,
+    "headings": [
+      "function [nodes,weights] = rp_gauss_legendre(order)",
+      "%RP_GAUSS_LEGENDRE Gaussian quadrature on [-1,1]."
+    ],
+    "project_calls": [
+      "rp_gauss_legendre"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_geometry.m",
+    "lines": 21,
+    "headings": [
+      "function g = rp_geometry(c,m,tx,rx,k)",
+      "%RP_GEOMETRY Freeze pose and finite-source geometry; no chief-ray aperture gate."
+    ],
+    "project_calls": [
+      "rp_geometry"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_illuminate.m",
+    "lines": 91,
+    "headings": [
+      "function a = rp_illuminate(c,g,mc)",
+      "%RP_ILLUMINATE Apply physical LC apertures, retaining Gaussian tails and scattering.",
+      "function beam=bottomEllipse(c,g)"
+    ],
+    "project_calls": [
+      "rp_bsf_ballistic",
+      "rp_fresnel",
+      "rp_gauss_legendre",
+      "rp_illuminate",
+      "rp_layer_path"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_incident_field.m",
+    "lines": 31,
+    "headings": [
+      "function f = rp_incident_field(c,g,xy,glassHeight)",
+      "%RP_INCIDENT_FIELD PDF Eq.(8) amplitude with an explicitly assumed Gaussian phase."
+    ],
+    "project_calls": [
+      "rp_bsf_ballistic",
+      "rp_incident_field",
+      "rp_layer_path"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_layer_path.m",
+    "lines": 32,
+    "headings": [
+      "function r = rp_layer_path(deltaXY,heights,indices,iterations)",
+      "%RP_LAYER_PATH Exact parallel-layer Fermat ray with variable endpoint heights."
+    ],
+    "project_calls": [
+      "rp_layer_path"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_link_metrics.m",
+    "lines": 62,
+    "headings": [
+      "function m=rp_link_metrics(c,h,powerW,order)",
+      "%RP_LINK_METRICS Conditional EGG CDF for OP; Gaussian-noise OOK for ABER.",
+      "function p=eggParameters(kind)",
+      "function F=eggCDF(x,p)",
+      "function [h,w]=eggQuadrature(p,n)",
+      "function [x,w]=laguerre(n,a)"
+    ],
+    "project_calls": [
+      "rp_link_metrics"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_link_samples.m",
+    "lines": 9,
+    "headings": [
+      "function s=rp_link_samples(c,n,seed)",
+      "%RP_LINK_SAMPLES Independent randomized Sobol samples; untruncated Gaussian tails."
+    ],
+    "project_calls": [
+      "rp_link_samples"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_mc.m",
+    "lines": 56,
+    "headings": [
+      "function mc = rp_mc(c,g)",
+      "%RP_MC Reuse underwater absorption/scattering MC and score the lower-face map."
+    ],
+    "project_calls": [
+      "rp_incident_field",
+      "rp_mc",
+      "wris_mc"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_modulated_field.m",
+    "lines": 24,
+    "headings": [
+      "function f = rp_modulated_field(c,g,a,p,unitIndex,xy)",
+      "%RP_MODULATED_FIELD Expose the ballistic phasor before/after a physical LC tile."
+    ],
+    "project_calls": [
+      "rp_incident_field",
+      "rp_modulated_field",
+      "rp_phase_profile"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_paraxial.m",
+    "lines": 29,
+    "headings": [
+      "function o = rp_paraxial(c,g,reference,targets)",
+      "%RP_PARAXIAL Exact central layered rays and canonical second-order OPL matrices."
+    ],
+    "project_calls": [
+      "rp_layer_path",
+      "rp_paraxial"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_phase.m",
+    "lines": 62,
+    "headings": [
+      "function p = rp_phase(c,g,a)",
+      "%RP_PHASE Steer each tile as close to world +z as its discrete commands allow."
+    ],
+    "project_calls": [
+      "rp_carrier_landing",
+      "rp_fresnel",
+      "rp_incident_field",
+      "rp_layer_path",
+      "rp_paraxial",
+      "rp_phase",
+      "rp_vertical_command"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_phase_profile.m",
+    "lines": 49,
+    "headings": [
+      "function f = rp_phase_profile(c,p,m,delta)",
+      "%RP_PHASE_PROFILE One scalar phase and its analytic, curl-free gradient.",
+      "function y=logCosh(x)"
+    ],
+    "project_calls": [
+      "rp_phase_profile"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_pixel_intensity.m",
+    "lines": 63,
+    "headings": [
+      "function [intensity,errorBound] = rp_pixel_intensity(fields,slopeX,slopeY,pixelSize,maxError)",
+      "%RP_PIXEL_INTENSITY Pixel-integrated coherent superposition of local plane carriers.",
+      "function value=normalisedSinc(x)"
+    ],
+    "project_calls": [
+      "rp_pixel_intensity"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_plot.m",
+    "lines": 80,
+    "headings": [
+      "function figures = rp_plot(s,style)",
+      "%RP_PLOT Draw only Fig1 MC illumination, RIS apertures and beam waist.",
+      "function drawMC(ax,p,c)",
+      "function projectedApertures(ax,p)",
+      "function value=panelTitle(p)",
+      "function fig=newFigure(c,name)",
+      "function styleAxes(ax,c)",
+      "function saveFigure(fig,c,name)",
+      "function removeTemporary(file)"
+    ],
+    "project_calls": [
+      "rp_plot"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_plot_phase_comparison.m",
+    "lines": 111,
+    "headings": [
+      "function rp_plot_phase_comparison(result)",
+      "%RP_PLOT_PHASE_COMPARISON Save editable MATLAB figures and matching PNG views.",
+      "function box=weightedBox(xy,power)",
+      "function saveFigure(fig,folder,name)"
+    ],
+    "project_calls": [
+      "rp_phase_profile",
+      "rp_plot_phase_comparison",
+      "rp_select_stress_unit"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_proxy_wave.m",
+    "lines": 29,
+    "headings": [
+      "function w=rp_proxy_wave(c,g,a,p)",
+      "%RP_PROXY_WAVE Screening only: deterministic aperture rays plus diffraction blur."
+    ],
+    "project_calls": [
+      "rp_incident_field",
+      "rp_proxy_wave",
+      "rp_trace"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_reachability.m",
+    "lines": 78,
+    "headings": [
+      "function r = rp_reachability(c)",
+      "%RP_REACHABILITY Scan local air target directions for one fixed water incidence.",
+      "function out=expandToGrid(values,inside,shape,fill)",
+      "function [window,step]=detailWindow(r,o)"
+    ],
+    "project_calls": [
+      "rp_check_config",
+      "rp_config",
+      "rp_direction_classes",
+      "rp_reachability"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_receiver_window.m",
+    "lines": 59,
+    "headings": [
+      "function window = rp_receiver_window(c,g,a,p,r)",
+      "%RP_RECEIVER_WINDOW Deterministic power envelope of the loaded phase, in world XY.",
+      "function value=weightedQuantile(x,weights,fraction)"
+    ],
+    "project_calls": [
+      "rp_bsf_ballistic",
+      "rp_layer_path",
+      "rp_receiver_window",
+      "rp_trace"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_refine_receiver.m",
+    "lines": 70,
+    "headings": [
+      "function panel = rp_refine_receiver(c,panel)",
+      "%RP_REFINE_RECEIVER Resolve small threshold circles without changing loaded phase.",
+      "function file=refinementCache(c,panel)"
+    ],
+    "project_calls": [
+      "rp_footprint",
+      "rp_refine_receiver",
+      "rp_wave"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_report.m",
+    "lines": 48,
+    "headings": [
+      "function rp_report(s)",
+      "%RP_REPORT World-z pointing and measured receiver spot, with explicit window bounds."
+    ],
+    "project_calls": [
+      "rp_report"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_run.m",
+    "lines": 12,
+    "headings": [
+      "function s = rp_run(c)",
+      "%RP_RUN Compute, validate and save. No drawing is performed here."
+    ],
+    "project_calls": [
+      "rp_audit",
+      "rp_config",
+      "rp_plot",
+      "rp_report",
+      "rp_run",
+      "rp_setup",
+      "rp_simulate",
+      "rp_validate"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_run_reachability.m",
+    "lines": 17,
+    "headings": [
+      "function r = rp_run_reachability(c)",
+      "%RP_RUN_REACHABILITY Save the fixed-incidence direction scan and its statistics."
+    ],
+    "project_calls": [
+      "rp_config",
+      "rp_reachability",
+      "rp_run_reachability"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_rx_complex_field.m",
+    "lines": 18,
+    "headings": [
+      "function f = rp_rx_complex_field(ballistic,modes,coefficients)",
+      "%RP_RX_COMPLEX_FIELD Complete RX field for explicitly supplied coherent modes."
+    ],
+    "project_calls": [
+      "rp_rx_complex_field"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_rx_motion.m",
+    "lines": 36,
+    "headings": [
+      "function rx = rp_rx_motion(c,t,nominal)",
+      "%RP_RX_MOTION Independent horizontal Gaussian axes -> Rayleigh radial offset."
+    ],
+    "project_calls": [
+      "rp_rx_motion"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_select_stress_unit.m",
+    "lines": 12,
+    "headings": [
+      "function [m,directionId] = rp_select_stress_unit(c,a,p)",
+      "%RP_SELECT_STRESS_UNIT Bright tile with an actual corner gradient violation."
+    ],
+    "project_calls": [
+      "rp_phase_profile",
+      "rp_select_stress_unit"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_setup.m",
+    "lines": 8,
+    "headings": [
+      "function rp_setup()",
+      "%RP_SETUP Add the existing motion models and this simulation to the path."
+    ],
+    "project_calls": [
+      "rp_setup"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_simulate.m",
+    "lines": 57,
+    "headings": [
+      "function s = rp_simulate(c)",
+      "%RP_SIMULATE Moving finite beams, illuminated-tile phase design and RX footprints.",
+      "function m = readMotionCache(lookup,c)"
+    ],
+    "project_calls": [
+      "rp_check_config",
+      "rp_geometry",
+      "rp_refine_receiver",
+      "rp_rx_motion",
+      "rp_simulate",
+      "rp_snapshot",
+      "wris_cached",
+      "wris_tx_motion"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_snapshot.m",
+    "lines": 47,
+    "headings": [
+      "function panel = rp_snapshot(c,g,wind)",
+      "%RP_SNAPSHOT Compute one world-z steering state and its actual receiver footprint.",
+      "function file=snapshotCacheFile(c,g,wind)"
+    ],
+    "project_calls": [
+      "rp_calibrate_input_field",
+      "rp_footprint",
+      "rp_illuminate",
+      "rp_mc",
+      "rp_phase",
+      "rp_receiver_window",
+      "rp_snapshot",
+      "rp_trace",
+      "rp_wave"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_spot_stats.m",
+    "lines": 17,
+    "headings": [
+      "function f=rp_spot_stats(w)",
+      "%RP_SPOT_STATS Power moments and energy radii, without a peak threshold."
+    ],
+    "project_calls": [
+      "rp_spot_stats"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_config.m",
+    "lines": 40,
+    "headings": [
+      "function c=rp_study_config()",
+      "%RP_STUDY_CONFIG Reproducible distance-specific finite-width receiver study."
+    ],
+    "project_calls": [
+      "rp_config",
+      "rp_study_config"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_distance.m",
+    "lines": 69,
+    "headings": [
+      "function d=rp_study_distance(c,z)",
+      "%RP_STUDY_DISTANCE Screen center margins; propagate every retained width/family."
+    ],
+    "project_calls": [
+      "rp_aperture_channel",
+      "rp_finite_phase",
+      "rp_link_metrics",
+      "rp_link_samples",
+      "rp_phase",
+      "rp_proxy_wave",
+      "rp_receiver_window",
+      "rp_setup",
+      "rp_spot_stats",
+      "rp_study_distance",
+      "rp_study_scene",
+      "rp_study_select",
+      "rp_trace",
+      "rp_wave"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_plot.m",
+    "lines": 155,
+    "headings": [
+      "function files=rp_study_plot(s,sensitivity)",
+      "%RP_STUDY_PLOT Curves and heatmaps from propagated data; no histogram bars.",
+      "function f=newFigure(sizeXY)",
+      "function style=styleFor(k)",
+      "function file=finish(f,c,stem)"
+    ],
+    "project_calls": [
+      "rp_study_plot",
+      "rp_study_sensitivity"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_report.m",
+    "lines": 99,
+    "headings": [
+      "function rp_study_report(s,sensitivity,validation)",
+      "%RP_STUDY_REPORT Complete numerical tables, actual phase commands and acceptance."
+    ],
+    "project_calls": [
+      "rp_study_report",
+      "rp_study_sensitivity"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_run.m",
+    "lines": 22,
+    "headings": [
+      "function s=rp_study_run(c)",
+      "%RP_STUDY_RUN Distance-specific, restartable coherent-wave receiver optimization."
+    ],
+    "project_calls": [
+      "rp_check_config",
+      "rp_setup",
+      "rp_study_config",
+      "rp_study_plot",
+      "rp_study_report",
+      "rp_study_run",
+      "rp_study_signature"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_scene.m",
+    "lines": 12,
+    "headings": [
+      "function [g,mc,a]=rp_study_scene(c,z)",
+      "%RP_STUDY_SCENE Static wetted board; inherited TX angle, water and beam."
+    ],
+    "project_calls": [
+      "rp_illuminate",
+      "rp_mc",
+      "rp_study_scene",
+      "wris_reference"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_select.m",
+    "lines": 35,
+    "headings": [
+      "function d=rp_study_select(c,d)",
+      "%RP_STUDY_SELECT Hard shape/width constraints and angle-slack lexicographic search."
+    ],
+    "project_calls": [
+      "rp_study_select"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_sensitivity.m",
+    "lines": 27,
+    "headings": [
+      "function sensitivity=rp_study_sensitivity(s)",
+      "%RP_STUDY_SENSITIVITY Frozen phases; independently vary three receiver errors."
+    ],
+    "project_calls": [
+      "rp_aperture_channel",
+      "rp_link_metrics",
+      "rp_link_samples",
+      "rp_study_sensitivity"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_study_signature.m",
+    "lines": 27,
+    "headings": [
+      "function key=rp_study_signature(c)",
+      "%RP_STUDY_SIGNATURE Hash all MATLAB sources and numerical configuration.",
+      "function s=rmfieldIfPresent(s,name)"
+    ],
+    "project_calls": [
+      "rp_study_signature"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_trace.m",
+    "lines": 31,
+    "headings": [
+      "function r = rp_trace(c,g,a,p)",
+      "%RP_TRACE Propagate every illuminated tile sample under its tile's phase ramp."
+    ],
+    "project_calls": [
+      "rp_fresnel",
+      "rp_phase_profile",
+      "rp_trace"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_validate.m",
+    "lines": 68,
+    "headings": [
+      "function v = rp_validate(s)",
+      "%RP_VALIDATE MC power, realizable world-z steering and measured wave coverage."
+    ],
+    "project_calls": [
+      "rp_validate",
+      "rp_vertical_command"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_verify_models.m",
+    "lines": 60,
+    "headings": [
+      "function v = rp_verify_models()",
+      "%RP_VERIFY_MODELS Independent numerical checks of the physical model identities."
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "rp_config",
+      "rp_illuminate",
+      "rp_incident_field",
+      "rp_phase_profile",
+      "rp_rx_complex_field",
+      "rp_setup",
+      "rp_verify_models"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_vertical_command.m",
+    "lines": 47,
+    "headings": [
+      "function [gradient,commandDeg,directionWorld,valid] = rp_vertical_command(c,g,qIn)",
+      "%RP_VERTICAL_COMMAND Globally closest world +z carrier on the discrete command grid."
+    ],
+    "project_calls": [
+      "rp_command",
+      "rp_vertical_command"
+    ]
+  },
+  {
+    "path": "RIS_phase\\rp_wave.m",
+    "lines": 233,
+    "headings": [
+      "function w = rp_wave(c,g,a,mc,p,r)",
+      "%RP_WAVE Per-unit canonical Fresnel integrals and detector-pixel coherent averaging.",
+      "function [field,slopeX,slopeY,pupilPower,N,padding,capped,fourierStep,sampleCounts]=unitField(c,g,a,p,m,points,power,pixelX,pixelY)"
+    ],
+    "project_calls": [
+      "rp_deposit_power",
+      "rp_fourier_window",
+      "rp_fresnel",
+      "rp_incident_field",
+      "rp_paraxial",
+      "rp_phase_profile",
+      "rp_pixel_intensity",
+      "rp_wave"
+    ]
+  },
+  {
+    "path": "RIS_phase\\run_ris_phase.m",
+    "lines": 4,
+    "headings": [
+      "%RUN_RIS_PHASE Three-distance finite-width, jitter/FOV-aware RIS link study."
+    ],
+    "project_calls": [
+      "rp_setup",
+      "rp_study_config",
+      "rp_study_run"
+    ]
+  },
+  {
+    "path": "RIS_phase\\run_ris_phase_comparison.m",
+    "lines": 5,
+    "headings": [
+      "%RUN_RIS_PHASE_COMPARISON Same-input comparison of the two supplied phase laws."
+    ],
+    "project_calls": [
+      "rp_compare_fresnel_line",
+      "rp_compare_models",
+      "rp_config",
+      "rp_setup"
+    ]
+  },
+  {
+    "path": "RIS_phase\\run_ris_reachability.m",
+    "lines": 4,
+    "headings": [
+      "%RUN_RIS_REACHABILITY Only scan target directions, without rerunning the MC model."
+    ],
+    "project_calls": [
+      "rp_config",
+      "rp_run_reachability",
+      "rp_setup"
+    ]
+  },
+  {
+    "path": "RIS_phase\\TASK_CHECKLIST.md",
+    "lines": 20,
+    "headings": [
+      "# README 执行清单（2026-11-11）"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "W_RIS\\111.pdf",
+    "pdf_pages": 4
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_ballistic.m",
+    "lines": 37,
+    "headings": [
+      "function intensity = bsf_ballistic(c, g, x, y)",
+      "%BSF_BALLISTIC Exact zero-collision ray density for the ORIGINAL Gaussian source."
+    ],
+    "project_calls": [
+      "bsf_ballistic"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_cell_average.m",
+    "lines": 22,
+    "headings": [
+      "function values = bsf_cell_average(fun, x, y, order)",
+      "%BSF_CELL_AVERAGE Area averages, with matrix convention I(ix,iy) of wris_mc."
+    ],
+    "project_calls": [
+      "bsf_cell_average",
+      "bsf_quadrature"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_compare.m",
+    "lines": 51,
+    "headings": [
+      "function metrics = bsf_compare(prediction, reference, x, y, area, modelSE, referenceSE)",
+      "%BSF_COMPARE Absolute-power, spatial, and noise-aware comparisons on SAME bins.",
+      "function covariance = covariance2(X,Y,I,mu)"
+    ],
+    "project_calls": [
+      "bsf_compare"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_export_summary.m",
+    "lines": 40,
+    "headings": [
+      "function summary = bsf_export_summary(folder)",
+      "%BSF_EXPORT_SUMMARY Write machine-readable metrics from completed panels."
+    ],
+    "project_calls": [
+      "bsf_export_summary"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_independent_ballistic.py",
+    "lines": 83,
+    "headings": [],
+    "project_calls": []
+  },
+  {
+    "path": "W_RIS\\BSF\\BSF_note.pdf",
+    "pdf_pages": 5
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_paper.m",
+    "lines": 52,
+    "headings": [
+      "function result = bsf_paper(c, g, x, y, options)",
+      "%BSF_PAPER Equation (3-18), separated analytically into Ib and Is."
+    ],
+    "project_calls": [
+      "bsf_paper"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_paper_map.m",
+    "lines": 26,
+    "headings": [
+      "function result = bsf_paper_map(c,g,x,y,order,frequencyNodes)",
+      "%BSF_PAPER_MAP Cell-averaged (3-18) with matched finite Gaussian waist."
+    ],
+    "project_calls": [
+      "bsf_paper",
+      "bsf_paper_map",
+      "bsf_quadrature"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_phase_input.m",
+    "lines": 34,
+    "headings": [
+      "function field = bsf_phase_input(c, g, x, y, phiRis)",
+      "%BSF_PHASE_INPUT Ballistic scalar Gaussian phase under an explicit coherence assumption."
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_phase_input"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_pilot.m",
+    "lines": 23,
+    "headings": [
+      "function pilot = bsf_pilot()",
+      "%BSF_PILOT Fast, reproducible numerical audit before the full 18-panel run."
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_cell_average",
+      "bsf_compare",
+      "bsf_paper",
+      "bsf_pilot",
+      "bsf_scatter_transport",
+      "bsf_setup"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_plot_results.m",
+    "lines": 101,
+    "headings": [
+      "function bsf_plot_results(folder)",
+      "%BSF_PLOT_RESULTS Identical coordinates/scales and honest unsmoothed residuals.",
+      "function map = divergingMap()"
+    ],
+    "project_calls": [
+      "bsf_export_summary",
+      "bsf_plot_results"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_qmc_pilot.m",
+    "lines": 33,
+    "headings": [
+      "function audit = bsf_qmc_pilot(row,col,powerOfTwo)",
+      "%BSF_QMC_PILOT Measure independent-scramble variance before selecting production N."
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_cell_average",
+      "bsf_compare",
+      "bsf_qmc_pilot",
+      "bsf_scatter_transport",
+      "bsf_setup"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_quadrature.m",
+    "lines": 11,
+    "headings": [
+      "function [nodes, weights] = bsf_quadrature(order)",
+      "%BSF_QUADRATURE Gauss-Legendre nodes and weights on [-1,1]."
+    ],
+    "project_calls": [
+      "bsf_quadrature"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_run_all.m",
+    "lines": 136,
+    "headings": [
+      "function bsf_run_all(options)",
+      "%BSF_RUN_ALL Reproducible adaptive precision study, all 18 ORIGINAL snapshots.",
+      "function result = initialise(c,g,o,versionTag,row,col)",
+      "function result = combine(result,trial)",
+      "function result = finishMetrics(result,o)",
+      "function writeProgress(folder,result)",
+      "function writeJson(file,value)"
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_cell_average",
+      "bsf_compare",
+      "bsf_export_summary",
+      "bsf_paper_map",
+      "bsf_plot_results",
+      "bsf_run_all",
+      "bsf_scatter_transport",
+      "bsf_setup"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_scatter_transport.m",
+    "lines": 190,
+    "headings": [
+      "function [out, packets] = bsf_scatter_transport(c, g, options)",
+      "%BSF_SCATTER_TRANSPORT Unbiased evaluation of the >=1-collision HG path integral.",
+      "function uniform = getUniforms(values,ids,dimension,count)",
+      "function d = scatterDirection(d,g,uniform)"
+    ],
+    "project_calls": [
+      "bsf_scatter_transport",
+      "wris_intersect"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_setup.m",
+    "lines": 8,
+    "headings": [
+      "function root = bsf_setup()",
+      "%BSF_SETUP Locate original modules without changing their source files."
+    ],
+    "project_calls": [
+      "bsf_setup"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_validate_outputs.m",
+    "lines": 74,
+    "headings": [
+      "function validation = bsf_validate_outputs()",
+      "%BSF_VALIDATE_OUTPUTS Independent seeds, packet accounting, and paper quadrature."
+    ],
+    "project_calls": [
+      "bsf_paper",
+      "bsf_phase_input",
+      "bsf_scatter_transport",
+      "bsf_setup",
+      "bsf_validate_outputs",
+      "wris_mc"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsf_worker.m",
+    "lines": 15,
+    "headings": [
+      "function bsf_worker()",
+      "%BSF_WORKER Run precision study as a timer callback in the connected MATLAB."
+    ],
+    "project_calls": [
+      "bsf_run_all",
+      "bsf_worker"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\bsfPhysicsTest.m",
+    "lines": 72,
+    "headings": [
+      "classdef bsfPhysicsTest < matlab.unittest.TestCase",
+      "function [c,g] = fixture()"
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_cell_average",
+      "bsf_phase_input",
+      "bsf_scatter_transport"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\FORMULAS.md",
+    "lines": 210,
+    "headings": [
+      "# RIS 下表面：弹道光与散射光的分解",
+      "## 1. 本次定义与物理参数",
+      "## 2. 将论文式（3-18）直接拆开",
+      "## 3. 与原 MC 同模型的弹道项",
+      "## 4. 完整 HG 散射项：精确输运公式",
+      "## 5. 高精度求值与原 MC 的区别",
+      "## 6. 0.1% 的确切含义与验收",
+      "## 7. 后续 RIS 调相接口"
+    ],
+    "project_calls": [
+      "bsf_scatter_transport"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\pilot.mat",
+    "mat_variables": [
+      [
+        "pilot",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\qmc_pilot_r3_c3.mat",
+    "mat_variables": [
+      [
+        "audit",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\README.md",
+    "lines": 82,
+    "headings": [
+      "# RIS 下表面 BSF 与原 MC 对比",
+      "## 运行",
+      "## 代码入口",
+      "## 单幅使用",
+      "## 调相所需的两个独立输入"
+    ],
+    "project_calls": [
+      "bsf_ballistic",
+      "bsf_cell_average",
+      "bsf_phase_input",
+      "bsf_run_all",
+      "bsf_scatter_transport",
+      "wris_mc"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\input_snapshot.mat",
+    "mat_variables": [
+      [
+        "options",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ],
+      [
+        "source",
+        [
+          1
+        ],
+        "char"
+      ],
+      [
+        "c",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ],
+      [
+        "versionTag",
+        [
+          1
+        ],
+        "char"
+      ],
+      [
+        "sourceInfo",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r1_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r1_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r1_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r2_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r2_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r2_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r3_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r3_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r3_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r4_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r4_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r4_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r5_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r5_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r5_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r6_c1.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r6_c2.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\panel_r6_c3.mat",
+    "mat_variables": [
+      [
+        "#subsystem#",
+        "b''"
+      ],
+      [
+        "result",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\phase_ballistic_r1_c1.mat",
+    "mat_variables": [
+      [
+        "c",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ],
+      [
+        "ballisticField",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\phase_scatter_original_r1_c1.mat",
+    "mat_variables": [
+      [
+        "originalScatter",
+        "b'struct'"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\REPORT.md",
+    "lines": 70,
+    "headings": [
+      "# RIS 下表面 IBSF 与原 MC：实测结果",
+      "## 验收口径",
+      "## 主要结果",
+      "## 18 个场景的绝对比较",
+      "## 光斑外围、分量与空间分布",
+      "## 后续调相",
+      "## 文件"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "W_RIS\\BSF\\results\\validation.mat",
+    "mat_variables": [
+      [
+        "validation",
+        [
+          1,
+          1
+        ],
+        "struct"
+      ]
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\run_bsf.m",
+    "lines": 12,
+    "headings": [
+      "%RUN_BSF All 18 panels; resume saved batches until 0.1% RMS numerical SE."
+    ],
+    "project_calls": [
+      "bsf_run_all",
+      "bsf_setup",
+      "bsf_validate_outputs"
+    ]
+  },
+  {
+    "path": "W_RIS\\BSF\\VALIDATION_SCOPE.md",
+    "lines": 21,
+    "headings": [
+      "# 验证口径与研究解释检查"
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "W_RIS\\run_wris.m",
+    "lines": 2,
+    "headings": [
+      "%RUN_WRIS Compatibility entry; edit parameters in run_wris_irradiance.m."
+    ],
+    "project_calls": []
+  },
+  {
+    "path": "W_RIS\\run_wris_irradiance.m",
+    "lines": 44,
+    "headings": [
+      "%RUN_WRIS_IRRADIANCE 修改下方参数区，点击运行即可重新计算并画图。",
+      "function s=calculateOrLoad(c,recompute)"
+    ],
+    "project_calls": [
+      "wris_config",
+      "wris_plot",
+      "wris_run"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_cached.m",
+    "lines": 46,
+    "headings": [
+      "function value = wris_cached(c,kind,key,producer)",
+      "%WRIS_CACHED Cache physical computations without invalidating them for plot edits.",
+      "function value=serializable(value)"
+    ],
+    "project_calls": [
+      "wris_cached"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_config.m",
+    "lines": 54,
+    "headings": [
+      "function c = wris_config(profile)",
+      "%WRIS_CONFIG Physical defaults; edit run_wris_irradiance.m for a new study."
+    ],
+    "project_calls": [
+      "wris_config",
+      "wris_device"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_device.m",
+    "lines": 15,
+    "headings": [
+      "function device = wris_device(wavelength)",
+      "%WRIS_DEVICE Shared LC electrode geometry and ideal air-calibrated limits."
+    ],
+    "project_calls": [
+      "wris_device"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_egg.m",
+    "lines": 78,
+    "headings": [
+      "function [h,info] = wris_egg(kind,n,seed)",
+      "%WRIS_EGG Mean-one EGG irradiance gains from supplied image Table 2-1.",
+      "function mustBeSeed(seed)"
+    ],
+    "project_calls": [
+      "wris_egg"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_geometry.m",
+    "lines": 33,
+    "headings": [
+      "function g = wris_geometry(c,m,tx,k,mode)",
+      "%WRIS_GEOMETRY Freeze a nanosecond optical snapshot of actual moving bodies."
+    ],
+    "project_calls": [
+      "wris_geometry",
+      "wris_intersect",
+      "wris_reference"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_intersect.m",
+    "lines": 12,
+    "headings": [
+      "function [local,range,inside] = wris_intersect(p,d,center,R,boardSize)",
+      "%WRIS_INTERSECT World rays -> body plane; row vectors use (xW-pW)*R."
+    ],
+    "project_calls": [
+      "wris_intersect"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_mc.m",
+    "lines": 163,
+    "headings": [
+      "function [out,packets] = wris_mc(c,g,seed,gain)",
+      "%WRIS_MC Generalized fig3-7 implicit-capture MC for a tilted finite detector."
+    ],
+    "project_calls": [
+      "wris_intersect",
+      "wris_mc",
+      "wris_metrics"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_metrics.m",
+    "lines": 11,
+    "headings": [
+      "function s = wris_metrics(xy,w)",
+      "%WRIS_METRICS Weighted second moments; axes are full 4-sigma diameters."
+    ],
+    "project_calls": [
+      "wris_metrics"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_plot.m",
+    "lines": 95,
+    "headings": [
+      "function files = wris_plot(s)",
+      "%WRIS_PLOT Render SAVED results only; never invokes motion/optical solvers.",
+      "function drawCore(ax,o,reference)",
+      "function closeIfHidden(f,visibility)"
+    ],
+    "project_calls": [
+      "wris_plot"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_reference.m",
+    "lines": 19,
+    "headings": [
+      "function g = wris_reference(c)",
+      "%WRIS_REFERENCE Underwater lower-face optical centre; world Z points upward."
+    ],
+    "project_calls": [
+      "wris_intersect",
+      "wris_reference"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_report.m",
+    "lines": 74,
+    "headings": [
+      "function wris_report(s)",
+      "%WRIS_REPORT Save numerical evidence independent of figure layout."
+    ],
+    "project_calls": [
+      "wris_report"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_run.m",
+    "lines": 15,
+    "headings": [
+      "function s = wris_run(input)",
+      "%WRIS_RUN Calculate, validate and save; call wris_plot(s) separately to draw."
+    ],
+    "project_calls": [
+      "wris_config",
+      "wris_plot",
+      "wris_report",
+      "wris_run",
+      "wris_simulate",
+      "wris_validate"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_setup.m",
+    "lines": 5,
+    "headings": [
+      "function wris_setup()",
+      "%WRIS_SETUP Add only required existing project modules."
+    ],
+    "project_calls": [
+      "wris_setup"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_simulate.m",
+    "lines": 62,
+    "headings": [
+      "function s = wris_simulate(c)",
+      "%WRIS_SIMULATE Compute snapshots only; no graphics, reports or figure layout.",
+      "function site=selectSite(c,wave)",
+      "function p=panel(c,g,wind,direction,motion,tx,site)"
+    ],
+    "project_calls": [
+      "wris_cached",
+      "wris_egg",
+      "wris_geometry",
+      "wris_mc",
+      "wris_reference",
+      "wris_simulate",
+      "wris_sites",
+      "wris_tx_motion"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_sites.m",
+    "lines": 35,
+    "headings": [
+      "function sites = wris_sites(c,wave)",
+      "%WRIS_SITES Four spatial sea positions in ONE realization at ONE fixed time."
+    ],
+    "project_calls": [
+      "wris_sites"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_tx_motion.m",
+    "lines": 26,
+    "headings": [
+      "function tx = wris_tx_motion(c,t)",
+      "%WRIS_TX_MOTION Weng et al. (2022), Eqs (5)-(7): planar dead reckoning."
+    ],
+    "project_calls": [
+      "wris_reference",
+      "wris_tx_motion"
+    ]
+  },
+  {
+    "path": "W_RIS\\wris_validate.m",
+    "lines": 53,
+    "headings": [
+      "function v = wris_validate(c,s)",
+      "%WRIS_VALIDATE Projection, complete-core orientation, clipping and convergence.",
+      "function out=optical(c,g,seed)"
+    ],
+    "project_calls": [
+      "wris_cached",
+      "wris_mc",
+      "wris_validate"
+    ]
+  }
+]

@@ -1,0 +1,535 @@
+\chapter{基于尺度滤波的动态海面建模与界面统计透射}
+\label{chap:dynamic_surface_modeling}
+\begin{figure}[H]
+	\centering
+	\makebox[\textwidth][c]{\includegraphics[width=1.10\textwidth]{pic/c3/第三章结构图.pdf}}
+	\caption{第三章动态海面建模、足迹尺度滤波与界面统计透射流程}
+	\label{fig:c3_scale_filter_logic}
+\end{figure}
+跨介质窄光束链路的接收功率受气--水界面的动态起伏影响。第二章已经给出 Cox--Munk (CM) 二维斜率概率密度、不同海浪谱模型以及粗糙界面透射的基础表达，这些模型分别面向斜率概率、海面生成和界面能量分配。对于有限光束直接穿越随机海面的问题，还需要把风浪海况、光束足迹尺度和粗糙界面透射放入同一计算流程中。
+
+本章先选取便于解析截断积分的 Neumann 方向谱生成三维动态海面，并通过风向旋转得到可供光线追踪调用的高度场、局部法向和离散微面元；随后将光束足迹写入斜率谱的低通滤波过程，得到随风速、风向和光束足迹尺度变化的足迹尺度有效斜率方差；再把该方差代入 CM 形式二维高斯斜率概率密度，使固定经验方差形式转化为由海浪谱和光束尺度共同确定的足迹尺度有效斜率模型。该尺度处理继续进入 Smith 遮挡模型、上游条件存活概率、最大允许入射角求解以及粗糙界面统计透射率计算，使光束整体偏折、可见路径筛选和界面能量分配采用同一组海面统计量。
+
+由此，本章在全文中承担海面输入的转换作用。第二章中的谱模型被转化为可追踪的瞬时粗糙海面，CM 斜率概率模型被赋予有限足迹尺度下的方差输入，粗糙界面透射也由平滑界面整体计算推进为含遮挡筛选的统计平均。第四章和第五章将在这一组海面高度、足迹尺度有效斜率方差、高频残余斜率方差和平均透射率基础上继续建立跨介质光场和接收功率模型。
+
+从全文链路看，本章给出的海面形貌、足迹尺度有效斜率方差、高频残余斜率方差和统计透射率共同构成后续光场计算与功率统计的风浪输入模块。
+
+图 \ref{fig:c3_scale_filter_logic} 给出了本章从风浪海况输入到后续光场与功率建模输入的变量传递关系。风速、风向、Neumann 方向谱、光束足迹尺度和入射角先进入动态海面生成与足迹尺度滤波；得到的有效斜率方差、高频残余斜率方差和重构后的斜率分布继续用于几何遮挡、最大允许入射角和统计透射率计算，最后形成第四章和第五章调用的海面几何输入与界面条件输入。
+
+
+\section{Neumann 方向谱驱动的三维海面双叠加建模与风向耦合}
+\label{sec:surface_modeling_and_variance}
+
+本节把海浪谱、风速 $U$ 和相对风向角 $\phi_w$ 转化为三维海面高度场、局部法向和离散微面元。在本文的参数体系中，风速决定谱能量和海面起伏强度，风向决定波浪主轴相对于入射主平面的旋转位置，Neumann 方向谱给出频率与方向上的能量分配。三者共同表征后续讨论中的风浪海况。纯斜率概率模型只能给出统计分布，无法确定射线与海面相交的位置；因此，本节先说明海浪谱模型的选取依据，再将 Neumann 谱作为物理发生源，通过双叠加法生成三维海面，并将相对风向角写入坐标系\citing{chang2021dynamic,zhao2025tssa}。
+
+采用谱驱动海面的原因在于，光线追踪需要连续的空间高度场和相邻面元法向，海面时空相关性也会影响固定接收机功率序列的连续性。已有海面数值重构研究通常先由频谱确定各频率分量的幅值，再通过随机相位或波动方程恢复三维表面\citing{chang2021dynamic,zhao2025tssa,gao2025uplink}。本文沿用这一思路，把生成结果进一步服务于有限足迹滤波和跨介质光线求交。
+
+本节输出的核心量是可离散求交的海面高度场 $z(x,y,t)$、三角面元局部法向以及风向旋转后的几何各向异性。后续足迹滤波和光线求交均在这组海面样本上展开。
+
+\subsection{海浪谱选取与有限光束尺度处理}
+\label{subsec:c3_spectrum_choice_beam_interface}
+
+海浪谱模型的选取需要同时考虑物理覆盖范围和后续解析调用难度。PM 谱和 ECKV 谱能够描述更完整的海面能量结构，其中 ECKV 谱还包含重力波与毛细波过渡区的高频尾部，对点尺度斜率统计更为充分。但在本文问题中，后续需要反复计算的是经过光束足迹滤波后的有效斜率方差，其基本形式包含谱函数、斜率转换因子和孔径滤波函数的乘积积分。对于 PM 谱和 ECKV 谱，该积分通常同时涉及非整次幂指数项、重力--毛细波分段项、经验风速函数以及 Bessel 型孔径滤波核。积分上限还会随光束足迹尺度变化，因而难以整理为简单闭式。若直接采用数值积分，虽然可以得到结果，但不利于后续在多风速、多风向和动态时间序列中反复调用。
+
+Neumann 谱的优势在于低频重力波部分具有较清晰的解析结构。将其与余弦平方方向扩展函数结合后，斜率谱经理想足迹低通滤波可以化为含互补误差函数的截断积分，并可在本文光束足迹尺度范围内进一步得到线性近似。因此，本文在解析推导中采用 Neumann 谱作为足迹尺度有效斜率的主模型；ECKV 谱保留为全频段参照，用于说明高频残余能量在束腰展宽和局部透射涨落中的补偿作用。
+
+基于上述取舍，后文验证将分别比较未滤波点斜率方差与足迹尺度有效斜率方差的谱型差异，用于检查 Neumann 谱作为解析输入时的适用范围。若有限孔径光束主要响应低频海浪对整体偏折的贡献，则谱尾差异对足迹尺度有效斜率方差的影响应在足迹平均后被削弱。本文据此把 Neumann 谱作为连接三维海面生成、CM 概率分布和光束足迹尺度的基础谱模型。
+
+\subsection{动态海面三维高度场的离散化建模}
+\label{subsec:3d_surface_reconstruction}
+
+依据第二章式(\ref{eq:Neumann_spectrum})和式(\ref{eq:spreading_function})关于 Neumann 频谱与方向扩展函数的推导，海面的能量分布由 Neumann 一维频率谱 $S_{Neu}(\omega)$ 与方向扩展函数 $\varphi(\theta)$ 联合决定，即 $S(\omega;\theta) = S_{Neu}(\omega)\varphi(\theta)$。为了在计算机中构造连续的海面高度场 $z$，需对频率域与方向域进行有限区间的离散化采样。
+
+设定有效仿真频率区间为 $[f_{min}, f_{max}]$，将其划分为 $M$ 个对数等距的频率子带；设定有效方向区间为 $[-\pi/2, \pi/2]$，将其划分为 $N$ 个线性等距的方向子带。对于第 $i$ 个频率分量 $f_i$ 与第 $j$ 个方向分量 $\theta_j$，其对应的角频率为 $\omega_i = 2\pi f_i$。依据深水线性波浪色散关系\citing{holthuijsen2007waves}，对应的空间波数严格满足 $k_i = \omega_i^2 / g$。
+
+在双叠加法框架下，每个离散的二维频谱微元对应一个独立的正弦传播简谐波。该谐波的物理振幅 $a_{ij}$ 由其所在微元区间内的总能量决定：
+\begin{equation}
+	a_{ij} = \sqrt{2 S_{Neu}(\omega_i) \varphi(\theta_j) \Delta \omega_i \Delta \theta}
+	\label{eq:amplitude_ij}
+\end{equation}
+
+式中，$\Delta \omega_i$ 与 $\Delta \theta$ 分别为角频率与方向的采样步长。该式保证了离散频带内的能量守恒，将连续谱的统计能量分配为各个确定性波浪分量的物理振幅。
+
+引入在 $[0, 2\pi]$ 区间内均匀分布的随机初始相位 $\epsilon_{ij}$ 以表征海面的随机无序性，则在任意时刻 $t_0$，空间点 $(x, y)$ 处的瞬时波面高度可由所有离散谐波线性叠加生成：
+\begin{equation}
+z(x, y, t_0) = \sum_{i=1}^{M} \sum_{j=1}^{N} a_{ij} \cos\left( \omega_i t_0 - k_i x \cos\theta_{\mathrm{abs}} - k_i y \sin\theta_{\mathrm{abs}} + \epsilon_{ij} \right)
+	\label{eq:double_superposition_actual}
+\end{equation}
+
+式中，$\theta_{\mathrm{abs}}$ 为各谐波分量在全局坐标系下的绝对传播方位角。该角度用于把方向谱中的能量分量旋转到全局坐标系，后续微面元法向由旋转后的三维高度场差分得到。
+
+\subsection{风向旋转映射、微面元法向提取与空间奈奎斯特采样}
+
+在上述建模过程中，一个核心的物理映射在于绝对传播方位角 $\theta_{\mathrm{abs}}$ 的界定。在理论基础中，风向对海面的影响仅体现为统计方差沿顺风与侧风主轴的坐标系旋转，其方向投影关系已由式(\ref{eq:sigma_dir})给出。但在实际的三维追踪仿真中，光束的发射坐标系是全局固定的（设定发射光束沿全局 $y$ 轴传播），因此必须在生成物理海面时，将局部风场坐标系主动旋转至全局坐标系中。
+
+设全局坐标系下主风向相对于入射光束在平均海面水平面内投影方向的方位角为 $\phi_w$。方向谱中的相对角度 $\theta_j$ 本质上是各谐波分量相对于主风向的偏离角。为了保证生成的三维海面在全局坐标系中固有地具备各向异性斜率特征，绝对传播角 $\theta_{\mathrm{abs}}$ 写为：
+\begin{equation}
+\theta_{\mathrm{abs}} = \theta_j + \frac{\pi}{2} - \phi_w
+	\label{eq:theta_abs_coupling}
+\end{equation}
+
+这一变换的物理意义在于：当 $\phi_w = 0$（顺风工况）时，主风向被旋转至全局 $y$ 轴，即与入射光束在静止海面上的水平投影方向重合；当 $\phi_w$ 改变时，顺风、侧风斜率主轴随之在水平面内旋转。这样，风向影响在海面生成阶段已经进入几何坐标，并与后续斜率方差旋转修正保持一致；海面拓扑与光束追迹坐标也保持一致。
+
+完成连续高度场解析映射后，需将其离散化为可供 MC 射线求交的微面元网格。设空间域划分间距为 $\Delta x, \Delta y$，网格分辨率需要与双叠加法中的最高仿真频率 $f_{max}$ 相匹配。物理仿真中存在的最短波长为 $\lambda_{min} = g / (2\pi f_{max}^2)$。为避免空间混叠导致高频能量错误折叠，网格步长需满足空间奈奎斯特采样条件\citing{oppenheim1999discrete}：
+\begin{equation}
+	2\Delta x \le \lambda_{min} \quad \Longrightarrow \quad f_{max} \le \sqrt{\frac{g}{4\pi \Delta x}}
+	\label{eq:nyquist_constraint}
+\end{equation}
+
+本章在几何重构时，将网格步长与最高频率设定为临界匹配状态，即式(\ref{eq:nyquist_constraint})中等号成立，以此在兼顾计算效率的同时保留可解析的高频几何细节。这一处理与动态海面数值重构中用于抑制高频能量折叠和网格混叠的离散化方法一致\citing{chang2021dynamic,zhao2025tssa}。类似采样要求也出现在随机粗糙面接触问题中：若谱中最短波长 $\lambda_s$ 未被充分解析，接触面积等量会产生系统误差\citing{yastrebov2017contactarea}。
+
+基于式(\ref{eq:double_superposition_actual})、式(\ref{eq:theta_abs_coupling})及式(\ref{eq:nyquist_constraint})确定的生成机制，本文生成了不同风速 $U$ 与相对风向角 $\phi_w$ 下的三维动态海面数值模型，如图 \ref{fig:3d_surface_multiU} 所示。图中三组工况用于分离风向旋转和风速增强的影响：图(a)与图(b)保持 $U=9\,\mathrm{m/s}$ 并改变 $\phi_w$，图(a)与图(c)保持 $\phi_w=30^\circ$ 并改变风速。从图中趋势可见，风速增大后海面起伏幅度和波谷深度同步增大；当 $\phi_w$ 改变时，全局波浪能量的主延展方向随之偏转。其物理原因在于低频重力波的延展方向受风场动量输入方向控制。上述形貌变化说明，风速幅值和风向旋转已经进入三维海面生成过程，并将在后续光线追迹中作为随工况变化的几何面。
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/surface_MultiU/Surf_U9_Phi30_20260327.pdf}
+	}
+	\hfill
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/surface_MultiU/Surf_U9_Phi45_20260327.pdf}
+	}
+	\hfill
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/surface_MultiU/Surf_U12_Phi30_20260327.pdf}
+	}
+	\caption[不同风速与相对风向角下的海面三维形貌特征对比]{不同风速与相对风向角下的海面三维形貌特征对比。(a) $U=9\,\mathrm{m/s}$，$\phi_w=30^\circ$；(b) $U=9\,\mathrm{m/s}$，$\phi_w=45^\circ$；(c) $U=12\,\mathrm{m/s}$，$\phi_w=30^\circ$}
+	\label{fig:3d_surface_multiU}
+\end{figure}
+
+上述三维海面生成过程给出了后续计算所需的高度场、局部法向和风向旋转后的空间各向异性。它既可作为固定时刻海面样本中的光线求交几何，也可组成动态序列中的相位连续海面样本。足迹尺度下的有效斜率统计将在此基础上继续推导。
+
+与求交几何相比，决定光束整体偏折的统计量主要是足迹尺度内的有效斜率。斜率作为高度场的空间一阶导数，在频域中等价于高度谱乘以波数平方 $k^2$，高频短波纹在点斜率方差中会被明显放大。CM 形式斜率概率分布正是在点尺度、全频段斜率意义下建立的；有限光束足迹却会平均掉一部分小尺度起伏。若直接把全频段 CM 方差用于光束宏观偏折，足迹内部的短波纹会被过度计入光轴倾斜，导致第四章中的光斑主轴估计和第五章中的逐帧接收功率波动偏离有限孔径实际响应。本文因此保留 CM 概率形式，但替换其方差输入：用足迹尺度有效斜率方差 $\sigma_{q,\mathrm{beam}}^2(U,D)$ 描述整体法向偏折，用 CM 原始全频段点尺度方差 $\sigma_{q,\mathrm{CM}}^2(U)$ 与 $\sigma_{q,\mathrm{beam}}^2(U,D)$ 的差额描述高频残余斜率方差，其中 $q\in\{u,c\}$。下文即围绕这一尺度转换关系推导有效斜率方差。
+
+\section{有限光束足迹滤波下海面足迹尺度有效斜率方差解析推导}
+\label{sec:variance_derivation}
+
+\subsection{风浪海况参数与光束足迹滤波范围}
+
+前文已经给出三维 Neumann 海面和 CM 形式斜率概率描述之间的尺度差异。为了使二者能够进入同一套跨介质光束模型，本节把风速 $U$、相对风向 $\phi_w$、Neumann 方向谱 $S_{Neu}(\omega)\varphi(\theta)$ 与光束足迹尺度 $D$ 放入同一组输入变量。风速控制斜率方差的能量水平，风向控制顺风、侧风统计主轴在全局坐标系中的投影方向，光束足迹尺度则控制光束从动态海面上实际采样到的空间频段。由此，风浪海况从三维形貌参数推进为 CM 形式斜率概率密度的方差输入、遮挡概率和统计透射率的计算输入。
+
+光束足迹可视为空间平均窗口，其滤波范围可由贝塞尔孔径滤波函数式(\ref{eq:bessel_filter})或理想阶跃滤波式(\ref{eq:step_filter})描述。低频长波起伏在足迹范围内主要表现为光轴整体倾斜，高频短波纹经过足迹平均后进入高频残余斜率方差，并进一步影响束腰展宽和局部透射率涨落。基于这一划分，本文在频域内引入截断积分，推导与光束宏观偏折相对应的足迹尺度有效斜率方差解析式，并将其作为 CM 形式二维高斯斜率概率密度函数（Probability Density Function, PDF）的替代方差输入。
+
+这一节得到的足迹尺度有效斜率方差会被后续两类模型共同使用。第四章中，BSF 光强分布的主轴方向、等效足迹尺度和高频残余斜率补偿均由该方差确定；第五章中，动态接收功率的逐帧几何投影沿用与光束足迹一致的有效法向，点尺度随机斜率进入高频残余斜率方差和透射涨落的统计项。
+
+\subsection{有效斜率方差解析积分与风向投影}
+
+根据随机过程与帕塞瓦尔定理\citing{papoulis2002probability}，海面有效斜率的方差等价于其功率谱密度在频域的积分。考虑到跨海通信中光束足迹尺度 $D$ 的低通滤波效应，分方向前的足迹尺度有效斜率总方差 $\sigma_{\mathrm{beam},\mathrm{tot}}^2(U,D)$ 可表示为经过孔径滤波函数加权后的谱积分：
+\begin{equation}
+	\sigma_{\mathrm{beam},\mathrm{tot}}^2(U,D) = \int_{0}^{\infty} S_{slope}(\omega,U) \cdot H_{beam}(\omega,D) \, d\omega
+	\label{eq:filtered_variance_integral}
+\end{equation}
+
+式中，$S_{slope}(\omega)$ 为海面斜率功率谱。本文将光束孔径等效为理想低通滤波器，截止角频率取 $\omega_c = \sqrt{2\pi g / D}$，从而把宏观偏折对应的积分区间限制在 $[0,\omega_c]$。该处理保留孔径主瓣的尺度范围，忽略旁瓣和过渡带影响；其误差将在后续与贝塞尔孔径滤波结果的对照中检查。
+
+为了获取 $S_{slope}(\omega)$ 的具体解析式，将式(\ref{eq:Neumann_spectrum})与式(\ref{eq:spreading_function})对应的 Neumann 高度谱及方向函数代入式(\ref{eq:filtered_variance_integral})，并结合色散转换法则（$k^2 = \omega^4/g^2$），可得一维斜率功率谱：
+\begin{equation}
+	S_{slope}(\omega) = \frac{C \pi}{4 g^2} \omega^{-2} \exp\left( -\frac{2g^2}{U^2 \omega^2} \right)
+	\label{eq:1d_slope_spectrum}
+\end{equation}
+
+为简化积分求解过程，提取与风速无关的物理常数项定义为中间变量 $A = \frac{C \pi}{4 g^2}$，提取受风速调控的变量定义为 $B = \frac{2g^2}{U^2}$。在 $[0, \omega_c]$ 的低频滤波区间内对该斜率谱进行截断积分，并利用变量代换执行广义积分求解，该积分可由互补误差函数 $\mathrm{erfc}$ 表示：
+\begin{equation}
+	\sigma_{\mathrm{beam},\mathrm{tot}}^2 = \int_{0}^{\omega_c} A \omega^{-2} \exp\left(-\frac{B}{\omega^2}\right) \, d\omega = \frac{A \sqrt{\pi}}{2\sqrt{B}} \cdot \mathrm{erfc}\left( \frac{\sqrt{B}}{\omega_c} \right)
+	\label{eq:variance_erfc_exact}
+\end{equation}
+
+该精确解虽然在数学上闭合，但包含互补误差函数，后续反复调用时仍不够简洁。考虑到实际通信场景中，光斑等效截止频率 $\omega_c$ 通常远大于重力波主频，自变量 $x = \sqrt{B}/\omega_c$ 属微小量。对互补误差函数在零点附近进行泰勒级数展开 $\mathrm{erfc}(x) \approx 1 - \frac{2}{\sqrt{\pi}}x$，忽略高阶无穷小项并代入 $A$ 与 $B$，可得到足迹尺度有效斜率总方差关于海面风速 $U$ 的线性理论近似模型：
+\begin{equation}
+	\sigma_{\mathrm{beam},\mathrm{tot}}^2(U, D) \approx \left( \frac{C \pi^{1.5}}{8 \sqrt{2} g^3} \right) \cdot U - \left( \frac{C \pi}{4 g^2 \omega_c} \right)
+	\label{eq:linear_total_variance}
+\end{equation}
+
+该式把互补误差函数形式的截断积分近似为一次式，便于在多风速和长时序计算中重复调用。为了明晰该线性模型的代数结构，本文显式定义表征方差随风速增长率的斜率因子 $K_{slope}$ 与表征孔径滤波损耗的截距项 $D_{intercept}$ 为：
+\begin{equation}
+	K_{slope} = \frac{C \pi^{1.5}}{8 \sqrt{2} g^3}, \quad D_{intercept} = \frac{C \pi}{4 g^2 \omega_c}
+	\label{eq:kslope_dintercept}
+\end{equation}
+
+依据第二章式(\ref{eq:sigma_u_macro})、式(\ref{eq:sigma_c_macro})中足迹尺度有效斜率方差的二重积分角向分解方式，总能量需按式(\ref{eq:spreading_function})给出的余弦平方方向扩展函数 $\varphi(\theta) = \frac{2}{\pi}\cos^2\theta$ 进行正交投影。顺风能量权重因子 $W_u$ 与侧风能量权重因子 $W_c$ 的具体积分为：
+\begin{equation}
+	\begin{cases}
+		W_u = \int_{-\pi/2}^{\pi/2} \varphi(\theta) \cos^2\theta \, d\theta = \frac{2}{\pi} \int_{-\pi/2}^{\pi/2} \cos^4\theta \, d\theta = 0.75 \\
+		W_c = \int_{-\pi/2}^{\pi/2} \varphi(\theta) \sin^2\theta \, d\theta = \frac{2}{\pi} \int_{-\pi/2}^{\pi/2} \cos^2\theta \sin^2\theta \, d\theta = 0.25
+	\end{cases}
+	\label{eq:weights_integration}
+\end{equation}
+
+将上述常量投影因子直接作用于式(\ref{eq:linear_total_variance})，光束宏观漂移所对应的各向异性有效斜率方差可写为：
+\begin{equation}
+	\begin{cases}
+		\sigma_{u,\mathrm{beam}}^2(U,D) \approx 0.75 \cdot (K_{slope} \cdot U - D_{intercept}) \\
+		\sigma_{c,\mathrm{beam}}^2(U,D) \approx 0.25 \cdot (K_{slope} \cdot U - D_{intercept})
+	\end{cases}
+	\label{eq:final_variance_split}
+\end{equation}
+
+该组方程建立了从二维海浪谱到光束空间漂移不确定性的代数计算链路。风速 $U$、风向 $\phi_w$ 和光束足迹尺度 $D$ 共同决定 CM 形式斜率概率密度中的足迹尺度有效斜率方差。这样，CM 分布保留原有的概率积分形式，同时获得了与实际光束尺度相匹配的方差输入。
+
+前述顺风与侧风方向的统计量均在风向主轴坐标系中建立。若全局坐标系与风向之间存在夹角 $\phi_w$，则需通过二维旋转将其映射到全局 $x-y$ 坐标系。记全局坐标中的斜率分量为 $Z_x$ 与 $Z_y$，则有效斜率方差与协方差满足
+\begin{equation}
+	\begin{cases}
+		\sigma_{Z_x,\mathrm{beam}}^2 =
+		\sigma_{c,\mathrm{beam}}^2\cos^2\phi_w
+		+
+		\sigma_{u,\mathrm{beam}}^2\sin^2\phi_w,\\
+		\sigma_{Z_y,\mathrm{beam}}^2 =
+		\sigma_{u,\mathrm{beam}}^2\cos^2\phi_w
+		+
+		\sigma_{c,\mathrm{beam}}^2\sin^2\phi_w,\\
+		\sigma_{Z_xZ_y,\mathrm{beam}} =
+		\left(\sigma_{u,\mathrm{beam}}^2-\sigma_{c,\mathrm{beam}}^2\right)
+		\sin\phi_w\cos\phi_w .
+	\end{cases}
+	\label{eq:c3_static_slope_variance_rotation}
+\end{equation}
+式(\ref{eq:c3_static_slope_variance_rotation})用于把风向主轴下的足迹尺度有效斜率方差转换到全局坐标系，$\sigma_{Z_x,\mathrm{beam}}^2$、$\sigma_{Z_y,\mathrm{beam}}^2$ 和 $\sigma_{Z_xZ_y,\mathrm{beam}}$ 分别表示全局 $x/y$ 方向有效斜率方差及协方差。若只需入射主平面方向的一维均方根斜率，本文记为
+\begin{equation}
+	\sigma_{\mathrm{dir},\mathrm{beam}}(U,\phi_w,D)=
+	\sqrt{\sigma_{u,\mathrm{beam}}^2(U,D)\cos^2\phi_w+\sigma_{c,\mathrm{beam}}^2(U,D)\sin^2\phi_w}.
+	\label{eq:c3_sigma_dir_beam}
+\end{equation}
+式(\ref{eq:c3_sigma_dir_beam})与第二章的 $\sigma_{\mathrm{dir},\mathrm{CM}}$ 使用相同投影形式，但方差输入已经替换为足迹尺度有效斜率方差。后续遮挡概率、统计透射率和光线追踪均采用同一时刻的空间统计定义。至此，Neumann 谱、光束足迹滤波与 CM 形式斜率分布形成了可传递的建模关系：Neumann 谱给出可追踪的几何海面和足迹尺度有效斜率方差，CM 形式分布用于概率积分，光束足迹尺度决定二者之间的方差转换关系。
+
+\section{光束足迹尺度适用性验证与 CM 形式斜率概率重构}
+\label{sec:scale_applicability_and_validation}
+
+前一节已经将海况参数、海浪谱、光束足迹和 CM 形式概率分布连接为有效斜率关系。该关系还需经过面向公式近似、概率重构、谱型选择和残余补偿的联合检查。本节依次验证四项内容：理想低通近似与 Bessel 孔径滤波数值积分的一致性，用于确认式(\ref{eq:linear_total_variance})在本文参数范围内可作为有效斜率方差的快速近似；足迹尺度有效斜率方差代入 CM 形式 PDF 后与 Neumann 海面斜率样本的一致性，用于确认 CM 概率骨架可以在有限光束尺度下重构；Neumann、PM 与 ECKV 谱在滤波前后的方差差异，用于确认 Neumann 谱作为宏观偏折输入的适用范围；高频残余斜率方差向束腰展宽和局部透射涨落的补偿映射，用于保留被足迹平均滤除的小尺度效应。
+
+该验证部分用于检查第四章和第五章将采用的尺度参数是否稳定。线性低通近似与孔径滤波偏差会影响第四章代理光强函数的尺度输入和第五章动态投影中的 $D_{\mathrm{beam}}$；滤波后谱间差异的大小则决定 Neumann 谱能否作为后续多工况调用的底层谱；高频残余补偿量则决定后续 BSF 展宽修正是否仍能保留小尺度毛细波的贡献。下述实验据此确定尺度滤波近似、概率重构和残余补偿的适用范围。
+
+\subsection{有效斜率方差线性近似与 Bessel 孔径滤波数值对照}
+
+在 3.2 节的理论推导中，光束空间滤波效应被等效为式(\ref{eq:step_filter})所示的理想阶跃低通，并通过泰勒级数展开得到与风速近似呈线性的解析解。该处理的作用是把原本需要频域积分的尺度滤波过程压缩为可直接调用的方差公式。为检查这一近似在本文参数范围内的适用性，本实验在 $U \in [5, 25]\,\mathrm{m/s}$ 的风速范围内，调用第二章式(\ref{eq:bessel_filter})定义的精确贝塞尔孔径滤波函数 $|H(k, D)|^2$，对斜率谱进行数值广义积分：
+\begin{equation}
+	\sigma_{rigorous}^2(U) = \int_{0.1}^{200} S_{slope}(\omega, U) \cdot \left[ \frac{2J_1(\omega^2 D/2g)}{\omega^2 D/2g} \right]^2 \, d\omega
+	\label{eq:rigorous_bessel_integral}
+\end{equation}
+
+该积分过程保留了贝塞尔函数的旁瓣特征，可作为理想低通近似的参照结果。将该积分提取的离散方差点与式(\ref{eq:linear_total_variance})计算的线性理论解进行对比分析。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.65\linewidth]{pic/c3/Variance_Verification/Slope_Verification_20260329.pdf}
+	\caption[截断积分与泰勒展开数值对照]{截断积分与泰勒展开数值对照（离散方差点由式(\ref{eq:rigorous_bessel_integral})的贝塞尔孔径滤波积分得到，解析曲线由式(\ref{eq:linear_total_variance})给出）}
+	\label{fig:Kslope_verification}
+\end{figure}
+
+图 \ref{fig:Kslope_verification} 的数值对比结果表明，在所考察风速范围内，贝塞尔孔径滤波积分得到的方差点沿线性关系分布。以贝塞尔积分结果为参照，对 $U=5$--$25\,\mathrm{m/s}$ 的离散点作线性拟合，平均相对残差为 $0.39\%$，最大相对残差为 $2.69\%$，拟合优度为 $R^2=0.99998$；解析斜率因子 $K_{slope}$ 与数值拟合斜率的相对偏差为 $0.73\%$。上述数值说明，在当前光束足迹尺度和风速范围内，用理想阶跃函数近似贝塞尔主瓣并忽略泰勒高阶项不会改变足迹尺度有效斜率方差随风速变化的主导线性趋势。该近似把足迹尺度对方差的影响显式写入解析表达，后续改变光束足迹尺度时，只需更新截止频率 $\omega_c$，即可得到新的 CM 形式斜率概率密度方差输入。
+
+\subsection{足迹尺度有效斜率方差与 CM 斜率统计的映射}
+
+经典的 Cox--Munk (CM) 经验方差隐式地包含了从大尺度重力波到毫米级毛细波的全频段空间起伏贡献。在检查线性近似适用性后，还需进一步判断：将足迹尺度有效斜率方差代入 CM 形式斜率分布，能否描述由式(\ref{eq:double_superposition_actual})生成的 Neumann 海面在宏观尺度上的斜率统计。该问题直接关系到后续遮挡概率和统计透射率是否可以继续使用 CM 形式高斯 PDF。
+
+在数值验证中，设定固定的最高空间截断频率 $f_{max}$，先按第 \ref{subsec:3d_surface_reconstruction} 节的双叠加法生成三维海面，再从该海面中提取顺风和侧风方向的斜率统计直方图；同时，将足迹尺度有效斜率方差代入 CM 二维高斯模型中。如图 \ref{fig:pdf_verification}(a) 和 (b) 中灰色直方图与红色理论曲线所示，两者的概率密度曲线基本重合。该结果说明，在空间频段一致时，Neumann 谱生成海面的斜率统计可以由足迹尺度有效斜率方差参数化的 CM 形式高斯概率密度表征。
+
+忽略光束足迹的有限尺度并直接套用 CM 顺风与侧风全谱原始方差评估光束抖动，会把大量小尺度粗糙度计入宏观偏折。为揭示该失配现象，图 \ref{fig:pdf_verification}(a) 和 (b) 补充绘制了代入 CM 原始方差的概率密度曲线（扁平黑色线）。可见，基于原始全谱方差的黑色曲线更加弥散，其覆盖的斜率范围远大于实际驱动光束漂移的红色基准。这说明，未实施空间尺度滤波时，全频段 CM 经验值会高估海面对宏观光束抖动的贡献。
+
+\begin{figure}[!htbp]
+	\centering
+	\begin{subfigure}[b]{0.30\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{pic/c3/Variance_Verification/Slope_X_Upwind_marked_260509.pdf}
+		\caption{}
+		\label{fig:upwind_pdf}
+	\end{subfigure}%
+	\hfill
+	\begin{subfigure}[b]{0.30\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{pic/c3/Variance_Verification/Slope_Y_Crosswind_marked_260509.pdf}
+		\caption{}
+		\label{fig:crosswind_pdf}
+	\end{subfigure}%
+	\hfill
+	\begin{subfigure}[b]{0.34\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{pic/c3/Variance_Verification/JointPDF_Validation_marked_260509.pdf}
+		\caption{}
+		\label{fig:joint_pdf_2d}
+	\end{subfigure}
+	
+	\vspace{-0.4em}
+	\caption[宏观概率密度分布对比与尺度失配现象]{宏观概率密度分布对比与尺度失配现象（灰色直方图来自三维 Neumann 海面斜率样本，红色理论曲线由式(\ref{eq:final_variance_split})和式(\ref{eq:CM_PDF})给出，黑色对照曲线由式(\ref{eq:sigma_u})、式(\ref{eq:sigma_c})和式(\ref{eq:CM_PDF})给出）。(a) 顺风向斜率一维分布；(b) 侧风向斜率一维分布；(c) 斜率二维联合概率密度分布}
+	\label{fig:pdf_verification}
+\end{figure}
+
+上述结果表明，Neumann 谱生成的三维海面在空间频段一致时，其斜率统计可以由 CM 形式的二维高斯概率密度表征。有限光束响应的是足迹尺度平均后的斜率起伏。将式(\ref{eq:final_variance_split})得到的足迹尺度有效斜率方差代入 CM 形式概率密度函数后，数值计算的联合概率分布理论轮廓与光束足迹尺度下提取的仿真散点阵保持一致；直接采用全频段 CM 经验方差会把小尺度粗糙度过度计入光束整体偏折。
+
+为量化概率重构的吻合程度，本文采用三类直接服务于模型判断的指标：一维经验分布与匹配高斯分布之间的 Kolmogorov--Smirnov 距离 $D_\alpha$、二维斜率样本相关系数 $\rho_{xy}$，以及全频段 CM 方差相对足迹尺度有效方差的放大倍数。设 $\hat F_\alpha(s)$ 为足迹尺度斜率样本的经验分布函数，$F_\alpha(s;\hat\sigma_\alpha)$ 为使用样本标准差 $\hat\sigma_\alpha$ 构造的零均值高斯分布函数，则
+\[
+D_\alpha=\sup_s\left|\hat F_\alpha(s)-F_\alpha(s;\hat\sigma_\alpha)\right|.
+\]
+其中，方向索引 $\alpha\in\{u,c\}$ 分别表示顺风向与侧风向。为给出 K--S 检验的显著性参照，本文同时计算互补概率 $q_\alpha$：
+\[
+q_\alpha=2\sum_{j=1}^{\infty}(-1)^{j-1}
+\exp\left\{-2j^2\left[(\sqrt{n}+0.12+0.11/\sqrt{n})D_\alpha\right]^2\right\}.
+\]
+其中，$n$ 为用于经验分布统计的样本数。表 \ref{tab:c3_pdf_quant_metrics} 给出了联合 PDF 缓存数据对应的统计结果：有效样本数为 $9.801\times10^5$，顺风和侧风方向的 $D_u$ 与 $D_c$ 分别为 $0.0159$ 和 $0.0219$，二维样本相关系数为 $\rho_{xy}=-0.0447$。这些结果说明，足迹尺度斜率样本与零均值各向异性高斯 PDF 的分布偏差较小，两个正交方向之间也未出现明显线性相关。
+
+需要说明的是，$q_u$ 和 $q_c$ 主要用于严格零假设显著性检验，其中下标 $u$ 与 $c$ 分别对应顺风向和侧风向。在本实验近百万样本条件下，即使 $D_u$ 和 $D_c$ 只有 $10^{-2}$ 量级，对应的 $q_u$ 与 $q_c$ 也会因样本量放大而降至极小值，因此它们更适合作为统计显著性参照，而不宜单独解释为工程上的分布吻合程度。相比之下，方差尺度对照更直接揭示模型适用问题：以 $U=10\,\mathrm{m/s}$ 的 CM 全频段原始方差为对照，顺风和侧风方向的原始 CM 方差分别约为足迹尺度样本方差的 $5.75$ 倍和 $10.37$ 倍，表明直接采用全频段 CM 方差会显著高估光束整体偏折尺度。这一差异给出了尺度滤波必要性的定量依据。由此，本文保留 CM 斜率 PDF 的函数形式，并将其方差输入替换为由海浪谱和光束尺度共同确定的足迹尺度有效斜率方差，使 CM 模型与三维海面生成和后续光束足迹参数联通。
+
+\begin{table}[htbp]
+	\centering
+	\caption{足迹尺度斜率概率重构的定量指标}
+	\label{tab:c3_pdf_quant_metrics}
+	\begin{tabular}{ccc}
+		\toprule
+		验证对象 & 指标 & 数值 \\
+		\midrule
+		顺风向一维 PDF & $D_u$ & $0.0159$ \\
+		顺风向一维 PDF & $q_u$ & $4.93\times10^{-216}$ \\
+		侧风向一维 PDF & $D_c$ & $0.0219$ \\
+		侧风向一维 PDF & $q_c$ & $1.60\times10^{-407}$ \\
+		二维联合样本 & $\rho_{xy}$ & $-0.0447$ \\
+		全频段 CM 方差对照 & $\sigma_{u,\mathrm{CM}}^2/\hat{\sigma}_{u,\mathrm{beam}}^2$ & $5.75$ \\
+		全频段 CM 方差对照 & $\sigma_{c,\mathrm{CM}}^2/\hat{\sigma}_{c,\mathrm{beam}}^2$ & $10.37$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{有限光束足迹尺度下不同谱模型的有效斜率方差对照}
+
+在确立尺度滤波的必要性后，还需检查不同海浪谱在有限光束足迹尺度下给出的有效斜率方差是否保持同一量级。该对照用于检验 Neumann 谱在本文尺度滤波框架下能否与 PM 谱和 ECKV 谱形成可比的宏观偏折输入。滤波后谱间差异的收敛程度，可用于判断后续采用 Neumann 谱进行解析推导时对有限光束宏观偏折量级的影响。
+
+Neumann 谱在高频段衰减较快，其未截断的全谱斜率方差低于包含毛细波分量的 ECKV 谱。本文关注的是光束足迹尺度下的有效斜率方差。本实验统一对 Neumann、PM 与 ECKV 谱施加相同物理尺度（如 $D=0.6\,\mathrm{m}$）的贝塞尔孔径滤波，并对比三者在滤波前后的斜率方差。
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]{
+		\includegraphics[width=0.48\linewidth]{pic/c3/Variance_Verification/Spectrum_Raw_Variance_marked_260509.pdf}
+	}
+	\hfill
+	\subfloat[]{
+		\includegraphics[width=0.48\linewidth]{pic/c3/Variance_Verification/Spectrum_Beam_Variance_marked_260509.pdf}
+	}
+	\caption[不同海浪功率谱在空间滤波前后的斜率方差演化对比]{不同海浪功率谱在空间滤波前后的斜率方差演化对比（Neumann、PM 与 ECKV 谱分别由式(\ref{eq:Neumann_spectrum})、式(\ref{eq:PM_spectrum})和式(\ref{eq:ECKV_total})定义，光束足迹低通滤波由式(\ref{eq:bessel_filter})给出）。(a) 未施加孔径滤波；(b) 施加光束足迹低通滤波}
+	\label{fig:spectrum_variance_compare}
+\end{figure}
+
+图 \ref{fig:spectrum_variance_compare} 表明，未施加足迹滤波时，不同海浪谱给出的全频段斜率方差差异明显，直接将全频段点斜率代入 CM 形式概率模型会使结果强烈依赖谱尾选取。施加光束足迹低通滤波后，高频毛细波贡献被削弱，三种谱模型输出的足迹尺度有效斜率方差收敛到相近量级。该结果说明，对于有限光束足迹下的整体偏折建模，关键输入应取为足迹尺度有效斜率方差；全频段点尺度斜率方差中未进入宏观偏折的部分，则通过高频残余斜率方差进入束腰展宽和局部透射涨落。Neumann 谱在该尺度处理下保留了对光束宏观偏折起主要作用的低频能量份额，由于它兼具解析便利性和尺度上的保守性，后续采用该谱作为统一输入。
+
+\subsection{高频残余斜率方差与光斑动态展宽机制}
+
+前述论证表明，低频重力波主导光束宏观偏折。根据双尺度模型（TSM），被光斑低通滤波器截断的高频毛细波能量并未消失。这部分高频波会导致射线的随机微折射，引发光束瞬时展宽。为解析该效应，本节引入小角散射近似（SAA）与傅里叶光学理论推导等效束腰半径。McLean 等人于1996年指出，在小角条件下，几何发散、海浪随机折射及多重散射可视为独立扩展机制，其总点扩散函数（PSF）等价于子 PSF 的空间卷积\citing{mclean1996waves,goodman2015statistical}。这一结论为本文将高频残余斜率映射为附加空间方差、并与基线几何束宽在线性域中叠加提供了理论依据。
+
+从物理含义看，该处理可理解为把第二章的双尺度分离继续推进到光场层面：足迹尺度有效斜率方差进入光轴方向和遮挡判定，高频残余斜率方差进入光束内部射线的角度散布。该分解在每一帧海面中保留低频几何起伏，同时把小尺度波纹对接收面光斑宽度和局部透射率的影响写入统计项。
+
+从全频段斜率方差中分离高频贡献时，需要提取导致光斑微观展宽的高频残余斜率方差。将式(\ref{eq:sigma_u})和式(\ref{eq:sigma_c})给出的 Cox--Munk 原始全频段点尺度方差 $\sigma_{q,\mathrm{CM}}^2(U)$ 减去式(\ref{eq:final_variance_split})给出的足迹尺度有效斜率方差 $\sigma_{q,\mathrm{beam}}^2(U,D)$，即可得到顺风与侧风方向上的高频残余斜率闭合方差：
+\begin{equation}
+	\sigma_{\mathrm{high},q}^2(U,D)=
+	\max\left[0,\sigma_{q,\mathrm{CM}}^2(U)-\sigma_{q,\mathrm{beam}}^2(U,D)\right],
+	\quad q\in\{u,c\}.
+	\label{eq:c3_residual_slope_var}
+\end{equation}
+
+上述分解将高频毛细波从光束整体偏折输入中分离出来，并转化为高频残余斜率方差。由此，CM 全频段斜率统计被拆分为足迹尺度有效斜率方差和高频残余斜率方差两部分：前者由 Neumann 谱经足迹滤波后给出，用于描述有限光束感知到的等效法向；后者保留小尺度波纹对局部折射角、束腰展宽和界面透射率涨落的影响。该双尺度分工使 CM 概率模型能够同时进入宏观几何偏折计算和小尺度波纹修正。
+
+在获取高频残余斜率方差后，需实现几何斜率向折射角方差的物理转换。根据斯涅尔定律，当光束以近垂直角度入射至局部倾角微小的波浪面时，透过海面进入水下的光线偏折角 $\theta$ 与海面局部斜率分量满足一阶线性关系\citing{guenther1985airborne,voronovich1999wave}。该一阶关系的系数由界面两侧折射率差决定，因此斜率方差进入角域后需要乘以 $(1-\eta)^2$。基于方差的线性缩放性质，水下光束的附加折射角方差可表示为：
+\begin{equation}
+	\sigma_{\theta,q}^2=(1-\eta)^2\sigma_{\mathrm{high},q}^2(U,D),
+	\quad q\in\{u,c\}.
+	\label{eq:c3_refraction_angle_var}
+\end{equation}
+
+式中，$\eta=n_a/n_w\approx 0.75$ 为相对折射率，其中 $n_a \approx 1.0$ 与 $n_w \approx 1.333$ 分别为空气与海水的折射率。式(\ref{eq:c3_refraction_angle_var})把高频残余斜率方差转写为水下传播角度的不确定性，顺风与侧风两个分量仍保持各向异性结构；在后续光斑展宽中，侧风分量主要进入横向 $x$ 方向束腰修正，顺风分量主要进入传播主平面内的 $y$ 方向束腰修正。
+
+在式(\ref{eq:c3_residual_slope_var})给出高频残余斜率方差，并由式(\ref{eq:c3_refraction_angle_var})映射为折射角方差后，还需把角域扰动转化为接收面上的空间方差。其物理含义是：同一界面点处的随机微折射主要在传播距离 $L$ 上积累为横截面位置偏移。对于高斯光斑，光强可写为 $I(r)\propto\exp(-2r^2/W^2)$。按照 ISO 11146 标准采用的二阶矩束宽定义，并结合 Saleh 等人于2019年对高斯光束统计宽度的表述，物理束腰半径 $W$（光强下降至 $1/e^2$ 处）与统计标准差满足 $W = 2\sigma$\citing{iso11146_1_2021,saleh2019fundamentals}。因此，折射角方差在接收面上对应坐标偏移方差 $\sigma_{\theta}^2 L^2$，而 $W=2\sigma$ 使该空间方差进入束腰半径时带来系数 $4$。若各扩展分量的 PSF 可近似为高斯核，则根据高斯卷积定理，合成光斑的总空间方差等于各独立过程诱导空间方差的代数和\citing{goodman2015statistical}。由此，从总方差链条中提取高频残余斜率对应的新增项，并叠加至纯几何传播基线束宽之上，可得到引入波浪微观展宽效应后的各向异性动态展宽半径：
+\begin{equation}
+	\begin{cases}
+		W_{Lx\_\mathrm{new}} = \sqrt{W_{Lx\_\mathrm{geom}}^2 + 4 \cdot \sigma_{\theta,c}^2 \cdot L^2} \\
+		W_{Ly\_\mathrm{new}}(\theta_i) = \sqrt{W_{Ly\_\mathrm{geom}}^2(\theta_i) + 4 \cdot \sigma_{\theta,u}^2 \cdot L^2}
+	\end{cases}
+	\label{eq:dynamic_spot_compensation}
+\end{equation}
+
+式中，$W_{Lx\_\mathrm{geom}}$ 与 $W_{Ly\_\mathrm{geom}}(\theta_i)$ 为仅考虑光束固有发散角的基线投影半径。该式通过高斯卷积，将小尺度波动引发的折射不确定性与纯几何传输分开建模后再合成，物理上补偿了频域截断后未进入宏观斜率的高频波纹展宽效应。
+
+高频残余斜率方差还会进入界面能量透射计算。海面小尺度波纹会改变局部光线的入射角，从而调制基于斯涅尔定律与菲涅尔方程的界面能量透射率。因此，式(\ref{eq:c3_residual_slope_var})得到的高频残余斜率方差既用于修正光斑束腰，后续评估局部能量透射损耗时也将调用这一统计量。
+
+尺度滤波后的两个斜率输入量在后续计算中分工不同：足迹尺度有效斜率方差用于计算光轴偏折和遮挡判定，高频残余斜率方差用于补偿束腰展宽与透射率涨落。第四章将分别把这两类斜率方差写入局部法向扰动和 BSF 展宽项。
+
+\section{动态海面几何遮挡的跨场景验证、条件概率分解与最大允许入射角}
+\label{sec:shadowing_decoupling}
+
+Smith 遮挡模型源自随机粗糙面的波散射问题。用于跨海面定向光束透射时，需要先检查其在海面入射场景中的适用性。前文得到的足迹尺度有效斜率在这里继续作为遮挡统计的方向均方根斜率输入，用于描述有限光束在传播视线方向上实际感知到的宏观起伏。本节依次验证总存活概率适用性与上游条件存活概率的单独提取方式：基于一维 Neumann 海面切片与 MC 射线追踪，对 Smith 总存活概率进行数值对照，验证该模型在海面入射场景中的有效性；在此基础上，提取局部法向满足迎光条件的子样本，检验上游条件存活概率是否可以独立统计，并据此提取最大允许入射角。
+
+上述验证把尺度滤波后的有效斜率从海面倾斜统计推进到界面可见性和能量透射计算。由此得到的 $\theta_{\max}$ 与统计平均透射率，用于刻画跨介质入射能量在粗糙界面处的可达范围。
+
+\subsection{一维 Neumann 海面上的 Smith 总存活概率迁移验证}
+\label{subsec:smith_migration_validation}
+
+为了与 Smith 理论推导所依赖的单剖面几何假设对应，本文将第 3.1 节建立的二维动态海面沿入射视线平面投影为等效的一维 Neumann 海面切片 $Z(x)$。在该投影框架下，遮挡判决仅发生在光束射线所在的观测平面内，从而在保留粗糙面几何可见性核心物理特性的同时，避免了三维求交引入的非必要复杂度。
+
+在生成一维定向切片时，本文采用基于方向谱的波数投影策略。对于给定的相对风向角 $\phi_w$，离散二维谱中的任意波浪分量其等效一维空间波数可映射为 $k_{\mathrm{eff}} = k_i \cos(\theta_j - \phi_w)$。这一物理映射确保了一维切片在空间统计上能够继承原始风场的各向异性斜率特征。
+
+总存活概率的验证采用 MC 射线追踪法。对于给定的入射天顶角 $\theta_i$（对应射线几何斜率 $-\cot\theta_i$），在一维切片的中心点进行双重几何判决：需依次进行局部自遮挡判定与上游高度廓线提取。若目标点相邻采样点的一阶差分（局部坡度）小于射线斜率，且上游廓线中不存在越过射线轨迹 $z_{ray}(x)$ 的波峰，则该样本同时满足局部迎光与上游无遮挡条件，记为一次成功穿透。总存活概率由统计平均给出：
+\begin{equation}
+	S_{\mathrm{MC,total}}(\theta_i) = \frac{N_{\mathrm{surv}}(\theta_i)}{N_{\mathrm{all}}(\theta_i)}
+	\label{eq:mc_total_survival}
+\end{equation}
+式中，$N_{\mathrm{all}}(\theta_i)$ 为当前角度下参与统计的总样本数；$N_{\mathrm{surv}}(\theta_i)$ 为同时满足局部迎光与上游无遮挡的成功穿透样本数。因此，$S_{\mathrm{MC,total}}$ 表示“局部自遮挡”和“上游波峰遮挡”共同作用后的联合存活概率。该统计量与 Smith 总存活概率具有相同概率对象，可作为式(\ref{eq:smith_survival})在一维海面切片上的 MC 参照。
+
+在实验参数配置上，海面切片长度取 $100\,\mathrm{m}$，空间分辨率取 $0.1\,\mathrm{m}$；Neumann 频谱在 $0.1 \sim 2.0\,\mathrm{Hz}$ 范围内对数离散为 50 个频点，并在 $[-\pi/2, \pi/2]$ 范围内离散为 36 个方向节点。光束孔径固定为 $D=0.1\,\mathrm{m}$（对应截止角频率 $\omega_c=\sqrt{2\pi g/D}$）。风速分别取 $U=6, 9, 12\,\mathrm{m/s}$，相对方位角取 $\phi_w=0^\circ, 30^\circ, 60^\circ, 90^\circ$，每组环境状态独立执行 $N_{\mathrm{mc}}=5000$ 次 MC 采样。入射角 $\theta_i$ 的扫描采用分段加密策略：$0^\circ \sim 60^\circ$ 步长为 $10^\circ$，$60^\circ \sim 80^\circ$ 步长为 $5^\circ$，$80^\circ \sim 89^\circ$ 的掠射区步长为 $1^\circ$，以精细捕捉概率跌落的非线性边缘。
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/Smith_Shadowing/1/TotalShadow_U6_marked_260509.pdf}
+		\label{fig:smith_total_u6}
+	}
+	\hfill
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/Smith_Shadowing/1/TotalShadow_U9_marked_260509.pdf}
+		\label{fig:smith_total_u9}
+	}
+	\hfill
+	\subfloat[]{
+		\includegraphics[width=0.31\linewidth]{pic/c3/Smith_Shadowing/1/TotalShadow_U12_marked_260509.pdf}
+		\label{fig:smith_total_u12}
+	}
+	\caption[一维 Neumann 投影切片下 Smith 总存活概率迁移验证]{一维 Neumann 投影切片下 Smith 总存活概率迁移验证（离散散点由 MC 切片统计得到，解析实线由式(\ref{eq:smith_survival})和式(\ref{eq:smith_lambda})给出）。(a) $U=6\,\mathrm{m/s}$；(b) $U=9\,\mathrm{m/s}$；(c) $U=12\,\mathrm{m/s}$}
+	\label{fig:smith_total_validation}
+\end{figure}
+
+图 \ref{fig:smith_total_validation} 呈现了各向异性海况下总存活概率的演化规律。结果显示，在 $0^\circ \sim 75^\circ$ 的入射区间内，存活概率基本保持在 1.0，说明中低角度下上游遮挡的影响较弱；越过 $75^\circ$ 附近后，存活概率开始快速下降。与此同时，风向会改变掠射区的可见范围，侧风工况（$\phi_w=90^\circ$）的存活概率曲线相对顺风工况（$\phi_w=0^\circ$）右移，对应更大的无遮挡角度范围。
+
+基于一维 Neumann 切片统计得到的离散散点，与代入足迹尺度方向均方根斜率 $\sigma_{\mathrm{dir},\mathrm{beam}}$ 的 Smith 解析实线整体接近；其中 $\sigma_{\mathrm{dir},\mathrm{beam}}$ 由式(\ref{eq:c3_sigma_dir_beam})得到，解析实线对应式(\ref{eq:smith_survival})和式(\ref{eq:smith_lambda})。在空间频段约束至光束足迹尺度后，Smith 总存活概率表达式可以作为当前参数范围内的遮挡概率近似。该对照说明，将足迹尺度有效斜率方差投影到入射视线方向后，可作为 Smith 可见性模型中的方向均方根斜率输入。前文建立的 Neumann--CM 有效斜率关系可同时用于局部斜率 PDF、遮挡概率和最大允许入射角计算。
+
+\subsection{上游遮挡指示函数与最大允许入射角 \texorpdfstring{$\theta_{\max}$}{theta max} 隐式求解}
+\label{subsec:theta_max_derivation}
+
+在确认式(\ref{eq:smith_survival})和式(\ref{eq:smith_lambda})给出的 Smith 总存活概率模型可迁移至光束透射场景后，需要进一步剖析其内部概率结构，以便将遮挡过程写入后续功率统计模型。对几何遮挡事件进行重构可知，Smith 总存活概率本质上可分解为“局部迎光事件”与“局部迎光已成立条件下的上游路径存活事件”的联合概率：
+\begin{equation}
+	S_S(\theta_i) = P_{\mathrm{local}}(\theta_i) \times P_{\mathrm{up}|\mathrm{local}}(\theta_i)
+	\label{eq:smith_decomposition}
+\end{equation}
+式中，局部自遮挡概率与上游条件存活概率分别定义为：
+\begin{equation}
+	P_{\mathrm{local}}(\theta_i) = 1 - \frac{1}{2}\mathrm{erfc}\left( \frac{\cot\theta_i}{\sqrt{2}\sigma_{\mathrm{dir},\mathrm{beam}}} \right)
+	\label{eq:prob_local}
+\end{equation}
+\begin{equation}
+	P_{\mathrm{up}|\mathrm{local}}(\theta_i) = \frac{1}{1 + \Lambda(\theta_i)}
+	\label{eq:prob_up_local}
+\end{equation}
+在此，$\sigma_{\mathrm{dir},\mathrm{beam}}$ 为式(\ref{eq:c3_sigma_dir_beam})定义的光束投影方向足迹尺度有效均方根斜率。式(\ref{eq:prob_local})中的互补误差函数来自高斯斜率分布在迎光半空间内的积分，$\sigma_{\mathrm{dir},\mathrm{beam}}$ 越大，局部法向越容易在入射方向附近产生离散分散，局部迎光概率随入射角的过渡也越平缓。式(\ref{eq:prob_up_local}) 则表示“局部法向已满足迎光条件后，光线沿轨迹逆推未被上游波峰截断”的上游条件存活概率。
+
+上述分解使局部迎光与上游路径存活两个事件可以分别处理：局部项 $P_{\mathrm{local}}$ 反映光束入射面元是否背光，对应连续的局部迎光概率变化；上游条件存活概率 $P_{\mathrm{up}|\mathrm{local}}$ 则决定视线路径是否被前方波峰截断。后文的上游遮挡指示函数 $h_{\mathrm{shadow}}$ 只记录上游路径连通性，不再重复计入局部迎光项。对于跨介质窄光束链路而言，掠射区的连通性主要受上游路径存活概率控制；当该概率快速下降时，局部法向的小幅变化难以恢复路径可见性。
+
+尽管动态海面在空间上连续起伏，但对特定窄光束链路而言，从完全照亮向完全遮挡的过渡可能较快。这是由于激光在海面的投影光斑及水下接收机的有效视场（Field of View, FOV），通常小于主导遮挡效应的海浪宏观尺度，边缘半遮挡过渡区在接收功率统计中可被简化。本文据此将连续遮挡过渡写为二元可见性判断；当过渡区远小于有效接收尺度时，二元指示函数近似具有明确的适用条件\citing{singh2024oirs,ata2025irsuwoc,yi2025ris}。基于此，本文将视距（Line-of-Sight, LoS）链路的上游遮挡分量写为遮挡指示函数：
+\begin{equation}
+	h_{\mathrm{shadow}}(\theta_i) \approx 
+	\begin{cases} 
+		1, & \text{若 } \theta_i \le \theta_{\max}(U, \phi_w) \\ 
+		0, & \text{若 } \theta_i > \theta_{\max}(U, \phi_w) 
+	\end{cases}
+	\label{eq:hard_truncation}
+\end{equation}
+式中，最大允许入射角 $\theta_{\max}$ 定义为：在特定风速 $U$ 与相对风向 $\phi_w$ 下，上游条件存活概率 $P_{\mathrm{up}|\mathrm{local}}(\theta_i)$ 下降至给定可见性阈值 $P_{\mathrm{vis}}$（如 $P_{\mathrm{vis}}=0.95$）时的临界天顶角。
+
+代入式(\ref{eq:prob_up_local})中的上游条件存活概率形式与式(\ref{eq:smith_lambda})中的特征函数显式展开，临界角条件可等价转换为求解 $\Lambda(\theta_{\max}) = (1 - P_{\mathrm{vis}}) / P_{\mathrm{vis}}$。为获得遮挡临界角，引入无量纲变量 $z \triangleq \cot\theta_i / (\sqrt{2}\sigma_{\mathrm{dir},\mathrm{beam}})$ 及修正遮挡特征函数 $G(z) \triangleq e^{-z^2}/(\sqrt{\pi}z) + \mathrm{erf}(z)$。利用误差函数恒等式，临界条件转化为求解非线性方程 $G(z) = (2 - P_{\mathrm{vis}}) / P_{\mathrm{vis}}$。由于 $G(z)$ 在 $z>0$ 域内单调递减，该方程存在唯一确定的解析隐式解。$\theta_{\max}$ 可通过反余切函数反演求得：
+\begin{equation}
+	\theta_{\max}(U, \phi_w,D) = \mathrm{arccot}\left[ \sqrt{2}\sigma_{\mathrm{dir},\mathrm{beam}}(U, \phi_w,D) \cdot G^{-1}\left( \frac{2 - P_{\mathrm{vis}}}{P_{\mathrm{vis}}} \right) \right]
+	\label{eq:theta_max_analytic}
+\end{equation}
+该隐式解用于划定跨海通信视场的可见范围，后续数值仿真中的临界角提取以此作为参考基准。
+
+\subsection{基于条件样本统计的上游遮挡与 \texorpdfstring{$\theta_{\max}$}{theta max} 多维验证}
+\label{subsec:numerical_validation}
+
+为检验 Smith 分解式(\ref{eq:smith_decomposition})中的上游条件存活概率项的物理合理性，并检查式(\ref{eq:theta_max_analytic})给出的 $\theta_{\max}$ 解析反演结果，本文进一步设置面向上游遮挡的 MC 射线追踪实验。
+
+实验不再统计局部迎光与上游遮挡共同作用后的总存活概率，而是采用条件样本统计策略：对于每个入射角 $\theta_i$，对生成的一维 Neumann 海面切片进行局部坡度筛查，仅提取目标面元法向满足迎光条件的样本，记其总数为 $N_{\mathrm{local}}(\theta_i)$；在此基础上，仅在满足局部迎光条件的样本子集中逆向追踪，统计未被上游波峰阻断的存活样本数 $N_{\mathrm{surv}}(\theta_i)$。仿真输出的概率对应于 Smith 分解中的上游条件存活概率：
+\begin{equation}
+	P_{\mathrm{MC},up|\mathrm{local}}(\theta_i) = \frac{N_{\mathrm{surv}}(\theta_i)}{N_{\mathrm{local}}(\theta_i)}
+	\label{eq:mc_conditional_upstream}
+\end{equation}
+
+一维切片长度设定为 $100\,\mathrm{m}$，采样间隔 $0.1\,\mathrm{m}$。为减弱单边差分引起的数值偏置，局部坡度采用相邻节点的中心差分估计。典型方位角曲线采用可见性阈值 $P_{\mathrm{vis}}=0.95$；在典型风速下（$U=9\,\mathrm{m/s}$），沿四个代表性方位角对掠射区（$70^\circ \sim 89.5^\circ$）进行步长为 $0.5^\circ$ 的高分辨率扫描，通过线性插值提取仿真临界角 $\theta_{\max,\mathrm{sim}}$，每组执行 $N_{\mathrm{mc}}=5000$ 次 MC 实现。为比较理论与仿真在广域空间内的临界角吻合程度，进一步采用 $P_{\mathrm{vis}}=0.98$ 的保守可见性阈值构建全参数矩阵：风速范围扩展为 $3\,\mathrm{m/s}$ 至 $15\,\mathrm{m/s}$，步长为 $2\,\mathrm{m/s}$；方位角范围扩展为 $0^\circ$ 至 $360^\circ$，步长为 $5^\circ$；每个状态执行 $N_{\mathrm{mc}}=1000$ 次 MC 实现，并由矩阵扫描结果提取仿真临界角，生成伪极坐标下的 $\theta_{\max}$ 全局验证图。
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]{
+		\includegraphics[width=0.46\linewidth]{pic/c3/Smith_Shadowing/2/upstream_maxtheta.pdf}
+		\label{fig:upstream_cliff}
+	}\hfill
+	\subfloat[]{
+		\includegraphics[width=0.46\linewidth]{pic/c3/Smith_Shadowing/2/Upstream_PolarMap_20260402.pdf}
+		\label{fig:theta_max_polar}
+	}
+	\vspace{-0.2cm}
+\caption[上游条件存活概率与最大允许入射角 $\theta_{\max}$ 的联合验证]{上游条件存活概率与最大允许入射角 $\theta_{\max}$ 的联合验证（图(a)中的上游条件存活概率由式(\ref{eq:mc_conditional_upstream})统计，竖直虚线和图(b)中的黑色等高线由式(\ref{eq:theta_max_analytic})给出，图(b)中的白色圆点 $M_0$ 标出代表性读图点）。(a) 粗糙海况 $U=9\,\mathrm{m/s}$ 下各方位角的上游条件存活概率曲线；(b) 全参数空间下 $\theta_{\max}$ 的各向异性伪极坐标热力图。图(b)验证参数为 $C_{Neu}=3.05$、$D=0.6\,\mathrm{m}$、$P_{\mathrm{vis}}=0.98$}
+	\label{fig:theta_max_joint_validation}
+\end{figure}
+
+图 \ref{fig:theta_max_joint_validation}(a) 呈现了各方位角下上游条件存活概率的演化，其在中小角度区间接近 1.0，而在逼近 $80^\circ$ 的掠射区快速下降。这种变化形态支持将上游遮挡近似为二元指示函数。图中理论反演最大允许入射角的竖直虚线，基本穿过仿真离散散点跌落至 $P_{\mathrm{vis}}=0.95$ 阈值的交点位置。侧风（$90^\circ$）曲线相较顺风（$0^\circ$）右移，说明侧风链路在掠射条件下具有更大的无遮挡角度范围。
+
+在图 \ref{fig:theta_max_joint_validation}(b) 的全参数空间伪极坐标图中，径向位置表示风速，方位角表示相对风向，颜色和黑色等高线分别表示仿真提取的临界角与理论预测临界角。代表仿真结果的底色热力扇形分布，与理论预测的黑色等高线群在 $0^\circ \sim 360^\circ$ 的风向跨度及所考察风速范围内具有相近的变化形态。其中，白色圆点 $M_0$ 对应 $U=9\,\mathrm{m/s}$、$\phi_w=90^\circ$ 的侧风工况，该工况下仿真最大允许入射天顶角为 $\theta_{\max,\mathrm{sim}}=83.97^\circ$，理论预测值为 $\theta_{\max,\mathrm{ana}}=85.38^\circ$，二者相差 $1.41^\circ$。这一对照结果表明，Smith 函数的上游条件存活概率拆解、足迹尺度有效斜率方差的引入以及 $\theta_{\max}$ 隐式求解能够共同给出上游可见范围的近似描述。
+
+定量误差分为概率曲线和临界角两类口径。对于 Smith 总存活概率和上游条件存活概率，本文在相同入射角、风速和风向采样点上比较理论概率与 MC 统计概率，并以 RMSE 衡量整条曲线或全参数矩阵中的平均偏差。对于最大允许入射角，仿真值由 MC 存活概率曲线跌落至给定可见性阈值的位置提取，理论值由式(\ref{eq:theta_max_analytic})计算，因此表中的角度误差直接对应 $\theta_{\max,\mathrm{sim}}$ 与 $\theta_{\max,\mathrm{ana}}$ 的差异。表 \ref{tab:c3_shadow_quant_metrics} 汇总了对应结果。Smith 总存活概率在掠射区 $\theta_i\geq 70^\circ$ 的 RMSE 为 $2.76\times10^{-2}$，最大绝对误差为 $7.54\times10^{-2}$；上游条件存活概率在全参数矩阵中的 RMSE 为 $4.07\times10^{-2}$。对于 $511$ 个风速--风向状态，$\theta_{\max}$ 的平均绝对误差为 $2.12^\circ$。误差主要出现在存活概率快速跌落的过渡角区间，低角度近全可见区和高角度遮挡区的理论与仿真判定更稳定。由此，足迹尺度滤波后的 CM 形式斜率分布进一步扩展为粗糙海面可见性分析的统计输入。
+
+\begin{table}[htbp]
+	\centering
+	\caption{Smith 遮挡模型与最大允许入射角的定量误差}
+	\label{tab:c3_shadow_quant_metrics}
+	\begin{tabular}{ccc}
+		\toprule
+		验证对象 & 指标 & 数值 \\
+		\midrule
+		Smith 总存活概率，$\theta_i\geq70^\circ$ & RMSE & $2.76\times10^{-2}$ \\
+		Smith 总存活概率，$\theta_i\geq70^\circ$ & 最大绝对误差 & $7.54\times10^{-2}$ \\
+		上游条件存活概率，全参数矩阵 & RMSE & $4.07\times10^{-2}$ \\
+		$\theta_{\max}$，全参数矩阵 & 平均绝对误差 & $2.12^\circ$ \\
+		代表点 $M_0$ & $|\theta_{\max,\mathrm{sim}}-\theta_{\max,\mathrm{ana}}|$ & $1.41^\circ$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{\texorpdfstring{$\theta_{\max}$}{theta max} 可见性条件下粗糙海面统计平均菲涅尔透射率}
+\label{subsec:transmission_under_theta_max}
+
+海面遮挡问题被拆解为局部迎光判定与上游路径截断后，界面透射可以写为“可见路径是否存在”与“可见微面元上的平均菲涅尔透射”两个统计量的乘积。上游可见性已经由式(\ref{eq:hard_truncation})写成指示函数 $h_{\mathrm{shadow}}(\theta_i)$；因此，后续理论推导与数值仿真仅需显式限制在式(\ref{eq:theta_max_analytic})确定的 $\theta_i \le \theta_{\max}(U,\phi_w)$ 允许入射区内进行，或在表达式前整体乘上指示函数 $h_{\mathrm{shadow}}(\theta_i)$，将路径可见性判断写入代数表达。
+
+在可见性条件下，界面平均透射率由“全局平均法向对应单一等效入射角”的近似，改写为对局部微面元菲涅尔透射率的统计平均。设全局入射天顶角为 $\theta_i$，入射方位角为 $\varphi_i$，则向下入射光线的单位方向向量写为：
+\begin{equation}
+	\mathbf{v}_{inc} = \left( \sin\theta_i\cos\varphi_i,\; \sin\theta_i\sin\varphi_i,\; -\cos\theta_i \right)
+	\label{eq:incident_vector_transmission}
+\end{equation}
+对任意局部斜率为 $(Z_x,Z_y)$ 的微面元，其指向空气侧的单位法向量为：
+\begin{equation}
+	\mathbf{n}(Z_x,Z_y) = \frac{(-Z_x, -Z_y, 1)}{\sqrt{1+Z_x^2+Z_y^2}}
+	\label{eq:local_normal_transmission}
+\end{equation}
+该式是第二章式(\ref{eq:normal_vector})在局部透射统计中的特例化写法，法向量在此作为局部菲涅尔入射角和斜率概率积分的连接变量。于是局部入射角 $\theta_{\mathrm{local}}$ 的余弦值可投影为：
+\begin{equation}
+	\mu \triangleq \cos\theta_{\mathrm{local}} = -\mathbf{v}_{inc}\cdot \mathbf{n} = \frac{\cos\theta_i + Z_x\sin\theta_i\cos\varphi_i + Z_y\sin\theta_i\sin\varphi_i}{\sqrt{1+Z_x^2+Z_y^2}}
+	\label{eq:local_mu_transmission}
+\end{equation}
+仅当 $\mu>0$ 时，微面元才真正朝向入射光源。这一点与前述 Smith 分解同构：局部迎光条件已经由积分域 $\Omega_+:\mu>0$ 显式限定，若再额外乘入前文推导的局部自遮挡概率 $P_{\mathrm{local}}(\theta_i)$，将造成对同一物理机制的重复计数。因此，局部迎光条件直接通过截断积分域单独处理。
+
+沿用前述相对折射率 $\eta=n_a/n_w$，局部微面元上的非偏振菲涅尔透射率依据电磁理论写为：
+\begin{equation}
+	R_s(\mu) = \left( \frac{\eta\mu-\sqrt{1-\eta^2+\eta^2\mu^2}}{\eta\mu+\sqrt{1-\eta^2+\eta^2\mu^2}} \right)^2, \qquad R_p(\mu) = \left( \frac{\mu-\eta\sqrt{1-\eta^2+\eta^2\mu^2}}{\mu+\eta\sqrt{1-\eta^2+\eta^2\mu^2}} \right)^2
+	\label{eq:fresnel_components_transmission}
+\end{equation}
+\begin{equation}
+	T_{\mathrm{Fresnel}}(\mu) = 1 - \frac{R_s(\mu)+R_p(\mu)}{2}
+	\label{eq:fresnel_transmission_average}
+\end{equation}
+式(\ref{eq:fresnel_components_transmission})中的 $R_s$ 与 $R_p$ 分别表示 $s$ 偏振和 $p$ 偏振分量的反射率；式(\ref{eq:fresnel_transmission_average})将两种偏振分量平均后得到局部微面元的非偏振透射率。该透射率只描述已可见微面元上的界面能量分配，不负责判断上游路径是否被波峰遮挡，因而与 $h_{\mathrm{shadow}}$ 对应的几何可见性环节互不重复。
+由于界面斜率概率密度是相对于水平投影面积定义的，而式(\ref{eq:local_mu_transmission})中的局部入射余弦决定了实际截获光通量与微面元对入射束的法向投影面积，因此需在积分核中保留辐射度学投影修正因子 $\mu/\cos\theta_i$，这一处理与经典海洋光学辐射传输中的界面通量积分写法一致\citing{mobley1994light,mobley2015polarized}。结合式(\ref{eq:fresnel_transmission_average})中的非偏振菲涅尔透射率，在最大允许入射角条件下，粗糙海面的统计平均透射率统一表达为：
+\begin{equation}
+	\langle T_{\mathrm{sea}}(\theta_i, U, \varphi_i) \rangle = h_{\mathrm{shadow}}(\theta_i; U, \phi_w) \iint_{\Omega_+} T_{\mathrm{Fresnel}}(\mu) \frac{\mu}{\cos\theta_i} p(Z_x,Z_y) \,\mathrm{d}Z_x\mathrm{d}Z_y
+	\label{eq:average_transmission_with_shadow}
+\end{equation}
+式中，$\Omega_+=\{(Z_x,Z_y)\,|\,\mu>0\}$ 为有效迎光积分域；$p(Z_x,Z_y)$ 表示微面元斜率的联合概率密度，并采用前文由足迹尺度有效斜率方差确定的 CM 形式二维高斯分布。这样，界面平均透射率摆脱固定经验斜率方差限制，转化为随海浪谱、风速、风向和光束足迹尺度共同变化的统计量。式(\ref{eq:average_transmission_with_shadow}) 中，上游遮挡指示函数 $h_{\mathrm{shadow}}$ 负责筛除已失去可见性的路径，局部入射角统计期望刻画存活微面元上的菲涅尔非线性透射。
+
+确立该统计期望后，粗糙界面的能量分配可由可见路径筛选与局部菲涅尔透射两部分共同描述。在后续第四章的跨介质链路建模中，传统的单点平滑菲涅尔透射近似将被替换。本文将调用式(\ref{eq:average_transmission_with_shadow}) 提取的 $\langle T_{\mathrm{sea}} \rangle$，并将其与大气段衰减及水下浅层附加光程损耗合并，重构跨介质初始功率项 $p_{\mathrm{the}}$。该处理将足迹尺度滤波后的斜率统计进一步传递到界面能量分配环节，为第四章跨海传播光场代理建模提供一致的统计输入。
+
+\section{本章小结}
+
+本章围绕有限光束足迹实际采样到的动态海面输入展开，将风速 $U$、相对风向 $\phi_w$、Neumann 方向谱和光束足迹尺度 $D$ 组织为同一组风浪海况参数。Neumann 谱经双叠加法生成可追踪的三维海面样本，风向旋转把顺风、侧风主轴映射到全局坐标系，离散微面元和空间奈奎斯特采样保证后续光线求交能够调用同一海面几何。这样，海浪谱由统计描述推进为高度场、局部法向和风向各向异性等可计算输入。
+
+在尺度滤波环节，本章把有限光束足迹写为空间低通窗口，推导了足迹尺度有效斜率方差的解析表达，并将风速、风向和足迹尺度共同引入 CM 形式斜率概率分布。线性近似、Bessel 孔径滤波和不同海浪谱对照共同表明，足迹平均会削弱高频毛细波对整体偏折的影响，使有限光束实际响应的斜率方差集中到低频重力波主导的宏观分量。CM 全频段经验方差由此被拆分为足迹尺度有效斜率方差和高频残余斜率方差：前者用于光轴折射、主轴估计和可见性判断，后者用于描述束腰展宽和局部透射涨落。
+
+在界面透射环节，本章将足迹尺度有效斜率继续传递到 Smith 遮挡模型、上游条件存活概率分解、最大允许入射角 $\theta_{\max}$ 和粗糙海面统计平均透射率中。由此得到的海面高度场、足迹尺度有效斜率方差、高频残余斜率方差、可见性阈值和平均透射率，构成第四章跨介质光场计算和第五章动态接收功率建模所需的海面输入。第三章因此完成了从风浪海况到有限光束跨介质传播初始条件的衔接。

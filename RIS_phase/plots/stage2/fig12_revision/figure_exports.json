@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "frames": [
+    {
+      "figure": "Fig12a_radius",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "daebc1f6089a081436457784916069312e14bd526c2647bfb73e02c6283e63af",
+      "pdfSHA256": "19bd2e9a0c5a20814a40095001e40ccb70ac5620f7cbdc1c178dc64c7e5be46a"
+    },
+    {
+      "figure": "Fig12b_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "2d25a2430b315be633daadb31cf271615dc4b937ed55bbe3724d3f86eeabca58",
+      "pdfSHA256": "369932d4fe97811cf3b2948347ef464a241535291f025a89a1995e6bfc8e1bb9"
+    },
+    {
+      "figure": "Fig12c_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "1c37e5e94db29b4cd6d0654ac96c7802537f7b3ee11d74d5c9c857f2fc4468c0",
+      "pdfSHA256": "6cb3389f4a6ff606d999f0d1930fad9abe6407b078af4c27622dbd73d0d61df2"
+    },
+    {
+      "figure": "Fig13a_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "d72e2a31824e0f648fe813c06620c8843759c001cf31640954622149b3a9be66",
+      "pdfSHA256": "a12ee9e8078a958ae40c86ebb95ce30814e5b2dc2a953b275455c64ebd8efcaf"
+    },
+    {
+      "figure": "Fig13b_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "c30337e4b7e41be830d023322f8d0db2bfee28daaa6e219d2cdac1de5ca4bcb7",
+      "pdfSHA256": "1cc6f01af58c7240041430419888e6879f0935fc430b8e2a48f822e168286750"
+    },
+    {
+      "figure": "Fig14a_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "7317987ffd68117da9d3902e8502c4da49d82da992d1744d9f36572ec9f5d635",
+      "pdfSHA256": "7d62c8e13b6cc0dc201f3b12410e4102b3fb5251e6aac20edfc11ec5c67af0d0"
+    },
+    {
+      "figure": "Fig14b_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "e6c270a5d9634300517f4b241ba5536e76744fafca65edafa25571fec7de319c",
+      "pdfSHA256": "262692d760fff1ace9a76f075eeb404ece734e00e05ae7bfffff909743b00bd8"
+    }
+  ],
+  "mergedPages": 7
+}

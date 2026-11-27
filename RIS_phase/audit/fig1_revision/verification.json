@@ -1,0 +1,152 @@
+{
+  "status": "passed",
+  "scope": "Fig1 revision only",
+  "statistics": [
+    {
+      "distanceM": 5,
+      "incidentPowerW": 0.26162565555415274,
+      "allReceiverPowerW": 0.24558030014472898,
+      "energyResidualW": -1.3322676295501878E-15,
+      "ballisticFractionInMain": 1,
+      "totalFractionInMain": 0.88663722601909856,
+      "densityBoundaryLossFraction": 0.000819326352090477,
+      "halfBandwidthPeakRelativeChange": 0.0887206762446533,
+      "independentHalfPeakRelativeDifference": 0.008921515665097024,
+      "independentHalfWidthRelativeDifference": 0.015440499027572052
+    },
+    {
+      "distanceM": 7.5,
+      "incidentPowerW": 0.26162565555415274,
+      "allReceiverPowerW": 0.24558030014472898,
+      "energyResidualW": -1.3322676295501878E-15,
+      "ballisticFractionInMain": 1,
+      "totalFractionInMain": 0.88459952487402416,
+      "densityBoundaryLossFraction": 0.00083756567105564006,
+      "halfBandwidthPeakRelativeChange": 0.085728996049517114,
+      "independentHalfPeakRelativeDifference": 0.0048302116638834214,
+      "independentHalfWidthRelativeDifference": 0.015675341962977818
+    },
+    {
+      "distanceM": 10,
+      "incidentPowerW": 0.26162565555415274,
+      "allReceiverPowerW": 0.24558030014472898,
+      "energyResidualW": -1.3322676295501878E-15,
+      "ballisticFractionInMain": 1,
+      "totalFractionInMain": 0.88333457101593915,
+      "densityBoundaryLossFraction": 0.00077532549531378336,
+      "halfBandwidthPeakRelativeChange": 0.091081661910746181,
+      "independentHalfPeakRelativeDifference": 0.0055478002345397126,
+      "independentHalfWidthRelativeDifference": 0.01627614513306419
+    }
+  ],
+  "limits": [
+    {
+      "row": 3,
+      "column": 4,
+      "xMinCM": -42.048274518835512,
+      "xMaxCM": 42.448045930586872,
+      "yMinCM": -43.103916912257908,
+      "yMaxCM": 42.633831000643404,
+      "ellipseEquationError": 1.7763568394002505E-15
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "xMinCM": -33.758983058394364,
+      "xMaxCM": 34.081016941605604,
+      "yMinCM": -34.007743082368982,
+      "yMaxCM": 33.832256917630879,
+      "ellipseEquationError": 1.7763568394002505E-15
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "xMinCM": -47.424084854336954,
+      "xMaxCM": 47.373309180123144,
+      "yMinCM": -52.026513094161317,
+      "yMaxCM": 51.648252353612442,
+      "ellipseEquationError": 2.6645352591003757E-15
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "xMinCM": -150.97514765367944,
+      "xMaxCM": 151.48397500483551,
+      "yMinCM": -192.70017963711993,
+      "yMaxCM": 191.87214066200889,
+      "ellipseEquationError": 3.5527136788005009E-15
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "xMinCM": -41.944828237119133,
+      "xMaxCM": 42.50995291527326,
+      "yMinCM": -42.806613809064778,
+      "yMaxCM": 42.418431728005032,
+      "ellipseEquationError": 2.6645352591003757E-15
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "xMinCM": -33.688307316757751,
+      "xMaxCM": 34.15169268324226,
+      "yMinCM": -34.194189070705,
+      "yMaxCM": 33.645810929294868,
+      "ellipseEquationError": 1.7763568394002505E-15
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "xMinCM": -40.579148761237931,
+      "xMaxCM": 40.52693210829694,
+      "yMinCM": -44.646230181925581,
+      "yMaxCM": 44.3970330263925,
+      "ellipseEquationError": 2.6645352591003757E-15
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "xMinCM": -120.22579930019054,
+      "xMaxCM": 120.6486253625195,
+      "yMinCM": -152.37492788421366,
+      "yMaxCM": 151.68010859325679,
+      "ellipseEquationError": 3.5527136788005009E-15
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "xMinCM": -41.603572792347975,
+      "xMaxCM": 42.12236552150631,
+      "yMinCM": -42.755573650291652,
+      "yMaxCM": 42.551074794925384,
+      "ellipseEquationError": 2.6645352591003757E-15
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "xMinCM": -33.595407840860936,
+      "xMaxCM": 34.244592159139074,
+      "yMinCM": -34.824181655243514,
+      "yMaxCM": 33.015818344756454,
+      "ellipseEquationError": 1.7763568394002505E-15
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "xMinCM": -33.937092228012958,
+      "xMaxCM": 33.902907771987046,
+      "yMinCM": -37.275217497830681,
+      "yMaxCM": 37.1429334673156,
+      "ellipseEquationError": 2.2204460492503131E-15
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "xMinCM": -89.539294549011188,
+      "xMaxCM": 89.87683082216769,
+      "yMinCM": -112.07806757062937,
+      "yMaxCM": 111.52323436214984,
+      "ellipseEquationError": 3.5527136788005009E-15
+    }
+  ]
+}

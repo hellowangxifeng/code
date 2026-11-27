@@ -1,0 +1,293 @@
+PAGE 1
+Reinforcement Learning-Based Link Switching in
+Underwater Optical Wireless Communication
+Systems using Intelligent Reflecting Surfaces
+Takumi ISHIDA
+∗, Chedlia BEN NAILA
+†, Hiraku OKADA
+†
+∗Dept. of Information and Communication Engineering, Nagoya University, Nagoya 464-8063, Japan
+†Institute of Materials and Systems for Sustainability, Nagoya University, Nagoya 464-8063, Japan
+tishida@katayama.nuee.nagoya-u.ac.jp, {bennaila, hiraku}@nagoya-u.jp
+Abstract—Intelligent reflecting surfaces (IRS) are emerging
+as a promising technology for establishing adaptable links
+and addressing the limitations of direct line-of-sight (LOS) in
+underwater optical wireless communication (UOWC) systems.
+In challenging underwater environments where direct LOS
+is often disrupted, the IRS can provide alternative paths
+for stable and reliable communication. In this paper, we
+consider an IRS-assisted UOWC system with an autonomous
+surface vehicle (ASV) and autonomous underwater vehicles
+(AUVs) operating in realistic, dynamic conditions. To enable
+adaptive link switching between LOS and IRS-based paths,
+we apply a reinforcement learning approach using a deep Q-
+network (DQN). We conduct simulations over gamma-gamma
+channels, taking into account key degrading factors, including
+underwater attenuation, pointing errors, turbulence, and ob-
+struction. System performance is evaluated in terms of both
+average reward and cumulative reward. Based on the obtained
+results, we demonstrate that the proposed method effectively
+maintains transmission reliability in the presence of obstacles,
+improving performance across various scenarios, particularly
+under obstruction, low attenuation, and minimal pointing error
+conditions.
+Index Terms—underwater optical wireless communication
+(UOWC), intelligent reflecting surfaces (IRS), reinforcement
+learning (RL), deep Q-network.
+I. INTRODUCTION
+Optical wireless communication (OWC) technologies
+have emerged as practical alternatives for wireless commu-
+nication across various hybrid applications, including terres-
+trial outdoor links [1], indoor settings [2], and underwater
+links for onshore and offshore scenarios [3], [4]. Despite
+their advantages in terms of higher data rates and broader
+bandwidth compared to traditional radio-frequency (RF) and
+acoustic link communication, underwater OWC (UOWC)
+systems face challenges due to the complex characteristics of
+underwater channels and the presence of natural obstructions
+[5], [6]. Maintaining alignment is critical, as even brief
+obstructions can cause burst errors and significant data loss
+due to high transmission speeds.
+To address these challenges, flexible and reconfigurable
+links are essential for supporting longer-range, reliable
+UOWC systems. Intelligent reflecting surfaces (IRS) offer a
+promising solution by providing alternative communication
+paths, thereby reducing the stringent need for line of sight
+(LOS) alignment between the transmitter (Tx) and receiver
+(Rx) [7], [8]. An IRS-assisted free-space optical (FSO)
+communication link has been proposed to alleviate such
+requirement for a direct LOS [9]. Inspired by the advantages
+of IRS in FSO links, this concept has also been considered
+for UOWC links [10]. However, the dynamic underwater
+environment poses challenges for communications using
+IRS. While several deterministic optimization techniques
+have been applied in underwater contexts, their effectiveness
+diminishes in such variable conditions. Therefore, a dynamic
+approach that does not rely on comprehensive knowledge of
+the environment is needed. Machine learning, particularly
+reinforcement learning (RL), presents a promising solution
+for efficiently addressing these challenges [11].
+Recognizing the potential use of IRS in UOWC sys-
+tems, recent research has focused on their implementation
+[10]–[13]. For instance, [10] introduced an IRS-assisted
+UOWC system designed to mitigate the impacts of obsta-
+cles, pointing errors, and turbulence. The authors in [12]
+quantified the performance improvements achieved through
+IRS technology considering an underwater turbulence optical
+power spectrum model. In [11], the authors proposed beam
+adaptation strategies based on RL, including Q-learning and
+SARSA, to address pointing-acquisition-and-tracking (PAT)
+challenges. [13] explored a machine-learning approach for
+power-efficient communication by adjusting the beam di-
+vergence angle and transmission power based on varying
+underwater conditions. Despite these advancements, none
+of the studies have considered employing IRS for link-
+switching in UOWC systems in conjunction with machine
+learning.
+In this paper, we propose a link-switching method that
+utilizes IRS for UOWC systems in realistic scenarios with
+obstructions. Our approach considers two types of links: a
+direct link and an IRS-based link. By employing an RL
+approach, we enable dynamic switching between these links
+based on underwater conditions, facilitating seamless com-
+2025 IEEE International Conference on Communications (ICC): Optical Networks and Systems Symposium
+979-8-3315-0521-9/25/$31.00 ©2025 IEEE
+1458
+ICC 2025 - IEEE International Conference on Communications | 979-8-3315-0521-9/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICC52391.2025.11160851
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:30:16 UTC from IEEE Xplore.  Restrictions apply. 
+
+PAGE 3
+TABLE I: Typical values in different water types [4].
+Water Types
+a(λ)
+b(λ)
+c(λ)
+Pure Sea Water
+0.053
+0.003
+0.056
+Clear Ocean Water
+0.069
+0.081
+0.150
+Coastal Ocean Water
+0.089
+0.216
+0.305
+In underwater environments, the fading factor caused by
+turbulence results from the stochastic variability of tempera-
+ture, high pressure, density, and salinity. This turbulence-
+induced fading coefficient is modeled using a gamma-
+gamma distribution, which is well-suited for moderate to
+strong turbulence conditions. We employ the probability
+density function (PDF) formulation of the gamma-gamma
+distribution, as described in [3]
+fht(ht) = 2(αβ)
+(α+β)
+2
+Γ(α)Γ(β) h
+(α+β)
+2
+−1
+t
+Kα−β(2
+p
+αβht).
+(8)
+In Eq. (8), the modeling of the large and small-scale log
+variances, denoted as α and β, is performed as [20]
+α =
+"
+exp
+ 
+0.49σ2
+I
+(1 + 1.11σ12/5
+I
+)7/6
+!
+−1
+#−1
+,
+(9)
+β =
+"
+exp
+ 
+0.51σ2
+I
+(1 + 0.69σ12/5
+I
+)5/6
+!
+−1
+#−1
+,
+(10)
+where Γ[·] reperesents the Gamma function, Kv(·) denotes
+the second kind modified Bessel function of v-th order, and
+σ2
+I is the scintillation index.
+UOWC systems require continuous alignment between the
+Tx and receiver Rx to ensure reliability and optimal perfor-
+mance. However, achieving and maintaining this alignment
+can be difficult, mainly due to pointing errors caused by
+factors such as beam jitter. Furthermore, in UOWC systems
+that utilize IRS, pointing errors must consider the beam
+offset resulting from IRS jitter. The PDF of the pointing
+error can be expressed as [17]
+fhp(hp) = ρ
+Aρ
+0
+× hρ−1
+p
+,
+0 ≤hp ≤A0
+(11)
+ρ =
+w2
+eq
+σ2p
+,
+(12)
+w2
+eq = w2√πerf(v)
+2v exp (−v2),
+(13)
+where v = √πar/
+√
+2w, and ar represents the Rx aperture
+radius.
+The pointing error displacement standard deviation at the
+Rx, denoted as σp, can be written as
+σ2
+p =
+ 4σ2
+θ(L1 + L2)2 + 16σ2
+ψL2
+2
+(IRS link)
+4σ2
+s
+(Direct link)
+(14)
+where σs is the corresponding jitter standard deviation [21],
+σ2
+θ is the variance of the beam jitter angle at the Tx.
+The lengths of the AUV-to-IRS and IRS-to-ASV links are
+Algorithm 1 Proposed link switching algorithm.
+1: Initialize replay buffers D
+2: Initialize DQN
+3: Initialize channel environment
+4: Initialize ϵ = 1
+5: for each iteration i do
+6:
+Obtain initial state s
+7:
+Reset obstacle list
+8:
+for each time slot t do
+9:
+if ϵ > ϵend then
+10:
+ϵ = ϵ × ϵdecay
+11:
+end if
+12:
+if random() ≤ϵ then
+13:
+Randomly select action a(t)
+14:
+else
+15:
+Select a(t) = arg max Q(s(t), a(t))
+16:
+end if
+17:
+Get the immediate reward r(t)
+18:
+Reach the new state s(t + 1)
+19:
+Store the experience sample in D
+20:
+Randomly samples a mini-batch from D
+21:
+Update weight θ
+22:
+In every pre-determined time interval,
+23:
+the agent updates the target DQN with
+24:
+ˆθ = θ
+25:
+end for
+26: end for
+denoted as L1 and L2, respectively. The term σ2
+ψ denotes
+the variance of the jitter angle of IRS and A0 is defined as
+A0 = [erf(v)]2.
+In this paper, we investigate the impact of obstructions on
+underwater communication links. If the channel is obstructed
+by an obstacle, the Rx cannot receive any power through the
+underwater channel, resulting in ho = 0. Conversely, if there
+is no obstruction, ho = 1, and the underwater communication
+channel remains unaffected. Assuming a free-space channel,
+the probability of obstruction within a small interval (∆x) is
+proportional to its length (T∆x). The obstruction probability
+for a connection of length L is given by [17]
+Pr{ho = 0} = 1 −exp(−TL),
+(15)
+Pr{ho = 1} = exp(−TL),
+(16)
+where T is the coefficient of obstacle probability.
+B. Link switching by reinforcement learning
+We present the proposed link-switching method based on
+the deep Q-network (DQN). This RL method is designed to
+identify the optimal policy without requiring any prior infor-
+mation about the environment [11]. Within this framework,
+the states, actions, agents, and reward functions are defined
+• States: [AUV’s coordinates, obstruction probability]
+• Actions: Switching communication links
+2025 IEEE International Conference on Communications (ICC): Optical Networks and Systems Symposium
+1460
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:30:16 UTC from IEEE Xplore.  Restrictions apply. 

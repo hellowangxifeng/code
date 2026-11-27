@@ -1,0 +1,115 @@
+PAGE 1
+DDPG-Based Link Adaptation for Direct
+Air-to-Underwater Optical Communication Under
+Noisy CSI Conditions
+Imene Romdhane
+´Ecole de Technologie Sup´erieure,
+Montr´eal, QC, H3C 1K3, CA,
+Email:imene.romdhane.1@ens.etsmtl.ca
+Ziyaur Rahman
+´Ecole de Technologie Sup´erieure,
+Montr´eal, QC, H3C 1K3, CA,
+Email:ziyaur.rahman.1@ens.etsmtl.ca
+Georges Kaddoum
+´Ecole de Technologie Sup´erieure,
+Montr´eal, QC, H3C 1K3, CA,
+Email:georges.kaddoum@etsmtl.ca
+Abstract—This paper introduces a novel approach to address
+the challenges of link adaptation in direct air-to-underwater
+optical communication systems, employing the deep deterministic
+policy gradient (DDPG) algorithm and the orthogonal frequency
+division multiplexing (OFDM) technique under noisy channel
+state information (CSI) conditions. The proposed method encom-
+passes dynamic adaptations of beam orientation, beam width, and
+power levels, treating these parameters as continuous variables
+to account for the inherent randomness in real-world scenarios.
+To evaluate the effectiveness of our approach, we compare the
+achieved success rates and consumed energy with our DDPG-
+based model against a Q-learning-based link adaptation strategy
+as well as two static benchmarks. Remarkably, the proposed
+model consistently achieved high success rates, nearly approach-
+ing 100%, while concurrently reducing energy consumption by
+a factor of ten compared to the Q-learning-based approach, all
+within the first 100 episodes.
+I. INTRODUCTION
+In recent times, there has been a growing interest among
+researchers in underwater communications. These underwater
+communication systems find applications across various fields,
+including remote monitoring of oceanic instruments, pollu-
+tion tracking, and oceanography research. Consequently, the
+number of underwater devices in use is steadily increasing.
+In this context, managing power consumption is a significant
+challenge for system designers because expensive batteries
+typically power underwater devices. Radio frequency (RF) and
+acoustic communication methods were initially put forward
+for underwater systems. Although these communication modes
+offer cost-effective solutions and deployment flexibility, they
+have limitations. Specifically, RF communications suffer from
+high power consumption and signal attenuation issues [1]. On
+the other hand, acoustic communications encounter notable
+transmission delays and bandwidth constraints [2]. In light of
+these limitations, underwater optical wireless communications
+(UOWC) has emerged as a promising alternative [3]. UOWC
+holds the potential to address the aforementioned challenges
+associated with RF and acoustic communication methods,
+making it an area of considerable interest and research activity
+in recent times.
+Recently,
+many
+researchers
+assessed
+heterogeneous
+underwater-terrestrial
+networks
+as
+a
+means
+to
+alleviate
+underwater data traffic through the utilization of optical
+communication
+technologies.
+These
+communication
+technologies offer several advantages, including high data
+rates in the order of Gbps, cost-effectiveness, and low power
+consumption. Additionally, they ensure minimal latency due
+to the high speed of light (approximately 2.55 × 108m/s).
+However, these technologies face challenges, notably high
+water absorption and scattering effects, which restrict the
+range of optical communication underwater to approximately
+50 to 100 meters. The combined impact of absorption
+and scattering effects is quantified through the attenuation
+coefficient, denoted as c, which is mainly affected by the type
+of water.
+Furthermore, direct air-to-underwater systems encounter
+challenges related to fog near the water surface, aquatic waves,
+and pointing, acquisition, and tracking (PAT), resulting in
+misalignment and inter-symbol interference (ISI) issues that
+affect connectivity and link quality. Consequently, the need
+to re-transmit lost packets leads to increased transmission
+delays and congestion issues. Power consumption is another
+significant challenge, given that these communication systems
+rely on batteries, which can be costly to recharge or replace.
+As a result, addressing link quality and power allocation in di-
+rect air-to-underwater optical communications represents vital
+issues that have been the subject of numerous studies in the
+existing literature. In [4], the authors conducted a performance
+analysis of an unmanned aerial vehicle (UAV)-assisted RF-
+underwater wireless optical communication (UWOC) system,
+considering both fixed-gain amplify-and-forward (AF) and
+decode-and-forward (DF) relaying protocols. The authors in
+[5] investigated the utilization of optical wireless communica-
+tion (OWC) transmission in the presence of Gamma-Gamma
+turbulence, specifically focusing on the application of fixed-
+gain AF relaying within a mixed UWOC-OWC communi-
+cation system. In [6], the authors derived the probability
+density function (PDF) and cumulative distribution function
+(CDF) of the signal-to-noise ratio (SNR) for the combined
+channel effect, considering various fading models such as
+atmospheric turbulence, random fog, air-to-water interface,
+oceanic turbulence, and pointing errors.
+2024 20th International Conference on the Design of Reliable Communication Networks (DRCN): Invited papers
+979-8-3503-4897-2/24/$31.00 ©2024 IEEE
+2024 20th International Conference on the Design of Reliable Communication Networks (DRCN) | 979-8-3503-4897-2/24/$31.00 ©2024 IEEE | DOI: 10.1109/DRCN60692.2024.10539137
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:25:32 UTC from IEEE Xplore.  Restrictions apply. 

@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "figureInches": [
+    2.67,
+    2.37
+  ],
+  "pngPixels": [
+    801,
+    711
+  ],
+  "dpi": 300,
+  "allVisibleTextPt": 10,
+  "xLimitsDBm": [
+    0,
+    60
+  ],
+  "yScale": "log",
+  "yLimits": [
+    1e-05,
+    0.5
+  ],
+  "schemes": 6,
+  "rawPointsPerScheme": 131,
+  "newPointsAbove45PerScheme": 30,
+  "legendCorner": "southwest",
+  "legendOcclusionSamples": 0,
+  "tail32vs64MaxABERAbsoluteDifference": 3.08e-09,
+  "pngSha256": "4e5bd94f12ea0923e3c4d61d879462810b04e84f7d515410b7fd2ad9198f05f7",
+  "figSha256": "4d83f2d158696237defed2168b45b812b4e1026950211d86ca02cd60a0a70e59"
+}

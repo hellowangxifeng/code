@@ -1,0 +1,92 @@
+[
+  {
+    "file": "rp_study_distance.m",
+    "sha256": "178c6c8491f2bcd65d8872bf9e2304b80d5f7ac0e8d793080e36177bdf1d24e1",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_select.m",
+    "sha256": "60d1c2cac828ed535496bb92f33f319c173597858d390d08478864da8ad26d24",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_refine_directions.m",
+    "sha256": "1aa3de45ed9db2cb8dbe30744260043362f39f1fff5c2d1dd06ee47b6f2e603d",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_finish.m",
+    "sha256": "739b822bf332d30a82627042ba93c0be3ff057c697c80d326ce483dd881f3468",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_finish_worker.m",
+    "sha256": "effa3e7d8944d7c502a602977734866c8c0b30dff342b9228df693b0b169c4b5",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_fixed_phase.m",
+    "sha256": "1faaf92ddde4413642380869aeff08f004b2aa5ff2d7b0c25c9371215d023197",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_signature.m",
+    "sha256": "fb808c9b84b3dbfb7aa203fb6423385f40bc6fab2a984c18a898a2a5d989a3c7",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_plot.m",
+    "sha256": "17be0919e399e111ea16aa8edd6f4f3f5728c530b723f21db26d29e4d187dce6",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_diagnostics.m",
+    "sha256": "0f16b09ad4c2a9d9ff2f5f3ac487882a60fe6930fff9c41a948568d341adccd2",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_sensitivity.m",
+    "sha256": "e3a87fe7b4e7e017fc9814761962ec834d1f734f049989857e61398b2b4ca9f9",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_report.m",
+    "sha256": "35d27a67bb5e325bbdbf35a51bb8fb9bd7721aa6c5e518a4d4677890f44aab8c",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "rp_study_run.m",
+    "sha256": "3b1a4e0ed208689e97abb6801b35401930993da5719a4a3ea60e78382078a8f0",
+    "reason": "superseded by the stage-two model, scans, and separated plotting workflow"
+  },
+  {
+    "file": "plots/archive_stage1/Fig7_distance_width.png",
+    "sha256": "677f4a6481893d340265ead523f61ef4bcd8840873c69d01a90cfada131722c2",
+    "reason": "Fig7 explicitly removed by stage-two README"
+  },
+  {
+    "file": "plots/archive_stage1/Fig7_distance_width.fig",
+    "sha256": "8647c4eb86a5e20401f6cf8e68c3ba2a67b958cbc80518a56e4d8a78e33eedf0",
+    "reason": "Fig7 explicitly removed by stage-two README"
+  },
+  {
+    "file": "plots/stage2/collected_extra_checkpoint.mat",
+    "sha256": "633e1c40aefe5675b6137dace23d718d7512932bc7852b44e612aae838377838",
+    "reason": "temporary stage-two checkpoint or layout probe superseded by validated canonical outputs"
+  },
+  {
+    "file": "plots/stage2/final_distance_checkpoint.mat",
+    "sha256": "0d9aa7ead7ad8695a3121b1fffc94e381553dea427bba3ca127cb48ce7e17fbb",
+    "reason": "temporary stage-two checkpoint or layout probe superseded by validated canonical outputs"
+  },
+  {
+    "file": "audit/stage2/legend_probe.fig",
+    "sha256": "c72ffdcb32844c2a2f921611aae1742bc929d050e672a4988d0692bae819a34f",
+    "reason": "temporary stage-two checkpoint or layout probe superseded by validated canonical outputs"
+  },
+  {
+    "file": "audit/stage2/figures_progress_montage.jpg",
+    "sha256": "8226e6170757f099a2871a29a84de7cb80d3ac9da61d395494e2a2000cd57277",
+    "reason": "temporary stage-two checkpoint or layout probe superseded by validated canonical outputs"
+  }
+]

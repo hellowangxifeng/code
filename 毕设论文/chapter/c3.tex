@@ -1,0 +1,397 @@
+\chapter{海面漂浮液晶RIS的器件设计与六自由度运动建模}
+\label{chap:ris_motion}
+
+水空直接链路中的 RIS 漂浮在海面上，它既是对光束施加相位调制的光学器件，也是在风浪中运动的浮体。前者决定了相位调制能力的上限，后者决定了光束在 RIS 下表面的入射几何如何随时间变化。本章首先给出 $1\,\mathrm{m}\times1\,\mathrm{m}$ 液晶 RIS 的器件方案，包括单元排布、电极结构、偏转角预算与角度量化，并论证 RIS 贴水安装对规避全反射的作用；然后完成环形浮框的质量预算与静水配平；在此基础上建立 Neumann 方向谱驱动的随机海面和六自由度刚体运动模型，给出不同风速和风向下 RIS 的姿态与质心轨迹。本章输出的 RIS 位置与姿态时间序列，将在第四章中与水下发射机的运动共同构成光学计算的冻结快照几何。
+
+\section{液晶RIS的器件设计}
+\label{sec:c3_device}
+
+\subsection{面板结构与单元排布}
+
+RIS 的器件结构参考 Kim 等研制的大面积透射式液晶光束偏转器\citing{kim2020lcdeflector}。该器件在两片玻璃基板之间夹持液晶层，下基板上以光刻工艺制作微米级周期的 ITO 条形电极，上基板为公共电极，单个器件的有效通光区为 14.4\,mm $\times$ 14.4\,mm。单个器件的面积远小于水空链路所需的米级口径，本文将多个器件以阵列方式拼接在一块光学玻璃夹层中构成 RIS 面板，设计参数如表\ref{tab:c3_device}所示。
+
+\begin{table}[htbp]
+\caption{液晶RIS器件设计参数}
+\label{tab:c3_device}
+\centering
+\begin{tabular}{ll}
+\toprule
+参数 & 数值 \\
+\midrule
+面板尺寸与厚度 & $1\,\mathrm{m}\times1\,\mathrm{m}$，厚 10\,mm，液晶单元位于厚度中间 \\
+液晶单元外形尺寸 & $15\,\mathrm{mm}\times15\,\mathrm{mm}$ \\
+单元通光区尺寸 & $14.4\,\mathrm{mm}\times14.4\,\mathrm{mm}$ \\
+相邻单元边缘间隙 & 10\,mm \\
+相邻单元中心间距 & 25\,mm \\
+单元数量 & $40\times40=1600$ \\
+单元叠层结构 & 0.55\,mm 玻璃 / ITO / 2.5\,$\mu$m 液晶 / ITO / 0.55\,mm 玻璃 \\
+微电极周期 & 1\,$\mu$m（电极宽 0.7\,$\mu$m，间隙 0.3\,$\mu$m） \\
+相位调制范围 & $0\sim2\pi$\,rad \\
+工作波长 & 532\,nm \\
+单轴最大偏转角 & $15.426^\circ$（连续值），$15.414^\circ$（量化网格最大值） \\
+偏转角控制步长 & $0.021^\circ$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+以面板中心为原点，第 $(i,j)$ 个单元的中心坐标为
+\begin{equation}
+\mathbf c_{ij}=\left(\Big[i-\frac{N_x+1}{2}\Big]p_x,\ \Big[j-\frac{N_y+1}{2}\Big]p_y\right),\qquad i,j=1,\ldots,40,
+\label{eq:c3_centers}
+\end{equation}
+其中 $N_x=N_y=40$，$p_x=p_y=25\,\mathrm{mm}$ 为单元中心间距。记以 $\mathbf c_m$ 为中心、边长 $d=14.4\,\mathrm{mm}$ 的正方形为第 $m$ 个单元的通光区 $D_m$，则面板的通光掩模为
+\begin{equation}
+M(\boldsymbol\xi)=\sum_{m=1}^{1600}\mathbf 1_{D_m}(\boldsymbol\xi),
+\label{eq:c3_mask}
+\end{equation}
+面积填充率为 $\eta_{\mathrm{fill}}=(14.4/25)^2\approx0.332$。单元之间的间隙用于布置驱动走线和过孔，第五章的接收平面光强计算将完整计及这一填充率：未落在通光区内的光不参与相位调制，也不进入空气侧链路。
+
+液晶层厚 2.5\,$\mu$m。由式(\ref{eq:c2_lc_phase})，实现 $2\pi$ 相位调制要求液晶双折射率满足 $\Delta n\ge\lambda_0/d_{\mathrm{LC}}\approx0.213$，常用的高双折射率向列相液晶可以满足这一条件。
+
+\subsection{偏转角预算与角度量化}
+
+单元内的微电极周期 $d_e=1\,\mu\mathrm m$ 决定了每个单元能够加载的最大相位梯度。由式(\ref{eq:c2_nyquist})，归一化相位梯度的上限为
+\begin{equation}
+B=\frac{\lambda_0}{2d_e}=0.266,\qquad
+\theta_{\max}=\arcsin\frac{\lambda_0}{2n_ad_e}\approx15.426^\circ.
+\label{eq:c3_budget}
+\end{equation}
+参考器件的电极周期为 2\,$\mu$m，对应的最大偏转角为 $7.643^\circ$\citing{kim2020lcdeflector}；本文将电极周期设计为 1\,$\mu$m，使偏转角上限提高约一倍。
+
+二维电极矩阵在 $x$、$y$ 两个方向上分别控制相位梯度，控制指令以偏转角表示，步长为 $\Delta\theta=0.021^\circ$。每个轴上可用的离散指令数为 $K=\lfloor\theta_{\max}/\Delta\theta\rfloor=734$，最大量化偏转角为 $734\times0.021^\circ=15.414^\circ$。对目标归一化梯度 $b_d^\star$（$d\in\{x,y\}$），可加载的梯度由逐轴限幅与量化得到：
+\begin{equation}
+\bar b_d=\operatorname{clip}(b_d^\star,-B,B),\quad
+k_d=\operatorname{clip}\!\left(\operatorname{round}\frac{\arcsin(\bar b_d/n_a)}{\Delta\theta},-K,K\right),\quad
+b_d=n_a\sin(k_d\Delta\theta).
+\label{eq:c3_quant}
+\end{equation}
+记该映射为 $\mathbf b=\mathcal Q(\mathbf b^\star)$。可加载梯度构成一个逐轴独立的矩形可行域；叠加入射切向波矢后，出射切向波矢还必须落在空气可传播圆盘 $|\mathbf q|<n_a$ 内。
+
+每个单元的相位以单元参考点 $\mathbf r_m$ 为中心写为
+\begin{equation}
+\phi_m(\boldsymbol\xi)=\phi_{0m}+k_0\Big[\mathbf b_m^{\mathrm T}(\boldsymbol\xi-\mathbf r_m)+\frac12(\boldsymbol\xi-\mathbf r_m)^{\mathrm T}H_m(\boldsymbol\xi-\mathbf r_m)\Big],
+\label{eq:c3_phase}
+\end{equation}
+其中 $\phi_{0m}$ 为单元常相位，$\mathbf b_m$ 为单元的线性梯度，$H_m$ 为对称的曲率矩阵。由于 $H_m$ 对称，相位梯度场 $\nabla\phi_m/k_0=\mathbf b_m+H_m(\boldsymbol\xi-\mathbf r_m)$ 无旋，可由同一个标量函数积分得到。实际加载值为 $\operatorname{mod}(\phi_m,2\pi)$。本文的生产方案取 $H_m=0$，即每个单元加载一个仿射相位：单元内的线性梯度控制该单元出射光的方向，单元间的常相位差控制各单元光场在接收平面上的相干叠加。这一设计使每个单元只需要两个量化角度指令和一个常相位，单元内的 14400 列微电极由线性相位按周期 $d_e$ 采样后取模得到。
+
+若需要在单元内引入曲率而又不突破梯度上限，可采用可积的双曲正切型分离相位：
+\begin{equation}
+\frac{\phi_d(\delta_d)-\phi_d(0)}{k_0}=\frac{B}{\alpha_d}\Big[\ln\cosh(c_d+\alpha_d\delta_d)-\ln\cosh c_d\Big],\quad
+c_d=\operatorname{atanh}\frac{b_d}{B},\quad
+\alpha_d=\frac{H_{dd}}{B\,[1-(b_d/B)^2]},
+\label{eq:c3_tanh}
+\end{equation}
+其导数为 $B\tanh(c_d+\alpha_d\delta_d)$，在任意位置都严格不超过 $B$，并在参考点处给出梯度 $b_d$ 和曲率 $H_{dd}$。该形式为后续研究单元内聚焦提供了满足器件约束的相位族。
+
+\subsection{贴水安装与全反射规避}
+
+RIS 的安装方式决定了它能否改善水空链路的全反射问题。若 RIS 位于水面上方的空气中，光束在到达 RIS 之前就要先穿过裸露的水—空气界面，入射角超过 $48.75^\circ$ 的光线已在水面全反射，RIS 无法挽回。本文将 RIS 下层玻璃贴近水面，使光线经历的界面序列变为
+\begin{equation*}
+\text{水}(n_w=1.33)\ \rightarrow\ \text{下层玻璃}(n_g=1.50)\ \rightarrow\ \text{液晶层}\ \rightarrow\ \text{上层玻璃}(n_g)\ \rightarrow\ \text{空气}(n_a=1).
+\end{equation*}
+水—玻璃界面由低折射率进入高折射率介质，不发生全反射；光线在玻璃内部的液晶层获得相位梯度，切向波矢由 $\mathbf q_{\mathrm{in}}$ 变为 $\mathbf q_{\mathrm{in}}+\mathbf b$，此后才到达玻璃—空气界面。只要调制后的切向波矢满足 $|\mathbf q_{\mathrm{in}}+\mathbf b|<n_a$，光线即可进入空气。
+
+表\ref{tab:c3_angles}给出了入射面与电极轴对齐、加载单轴最大梯度 $b=-0.266$ 时各层传播角的对应关系。水中入射角为 $40^\circ$ 时，切向波矢 $q_{\mathrm{in}}=1.33\sin40^\circ=0.855$，裸水面出射角为 $58.75^\circ$；经 RIS 调相后切向波矢降为 0.589，空气中出射角降为 $36.1^\circ$。全反射的起始入射角由裸水面的 $48.75^\circ$ 推迟到 $72.15^\circ$，此时 $1.33\sin72.15^\circ-0.266\approx1$。当入射面沿单元的对角方向时，两轴梯度叠加，可补偿的切向波矢上限进一步提高到 $\sqrt2B$。
+
+\begin{table}[htbp]
+\caption{RIS贴水安装时各层传播角（单轴最大偏转）}
+\label{tab:c3_angles}
+\centering
+\begin{tabular}{ccccc}
+\toprule
+水中入射角 & 玻璃内调相前 & 玻璃内调相后 & 空气中出射角 & 裸水面出射角 \\
+\midrule
+$0^\circ$  & $0^\circ$     & $0^\circ$     & $0^\circ$     & $0^\circ$ \\
+$10^\circ$ & $8.86^\circ$  & $0^\circ$     & $0^\circ$     & $13.35^\circ$ \\
+$20^\circ$ & $17.65^\circ$ & $7.23^\circ$  & $10.89^\circ$ & $27.06^\circ$ \\
+$30^\circ$ & $26.32^\circ$ & $15.43^\circ$ & $23.52^\circ$ & $41.68^\circ$ \\
+$40^\circ$ & $34.75^\circ$ & $23.12^\circ$ & $36.08^\circ$ & $58.75^\circ$ \\
+$45^\circ$ & $38.83^\circ$ & $26.72^\circ$ & $42.41^\circ$ & $70.13^\circ$ \\
+$50^\circ$ & $42.78^\circ$ & $30.13^\circ$ & $48.84^\circ$ & 全反射 \\
+$60^\circ$ & $50.16^\circ$ & $36.20^\circ$ & $62.35^\circ$ & 全反射 \\
+$70^\circ$ & $56.43^\circ$ & $40.98^\circ$ & $79.67^\circ$ & 全反射 \\
+$72.15^\circ$ & -- & -- & 全反射 & 全反射 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+注：$10^\circ$ 入射时所需梯度小于上限，调相后可使光线沿法向出射。
+
+表\ref{tab:c3_angles}说明了贴水安装的两项作用：在亚临界入射范围内，RIS 把空气侧出射方向向竖直方向拉回，降低空中接收平台对低仰角的需求；在超临界入射范围内，RIS 使原本全反射的光束重新获得透射通道。第五章将在完整波动传播模型中定量评估这两项作用。
+
+\section{浮框配平与静水平衡}
+\label{sec:c3_float}
+
+\subsection{浮框结构与质量预算}
+
+1\,cm 厚的玻璃面板本身无法漂浮，需要由四周的环形浮框承重。浮框外形为 $1.2\,\mathrm{m}\times1.2\,\mathrm{m}$，四边宽 0.10\,m、高 0.12\,m，等效干密度 60\,$\mathrm{kg/m^3}$；玻璃底面距浮框底面 $a=0.055\,\mathrm{m}$；驱动电路等附件 1\,kg，位于玻璃底面上方 0.01\,m；配重 0.703\,kg，位于玻璃底面下方 0.05\,m。玻璃面积 $A_g=L_xL_y=1\,\mathrm{m^2}$，环框水平面积 $A_f=(L_x+2b_f)(L_y+2b_f)-A_g=0.44\,\mathrm{m^2}$，其中 $b_f$ 为浮框宽度。整机质量为
+\begin{equation}
+M=\rho_gA_gt_g+\rho_fA_fH_f+m_{\mathrm{pay}}+m_{\mathrm{bal}}
+=25+3.168+1+0.703=29.871\,\mathrm{kg},
+\label{eq:c3_mass}
+\end{equation}
+其中 $\rho_g=2500\,\mathrm{kg/m^3}$ 为玻璃密度，$\rho_f$、$H_f$ 为浮框等效密度与高度。
+
+\subsection{吃水方程与平衡位置}
+
+设浮框吃水为 $d$。玻璃底面在浮框底面以上 $a$ 处，当 $d>a$ 时玻璃部分浸水，排水体积由浮框和玻璃两部分组成。静水平衡方程为
+\begin{equation}
+\frac{M}{\rho}=A_fd+A_g\operatorname{clip}(d-a,0,t_g),
+\label{eq:c3_draft}
+\end{equation}
+$\rho=1025\,\mathrm{kg/m^3}$ 为海水密度。玻璃底面恰好接触静水面（$d=a$）时，浮框排水质量仅为 $\rho A_fa=24.805\,\mathrm{kg}$，小于整机质量，因此平衡状态处于玻璃部分浸水的分支，解得
+\begin{equation}
+d=a+\frac{M-\rho A_fa}{\rho(A_f+A_g)}=0.058432\,\mathrm{m}.
+\label{eq:c3_draft_sol}
+\end{equation}
+静水中玻璃底面位于 $Z=a-d=-3.432\,\mathrm{mm}$，顶面位于 $Z=+6.568\,\mathrm{mm}$，玻璃下表面浸水而上表面保持在空气中，满足贴水安装的光学要求。玻璃开始浸水和顶面到达水线的整机质量阈值分别为 24.805\,kg 和 39.565\,kg，当前设计的质量位于两者之间，对附件和配重质量的变化有约 $-5.1\,\mathrm{kg}$ 至 $+9.7\,\mathrm{kg}$ 的裕量。整机组合重心相对静水面约为 $+0.441\,\mathrm{mm}$。
+
+\subsection{静水恢复刚度}
+
+小运动下的静水恢复力由水线面面积和水线面二次矩决定\citing{newman1977marine}：
+\begin{equation}
+K_z=\rho gA_{wp},\qquad
+K_\phi=\rho gI_{wp,x}+Mg(z_B-z_G),\qquad
+K_\theta=\rho gI_{wp,y}+Mg(z_B-z_G),
+\label{eq:c3_stiffness}
+\end{equation}
+其中 $A_{wp}$ 为水线面面积，$I_{wp,x}$、$I_{wp,y}$ 为水线面对两水平轴的二次矩，$z_B$、$z_G$ 分别为浮心和重心高度。玻璃部分浸水时，水线面为完整的 $1.2\,\mathrm{m}\times1.2\,\mathrm{m}$ 矩形，$A_{wp}=1.44\,\mathrm{m^2}$，$K_z\approx1.45\times10^4\,\mathrm{N/m}$，$I_{wp}=1.2^4/12=0.1728\,\mathrm{m^4}$。
+
+为了在姿态变化时保持能量一致，本文把小姿态静水恢复关系推广为连续势能
+\begin{equation}
+U_{hs}=\frac12K_zz^2+\frac12K_\phi n_{By}^2+\frac12K_\theta n_{Bx}^2,\qquad \mathbf n_B=R^{\mathrm T}\mathbf e_z,
+\label{eq:c3_potential}
+\end{equation}
+其中 $z$ 为质心相对平衡位置的升沉，$\mathbf n_B$ 为世界竖直方向在本体坐标系中的表示。由该势能得到的恢复力和恢复力矩为
+\begin{equation}
+\mathbf F_{hs,W}=-K_zz\,\mathbf e_z,\qquad
+\boldsymbol\tau_{hs,B}=\mathbf n_B\times\big[K_\theta n_{Bx},\ K_\phi n_{By},\ 0\big]^{\mathrm T}.
+\label{eq:c3_restoring}
+\end{equation}
+小角度时 $\boldsymbol\tau_{hs,B}$ 退化为 $[-K_\phi\phi,-K_\theta\theta,0]^{\mathrm T}$，且满足 $\mathbf e_z^{\mathrm T}R\boldsymbol\tau_{hs,B}=0$，即静水力不对竖直轴产生偏航恢复力矩。纵荡、横荡和偏航方向没有静水恢复，RIS 在水平面内可以自由漂移和转动。
+
+\section{风浪激励下的随机海面生成}
+\label{sec:c3_sea}
+
+\subsection{风向映射与谱离散}
+
+海面由第二章式(\ref{eq:c2_neumann})--(\ref{eq:c2_superposition})生成。设风向参数为 $\phi_w$，谐波主传播方向相对世界 $+X$ 轴的方位角取为 $90^\circ-\phi_w$，第 $(i,j)$ 个谐波的传播方位角为
+\begin{equation}
+\theta_{ij}=\vartheta_j+\frac{\pi}{2}-\phi_w.
+\label{eq:c3_wind}
+\end{equation}
+用复数形式表示，海面高度写为
+\begin{equation}
+\zeta(X,Y,t)=\Re\sum_{l}c_l\,e^{i(\omega_lt-k_{xl}X-k_{yl}Y)},\qquad c_l=a_le^{i\epsilon_l},
+\label{eq:c3_complex}
+\end{equation}
+其中 $l$ 遍历全部频率—方向单元。海面生成器与浮体载荷求解共用同一组谐波分量 $\{c_l,\omega_l,k_{xl},k_{yl}\}$，保证海面形貌和 RIS 受到的波浪力来自同一个随机实现。随机初相由独立的 MT19937 随机流生成，随机种子取 600。
+
+频率区间取 0.05--4\,Hz，在对数等距网格上取 50 个频率点；方向区间 $[-\pi/2,\pi/2]$ 取 36 个方向点。频率和方向的积分权重均采用梯形公式，端点取半权重。
+
+\subsection{离散谱方差审计}
+
+离散谱的方差应与连续谱在同一频带内的积分一致。以独立的自适应数值积分计算连续谱方差作为参照，表\ref{tab:c3_audit}给出了离散方差的相对误差。早期实现在频率端点处采用了加倍的权重，对 $U=12\,\mathrm{m/s}$、0.1--4\,Hz 的算例产生 5.689\% 的频带方差误差；修正为梯形半权重后，误差降为 0.176\%，剩余部分来自 50 点梯形积分本身的离散误差。在默认的 0.05--4\,Hz 频带下，四组风速的最大方差误差为 0.133\%；将频率点加密到 400 个后，误差降至 0.0021\%，表明离散方案随网格加密收敛。
+
+\begin{table}[htbp]
+\caption{海浪谱离散方差审计结果}
+\label{tab:c3_audit}
+\centering
+\begin{tabular}{lcc}
+\toprule
+算例 & 频率点数 & 方差相对误差 \\
+\midrule
+$U=12\,\mathrm{m/s}$，0.1--4\,Hz，端点权重加倍（修正前） & 50 & 5.689\% \\
+$U=12\,\mathrm{m/s}$，0.1--4\,Hz，梯形半权重 & 50 & 0.176\% \\
+$U=3,5,9,12\,\mathrm{m/s}$，0.05--4\,Hz（四组最大值） & 50 & 0.133\% \\
+$U=3,5,9,12\,\mathrm{m/s}$，0.05--4\,Hz（四组最大值） & 400 & 0.0021\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+对式(\ref{eq:c2_neumann})在全频带上积分可以得到零阶矩的闭式。令 $x=1/\omega$，有
+\begin{equation}
+m_0=\int_0^\infty S(\omega)\,d\omega=C\frac{\pi}{4}\cdot\frac{3\sqrt\pi}{8}\left(\frac{U^2}{2g^2}\right)^{5/2},\qquad H_s=4\sqrt{m_0}.
+\label{eq:c3_m0}
+\end{equation}
+按式(\ref{eq:c3_m0})，风速 3、5、9、12\,m/s 对应的全频带有效波高约为 0.11、0.39、1.71 和 3.51\,m，谱峰角频率 $\omega_p=\sqrt{2/3}\,g/U$ 对应的周期约为 2.4、3.9、7.1 和 9.4\,s。有效波高随风速的五次方根增长，谱峰向低频移动，这一特征决定了高风速下 RIS 的运动以大幅度、长周期的随波升沉为主。
+
+\section{六自由度刚体运动模型}
+\label{sec:c3_6dof}
+
+\subsection{运动描述与坐标变换}
+
+RIS 与浮框作为一个刚体，本体坐标系原点取在组合质心 $G$，$x$ 轴沿面板 $L_x$ 方向，$z$ 轴指向面板上表面。广义位置与本体速度为
+\begin{equation}
+\boldsymbol\eta=[x,y,z,\phi,\theta,\psi]^{\mathrm T},\qquad
+\boldsymbol\nu_B=[u,v,w,p,q,r]^{\mathrm T},
+\label{eq:c3_eta}
+\end{equation}
+分别对应纵荡、横荡、升沉、横摇、纵摇和偏航。姿态矩阵采用右手 $ZYX$ 顺序\citing{fossen2011handbook}：
+\begin{equation}
+R=R_z(\psi)R_y(\theta)R_x(\phi)=
+\begin{bmatrix}
+c_\psi c_\theta & c_\psi s_\theta s_\phi-s_\psi c_\phi & c_\psi s_\theta c_\phi+s_\psi s_\phi\\
+s_\psi c_\theta & s_\psi s_\theta s_\phi+c_\psi c_\phi & s_\psi s_\theta c_\phi-c_\psi s_\phi\\
+-s_\theta & c_\theta s_\phi & c_\theta c_\phi
+\end{bmatrix},
+\label{eq:c3_rotation}
+\end{equation}
+$c_\cdot$、$s_\cdot$ 分别表示余弦和正弦。面板上任意一点的世界坐标为 $\mathbf x_W=\mathbf x_G+R\mathbf r_B$，面板法向为 $\mathbf n=R\mathbf e_z$。欧拉角在 $\theta=\pm90^\circ$ 处奇异，状态积分采用单位四元数 $Q$：
+\begin{equation}
+\dot Q=\frac12Q\otimes[0,\boldsymbol\omega_B],\qquad \dot{\mathbf x}_G=R\mathbf v_B,
+\label{eq:c3_quaternion}
+\end{equation}
+每个积分步后对 $Q$ 归一化，输出时再分解为欧拉角并对偏航角作连续展开。
+
+\subsection{动力学方程}
+
+水动力的附加惯性、波浪激励和辐射记忆均在初始水平参考系 $\mathcal H$ 中定义，其姿态为 $R_H=R_z(\psi_0)$；刚体惯性和姿态保持完整非线性。记 $A_{\infty,z}$、$A_{\infty,\phi}$、$A_{\infty,\theta}$ 为升沉、横摇、纵摇模态的无穷频率附加质量（惯量），定义
+\begin{equation}
+D_t=MI_3+A_{\infty,z}\mathbf e_z\mathbf e_z^{\mathrm T},\qquad
+I_W=RI_BR^{\mathrm T},\qquad
+A_r=R_H\operatorname{diag}(A_{\infty,\phi},A_{\infty,\theta},0)R_H^{\mathrm T}.
+\label{eq:c3_inertia}
+\end{equation}
+世界坐标系下的平动和转动方程为
+\begin{align}
+D_t\dot{\mathbf v}_W&=\mathbf F_{\mathrm{wave},W}+\mathbf F_{hs,W}+\mathbf F_{\mathrm{rad},W},\label{eq:c3_trans}\\
+(I_W+A_r)\dot{\boldsymbol\omega}_W+\boldsymbol\omega_W\times(I_W\boldsymbol\omega_W)
+&=\boldsymbol\tau_{\mathrm{wave},W}+\boldsymbol\tau_{hs,W}+\boldsymbol\tau_{\mathrm{rad},W}.\label{eq:c3_rot}
+\end{align}
+转换到本体坐标系，得到程序中实际积分的形式：
+\begin{equation}
+M_B(R)\dot{\boldsymbol\nu}_B+\mathbf c_B(R,\boldsymbol\nu_B)=\mathbf f_{\mathrm{wave},B}+\mathbf f_{hs,B}+\mathbf f_{\mathrm{rad},B},
+\label{eq:c3_body}
+\end{equation}
+\begin{equation}
+M_B=\operatorname{blkdiag}\big(R^{\mathrm T}D_tR,\ R^{\mathrm T}(I_W+A_r)R\big),\qquad
+\mathbf c_B=\begin{bmatrix}(R^{\mathrm T}D_tR)(\boldsymbol\omega_B\times\mathbf v_B)\\ \boldsymbol\omega_B\times(I_B\boldsymbol\omega_B)\end{bmatrix}.
+\label{eq:c3_mass_matrix}
+\end{equation}
+式(\ref{eq:c3_mass_matrix})包含了平移的坐标耦合项、完整的欧拉陀螺项和随姿态变化的有效惯量。附加质量固定在参考系中，因此不采用“常数随体附加质量”的 Coriolis 矩阵形式。偏航角速度由三个转动方程联立求解后经四元数积分得到，没有人为指定偏航时间历程。
+
+组合刚体的质心位置和惯量张量由玻璃、浮框、附件和配重四部分按各自质量、几何和位置计算，并用平行轴定理合成。
+
+\subsection{竖向波浪载荷与辐射/绕射}
+
+升沉、横摇和纵摇三个竖向模态的波浪激励和辐射力采用矩形复合浮板的薄板势流模型\citing{michele2024compound}。该模型把浮体湿表面近似为水线面上的薄板，以广义形状函数 $[1,x,y]$ 分别表示三个模态，在板面上离散求解辐射与绕射的积分方程。玻璃部分浸水时，薄板参考域取为填充的 $1.2\,\mathrm{m}\times1.2\,\mathrm{m}$ 矩形；网格取 80 个面元每边，即面元尺寸 15\,mm。参考域关于两轴镜像对称，三个奇偶扇区解耦，每个扇区有 1600 个未知量。求解得到的载荷映射到右手坐标后为 $[F_z,M_x,M_y]=[F_1,F_3,-F_2]$。
+
+\subsection{侧壁压力载荷与偏航力矩}
+
+薄板模型只给出竖向载荷。浮框具有有限吃水 $d$，入射波压力作用在四周侧壁上，产生水平力、水平力矩和偏航力矩。线性深水入射波的动压力复振幅（每米波幅）为
+\begin{equation}
+\hat p(x,y,z)=\rho g\,e^{kz}e^{-i(k_xx+k_yy)},
+\label{eq:c3_pressure}
+\end{equation}
+作用在侧壁 $S_{\mathrm{side}}$ 上的力和对质心的力矩为
+\begin{equation}
+\hat{\mathbf F}=-\int_{S_{\mathrm{side}}}\hat p\,\mathbf n\,dS,\qquad
+\hat{\mathbf M}_G=-\int_{S_{\mathrm{side}}}\mathbf r_G\times(\hat p\,\mathbf n)\,dS.
+\label{eq:c3_side_int}
+\end{equation}
+对长 $L_x$、宽 $L_y$、吃水 $d$ 的矩形柱体，把四个侧壁的面积分按高斯定理转化为对水线面的积分，并定义
+\begin{equation}
+J(k_x,k_y)=L_xL_y\operatorname{sinc}\frac{k_xL_x}{2}\operatorname{sinc}\frac{k_yL_y}{2},\qquad
+D_z=\frac{1-e^{-kd}}{k},
+\label{eq:c3_J}
+\end{equation}
+其中 $\operatorname{sinc}(x)=\sin x/x$，$J$ 是水线面的二维 Fourier 变换，$D_z$ 是压力沿吃水深度的积分。由此得到水平力和偏航力矩的闭式：
+\begin{equation}
+\hat F_x=i\rho gD_zk_xJ,\qquad
+\hat F_y=i\rho gD_zk_yJ,\qquad
+\hat M_z=\rho gD_z\left(k_x\frac{\partial J}{\partial k_y}-k_y\frac{\partial J}{\partial k_x}\right).
+\label{eq:c3_yaw}
+\end{equation}
+式(\ref{eq:c3_yaw})保留了有限板长和波浪在板面上的相位差。波浪沿对称轴入射时 $\hat M_z=0$；沿方板对角线入射时同样为零；一般斜向入射的有限波长分量会产生非零偏航力矩。在长波极限下，矩形的主项正比于 $k_xk_y(L_x^2-L_y^2)/12$，对方板该项抵消，偏航力矩只来自更高阶的有限波长项，因此方形 RIS 的偏航激励较弱。
+
+水平侧壁力的作用高度由压力沿深度的加权平均给出：
+\begin{equation}
+\ell_z=-\frac1k+\frac{d}{e^{kd}-1}-z_G,\qquad
+M_{x,\mathrm{side}}=-\ell_zF_y,\qquad M_{y,\mathrm{side}}=\ell_zF_x.
+\label{eq:c3_lever}
+\end{equation}
+总侧壁载荷取外矩形四壁减去内孔四壁：玻璃底面低于水线时，内孔压力积分只扣除浮框底面至玻璃底面之间的部分。$\hat M_z$ 的解析式经独立的四壁高阶数值积分校验。
+
+\subsection{辐射记忆的状态空间近似}
+
+频域薄板模型给出各模态的附加质量 $A(\omega)$ 和辐射阻尼 $B(\omega)$。时域中，辐射力是运动速度与辐射脉冲响应函数的卷积\citing{cummins1962impulse}。为避免直接计算卷积，以正实有理函数拟合辐射阻抗：
+\begin{equation}
+B(\omega)+i\omega A(\omega)\simeq i\omega A_\infty+\sum_lc_l\frac{i\omega+a_l}{(i\omega+a_l)^2+b_l^2},\qquad A_\infty,c_l\ge0,\ a_l>0,
+\label{eq:c3_fit}
+\end{equation}
+系数由非负最小二乘求得，每个模态取 64 个极点。每一项对应一组二阶记忆状态：
+\begin{equation}
+\dot x_l=-a_lx_l-b_ly_l+u,\qquad \dot y_l=b_lx_l-a_ly_l,\qquad f_{\mathrm{mem}}=-\sum_lc_lx_l,
+\label{eq:c3_memory}
+\end{equation}
+输入 $u$ 为参考系中对应模态的速度。记忆能量 $\sum_lc_l(x_l^2+y_l^2)/2$ 的耗散率为 $\sum_la_lc_l(x_l^2+y_l^2)\ge0$，因此无波浪激励时系统总能量满足
+\begin{equation}
+\frac{d}{dt}\left(T_{RB}+T_{\mathrm{added}}+U_{hs}+E_{\mathrm{mem}}\right)=-\sum_la_lc_l(x_l^2+y_l^2)\le0,
+\label{eq:c3_energy}
+\end{equation}
+拟合模型是被动的，不会在时域积分中凭空注入能量。拟合的相对均方根误差随结果一同输出，用于检查辐射近似的精度。
+
+\subsection{初始化与数值积分}
+
+初始状态由拟合的线性稳态响应确定：升沉、横摇、纵摇及其记忆状态取对应频域响应在初始时刻的值，水平初速度取波致轨道速度，偏航角与偏航角速度取零。状态方程采用四阶 Runge--Kutta 方法积分，步长 0.01\,s。全部计算从绝对海面时间 25\,s 开始，以避开随机相位叠加在 $t=0$ 附近的特殊相位组合。
+
+\section{数值结果与分析}
+\label{sec:c3_results}
+
+\subsection{不同风速下的海面与RIS姿态}
+
+图\ref{fig:c3_sea_wind}给出了风向 $\phi_w=30^\circ$ 时，四组风速下绝对海面时间 27\,s 的海面形貌与 RIS 位置。所有子图的 $z$ 轴显示范围固定为 $\pm0.5\,\mathrm{m}$，超出范围的海面仅在显示中被裁去。风速为 3\,m/s 时，海面起伏为厘米量级的短波，RIS 基本保持水平；风速为 5\,m/s 时，海面出现分米量级的起伏，RIS 随波面产生可见的倾斜；风速增至 9\,m/s 和 12\,m/s 后，谱峰波长达到数十米至百米量级，$10\,\mathrm{m}\times10\,\mathrm{m}$ 的显示区域内海面呈现为大尺度的整体倾斜面，RIS 跟随长波面整体升沉和倾斜。这与式(\ref{eq:c3_m0})给出的有效波高和谱峰周期随风速的变化一致。
+
+\begin{figure}[htbp]
+\centering
+\subfloat[$U=3\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_sea_U03_Phi30_t27.png}}
+\hfill
+\subfloat[$U=5\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_sea_U05_Phi30_t27.png}}\\
+\subfloat[$U=9\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_sea_U09_Phi30_t27.png}}
+\hfill
+\subfloat[$U=12\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_sea_U12_Phi30_t27.png}}
+\caption{风向 $30^\circ$ 时不同风速下的海面形貌与RIS位置（$t=27\,\mathrm{s}$）}
+\label{fig:c3_sea_wind}
+\end{figure}
+
+\subsection{风向对海面与RIS的影响}
+
+图\ref{fig:c3_sea_dir}给出了 $U=9\,\mathrm{m/s}$ 时三种风向下的海面与 RIS。三组工况使用同一随机种子和同一组频率—方向分量，只改变式(\ref{eq:c3_wind})中的风向映射。风向从 $30^\circ$ 变为 $90^\circ$ 时，长波的波峰线在水平面内随之旋转，RIS 所在位置的局部波面坡向也随之改变。对光学链路而言，风向决定了 RIS 法向的主要摆动方向：当摆动方向与水下光束入射面平行时，入射角的变化最大；当摆动方向与入射面垂直时，主要改变入射面的方位。第四章的冻结快照将同时记录这两类变化。
+
+\begin{figure}[htbp]
+\centering
+\subfloat[$\phi_w=30^\circ$]{\includegraphics[width=0.32\textwidth]{c3/RIS_sea_U09_Phi30_t27.png}}
+\hfill
+\subfloat[$\phi_w=60^\circ$]{\includegraphics[width=0.32\textwidth]{c3/RIS_sea_U09_Phi60_t27.png}}
+\hfill
+\subfloat[$\phi_w=90^\circ$]{\includegraphics[width=0.32\textwidth]{c3/RIS_sea_U09_Phi90_t27.png}}
+\caption{$U=9\,\mathrm{m/s}$ 时不同风向下的海面形貌与RIS位置（$t=27\,\mathrm{s}$）}
+\label{fig:c3_sea_dir}
+\end{figure}
+
+\subsection{RIS质心轨迹}
+
+图\ref{fig:c3_path}给出了风向 $30^\circ$ 时，绝对海面时间 25--35\,s 内 RIS 组合质心在惯性坐标系中的三维轨迹，底部灰色点线为水平投影。风速为 3\,m/s 时，质心的水平运动范围约为 $\pm4\,\mathrm{cm}$，轨迹呈现由多个短周期分量叠加形成的环绕形状，全部采样点的高度位于 $\pm0.5\,\mathrm{m}$ 显示范围内；风速为 5\,m/s 时，水平运动范围扩大到约 $0.2$--$0.3\,\mathrm{m}$；风速为 9\,m/s 时，水平位移达到约 1\,m，有 34\% 的采样点高度超出 $\pm0.5\,\mathrm{m}$；风速为 12\,m/s 时，水平位移约 2\,m，69\% 的采样点高度超出该范围。RIS 的运动从低风速下的小幅随机晃动逐步过渡为高风速下跟随长波的大幅轨道运动，水平轨迹与深水波浪质点的轨道运动特征一致。
+
+\begin{figure}[htbp]
+\centering
+\subfloat[$U=3\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_center_path_U03_Phi30.png}}
+\hfill
+\subfloat[$U=5\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_center_path_U05_Phi30.png}}\\
+\subfloat[$U=9\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_center_path_U09_Phi30.png}}
+\hfill
+\subfloat[$U=12\,\mathrm{m/s}$]{\includegraphics[width=0.45\textwidth]{c3/RIS_center_path_U12_Phi30.png}}
+\caption{风向 $30^\circ$ 时RIS质心在25--35\,s内的三维轨迹}
+\label{fig:c3_path}
+\end{figure}
+
+RIS 的运动从两个方面影响光学链路。其一，RIS 的平移改变了光束在面板上的落点：在 10\,m 水下斜程、发散角 0.01\,rad 的条件下，RIS 下表面的光斑尺度约为 0.1\,m 量级，低风速下厘米级的水平漂移不会使光斑移出面板，高风速下米级的轨道运动则可能使光斑部分或全部落在面板之外。其二，RIS 的横摇和纵摇直接改变了入射角和入射面方位，在给定相位下改变出射方向，进而改变接收平面上的光斑位置。第四章将利用本章的运动输出冻结若干时刻的几何，计算对应的 RIS 下表面入射光场。
+
+\subsection{模型的适用范围}
+
+本章的运动模型由六自由度非线性刚体动力学与线性参考水动力组合而成，其适用范围由以下几点确定。第一，竖向载荷来自薄板势流模型，侧壁只计入射波的 Froude--Krylov 压力，水平方向和偏航方向没有求解相应的绕射、辐射附加质量和黏性阻尼。第二，波浪激励和辐射载荷在初始位置与初始水平航向上线性化，未随浮体的水平位移和航向变化重新计算遭遇频率和散射场；程序输出最大航向变化等诊断量，用于判断这一近似在给定工况下是否成立。第三，模型未求解越浪、拍击和瞬时干湿切换；面板上 $5\times5$ 个采样点处入射波面与玻璃底面、顶面的间隙作为几何诊断量随结果保存。第四，风压、海流、系泊和二阶慢漂未计入，无约束浮体的长时间水平漂移不具有物理预测意义。在上述范围内，模型通过了连续谱积分一致性、静水不动条件、规则波方程残差、姿态矩阵正交性和镜像对称工况零偏航等数值检查。对低风速和中等风速下秒量级的冻结快照计算，该模型为光学计算提供了与海面随机实现一致的 RIS 位置与姿态。
+
+\section{本章小结}
+
+本章建立了海面漂浮液晶 RIS 的器件方案与运动模型。器件方面，给出了 $40\times40$ 单元、25\,mm 中心间距、14.4\,mm 通光区的面板排布，由 1\,$\mu$m 电极周期得到 $15.426^\circ$ 的单轴偏转角上限与 $0.021^\circ$ 的量化网格，建立了逐单元仿射相位模型及其限幅量化映射；论证了 RIS 贴水安装时，水—玻璃界面不存在全反射，液晶层在玻璃内部预先减小切向波矢，使单轴条件下全反射的起始入射角由 $48.75^\circ$ 推迟到 $72.15^\circ$。平台方面，完成了 29.871\,kg 整机的质量预算和静水配平，玻璃静态浸水 3.432\,mm、顶面高出水面 6.568\,mm；以 Neumann 方向谱和梯形半权重离散生成随机海面，离散方差误差在默认网格下不超过 0.133\%；建立了四元数描述的六自由度刚体方程，耦合了薄板辐射/绕射载荷、侧壁压力及其解析偏航力矩和被动辐射记忆模型。数值结果给出了风速 3--12\,m/s、风向 $30^\circ$--$90^\circ$ 下 RIS 的姿态与质心轨迹，表明 RIS 的运动由低风速下厘米级的随机晃动过渡为高风速下米级的长波轨道运动。

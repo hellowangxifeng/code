@@ -1,0 +1,31 @@
+[
+  {
+    "file": "RIS_phase\\plots\\stage2\\Fig11_width_jitter_maps.fig",
+    "sha256": "D026637C4F033F590AF6D2911FDFDD067D5882D51DA3625C6C0013B8C212551E",
+    "reason": "User requested Fig11 removal or superseded combined Fig12"
+  },
+  {
+    "file": "RIS_phase\\plots\\stage2\\Fig11_width_jitter_maps.png",
+    "sha256": "23BA0113CDF9E5E7D41616D90E9DFB2CF4B46728004323802706C1DE1FEE056B",
+    "reason": "User requested Fig11 removal or superseded combined Fig12"
+  },
+  {
+    "file": "RIS_phase\\plots\\stage2\\width_jitter_display.mat",
+    "sha256": "40A88061A2B8DDD6721E985E6D25685A2B3E053B8F1B9027388950831D349593",
+    "reason": "User requested Fig11 removal or superseded combined Fig12"
+  },
+  {
+    "file": "RIS_phase\\plots\\stage2\\Fig12_adaptive_widths.fig",
+    "sha256": "F0AF7AE53D70D2577111AE7EBEC488863D11A369D181D0401E52F614F95CC866",
+    "reason": "User requested Fig11 removal or superseded combined Fig12"
+  },
+  {
+    "file": "RIS_phase\\plots\\stage2\\Fig12_adaptive_widths.png",
+    "sha256": "D31B185257DEC928BED10626B7DB40E20F44FECC22299E519EB073E71E987738",
+    "reason": "User requested Fig11 removal or superseded combined Fig12"
+  },
+  {
+    "file": "RIS_phase/plots/rp_stage2_plot_width_jitter.m",
+    "reason": "Removed entire obsolete heatmap and combined-plot source; replacement uses three-cm Fig12–14 code"
+  }
+]

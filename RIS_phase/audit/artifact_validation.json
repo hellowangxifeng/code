@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "artifact_counts": {
+    "Fig*.png": 8,
+    "Fig*.fig": 8,
+    "phase_z*.csv": 9,
+    "phase_lut_z*.mat": 9,
+    "optical_check*.mat": 4,
+    "fixed_5m_phase_at*.mat": 2
+  },
+  "candidate_count": 93,
+  "sensitivity_rows": 1176,
+  "unit_tests_passed": 10,
+  "phase_csv_rows_each": 1600
+}

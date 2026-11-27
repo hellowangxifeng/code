@@ -1,0 +1,75 @@
+\thesisappendix
+
+\chapter{矩形孔径非驻相积分的分部积分包络}
+\label{app:tail}
+
+第五章共同固定接收机比较中，未调相 RIS 的主光斑远离接收目标，接收区域位于各单元衍射场的远尾。此时单元衍射积分的相位在孔径内没有驻相点，直接用有限窗口的数值传播会把窗口外的场错误地置零。本附录给出用于估计远尾场幅度上界的分部积分包络。
+
+考虑矩形孔径上的振荡积分
+\begin{equation}
+\mathcal I=\int_{y_-}^{y_+}\int_{x_-}^{x_+}A(x,y)\,e^{i\Phi(x,y)}\,dx\,dy,\qquad
+g_x=\Phi_x\ne0,\quad g_y=\Phi_y\ne0,
+\label{eq:appA_int}
+\end{equation}
+其中 $A$ 为光滑振幅，$\Phi$ 为相位，下标表示偏导数。利用 $e^{i\Phi}=(ig_x)^{-1}\partial_xe^{i\Phi}$ 对 $x$ 分部积分，得到边界项与余项；再对每一项利用 $e^{i\Phi}=(ig_y)^{-1}\partial_ye^{i\Phi}$ 沿 $y$ 分部积分。令
+\begin{equation}
+C=\frac{A}{g_xg_y},\qquad D=\frac{\partial_x(A/g_x)}{g_y},
+\label{eq:appA_CD}
+\end{equation}
+对所有边界项与余项取绝对值，得到上界
+\begin{equation}
+|\mathcal I|\le\sum_{\text{四角}}|C|
++\int_{y_-}^{y_+}\big[|\partial_yC(x_-,y)|+|\partial_yC(x_+,y)|\big]dy
++\int_{x_-}^{x_+}\big[|D(x,y_-)|+|D(x,y_+)|\big]dx
++\int_{y_-}^{y_+}\!\!\int_{x_-}^{x_+}|\partial_yD|\,dx\,dy.
+\label{eq:appA_bound}
+\end{equation}
+对衍射积分，振幅 $A$ 含 $\sqrt{IT|\det B|}/\lambda_0$，相位梯度 $(g_x,g_y)$ 由单元出射切向量与指向接收点的切向量之差确定。相位梯度越大，即接收点偏离单元的几何出射方向越远，$C$、$D$ 越小，远尾场越弱。
+
+对每个单元，在目标区域的四角及中心计算式(\ref{eq:appA_bound})的振幅界 $\mathcal B_{m,n}$，其中导数与积分在 $n\times n$ 的梯形/差分网格上数值计算。按三角不等式把各单元的场界相加后平方，并取 20\% 的余量：
+\begin{equation}
+I_{\mathrm{tail,env}}=1.2\max_{n\in\{17,33\}}\Big(\sum_m\mathcal B_{m,n}\Big)^2.
+\label{eq:appA_env}
+\end{equation}
+计算要求两种网格的相对变化小于 3\%，且两轴在孔径内的最小振荡周期数均超过 100。
+
+散射光在接收区域的贡献以加密 MC 估计：每个随机流发射 100 个独立批次、每批 $10^6$ 个光子，合并 6 个独立流共 $6\times10^8$ 个光子，只收集目标周围半宽 0.65\,m 内的落点，并以加权 Scott 带宽的高斯核平滑。由于 ABER 和 OP 随接收功率单调下降，以仅散射增益 $G_L$ 和散射加尾部包络增益 $G_U$ 分别计算，有
+\begin{equation}
+\mathrm{ABER}(G_U)\le\mathrm{ABER}(G)\le\mathrm{ABER}(G_L),\qquad
+\mathrm{OP}(G_U)\le\mathrm{OP}(G)\le\mathrm{OP}(G_L).
+\label{eq:appA_sandwich}
+\end{equation}
+第五章图中的 U-RIS* 曲线取 $G_U$，即未调相 RIS 的乐观风险包络。以该乐观包络为基准得到的相位调制增益是实际增益的下界。
+
+\chapter{矩形浮体侧壁偏航力矩的推导}
+\label{app:yaw}
+
+设矩形浮体中心位于原点，水线面为 $S_0=[-L_x/2,L_x/2]\times[-L_y/2,L_y/2]$，吃水为 $d$，侧壁外法向为 $\mathbf n$。线性深水入射波每米波幅的动压力为 $\hat p=\rho ge^{kz}e^{-i(k_xx+k_yy)}$。对质心的偏航力矩为
+\begin{equation}
+\hat M_z=-\int_{S_{\mathrm{side}}}\big(x\,n_y-y\,n_x\big)\hat p\,dS.
+\label{eq:appB_Mz}
+\end{equation}
+侧壁由竖直坐标 $z\in[-d,0]$ 与水线面边界 $\partial S_0$ 张成，压力沿深度的积分为 $\int_{-d}^0e^{kz}dz=D_z=(1-e^{-kd})/k$。于是
+\begin{equation}
+\hat M_z=-\rho gD_z\oint_{\partial S_0}\big(x\,n_y-y\,n_x\big)e^{-i(k_xx+k_yy)}\,dl.
+\label{eq:appB_line}
+\end{equation}
+由二维散度定理，$\oint_{\partial S_0}\mathbf F\cdot\mathbf n\,dl=\int_{S_0}\nabla\cdot\mathbf F\,dA$，取 $\mathbf F=(-y,x)\,e^{-i(k_xx+k_yy)}$，有
+\begin{equation}
+\nabla\cdot\mathbf F=\big(iyk_x-ixk_y\big)e^{-i(k_xx+k_yy)}.
+\label{eq:appB_div}
+\end{equation}
+记水线面的 Fourier 变换 $J(k_x,k_y)=\int_{S_0}e^{-i(k_xx+k_yy)}dA=L_xL_y\operatorname{sinc}(k_xL_x/2)\operatorname{sinc}(k_yL_y/2)$，则 $\int_{S_0}x\,e^{-i(k_xx+k_yy)}dA=i\,\partial J/\partial k_x$，$\int_{S_0}y\,e^{-i(k_xx+k_yy)}dA=i\,\partial J/\partial k_y$。代入式(\ref{eq:appB_line})和(\ref{eq:appB_div})，得到
+\begin{equation}
+\hat M_z=-\rho gD_z\Big(ik_x\cdot i\frac{\partial J}{\partial k_y}-ik_y\cdot i\frac{\partial J}{\partial k_x}\Big)
+=\rho gD_z\Big(k_x\frac{\partial J}{\partial k_y}-k_y\frac{\partial J}{\partial k_x}\Big),
+\label{eq:appB_result}
+\end{equation}
+即第三章式(\ref{eq:c3_yaw})。同理，取 $\mathbf F=(1,0)e^{-i(k_xx+k_yy)}$ 和 $(0,1)e^{-i(k_xx+k_yy)}$ 可得水平力 $\hat F_x=i\rho gD_zk_xJ$、$\hat F_y=i\rho gD_zk_yJ$。
+
+将 $J$ 在 $k\to0$ 处展开到二阶，$J\approx L_xL_y[1-(k_x^2L_x^2+k_y^2L_y^2)/24]$，代入式(\ref{eq:appB_result})得到长波极限
+\begin{equation}
+\hat M_z\approx\rho gD_zL_xL_y\,\frac{k_xk_y\,(L_x^2-L_y^2)}{12},
+\label{eq:appB_long}
+\end{equation}
+对方形浮体 $L_x=L_y$ 该主项为零，偏航力矩只来自更高阶的有限波长项。

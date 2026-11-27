@@ -1,0 +1,7 @@
+{
+  "sha256": "5ae41e69bf49a9828045e9ffef7b39943d7544ac0330e1f29aa16f8c5c116b19",
+  "originalStage2SHA256": "c51feafdb2b540623ed0dc9a6ada52966d24baf947d6a3b2bbcaf8ede54d759f",
+  "observedAt": "2026-11-13T17:00:00+08:00",
+  "fileModifiedAt": "2026-11-13T15:45:42.588368",
+  "note": "README was externally updated since the original stage2 audit (modified 15:45:42 during this revision). This revision did not write README. Current snapshot is preserved separately; the historical baseline is not replaced."
+}

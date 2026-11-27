@@ -1,0 +1,298 @@
+     IEEE PHOTONICS TECHNOLOGY LETTERS, VOL. 34, NO. 13, JULY 1, 2022                                                                                              699
+
+
+
+
+             Pointing Error Control of Underwater Wireless
+              Optical Communication on Mobile Platform
+             Yang Weng , Graduate Student Member, IEEE, Takumi Matsuda , Member, IEEE, Yuki Sekimori ,
+                          Joni Pajarinen , Jan Peters , Fellow, IEEE, and Toshihiro Maki , Member, IEEE
+
+
+
+        Abstract— This letter discusses pointing errors in underwater                  acceptable for mobile platforms, such as autonomous under-
+     optical communication caused by environmental disturbances                        water vehicles (AUVs), remotely operated vehicles (ROVs),
+     and uncertainties that cannot be well measured and controlled                     and underwater gliders. Considering that the deployment of
+     in previous optical alignment methods. The bore-sight and jitter
+     effects are identified in the motion model of the mobile platform.                multi-platform formations for joint underwater surveys may
+     We propose to use the sensor suite that includes a pressure                       become the standard in the future, UWOC is an attractive
+     sensor, super short baseline (SSBL) acoustic system, Doppler                      solution for sharing real-time data between mobile platforms.
+     velocity log (DVL), and fiber optic gyro (FOG) to observe and                        Achieving wireless optical communication between mobile
+     estimate pointing errors during communication. The pointing                       platforms requires establishing a line-of-sight (LOS) link. The
+     errors updated by the particle filter can be shared with the
+     pointing, acquisition, and tracking (PAT) system and thruster                     underwater optical link is affected by various factors, such as
+     system. The sea experiments reveal that the proposed method can                   inherent and apparent optical properties [4]. Gabriel et al. sim-
+     measure pointing errors and limit error growth by maneuvering                     ulated the trajectories of emitted photons in seawater to study
+     the mobile platform.                                                              the effects of absorption and scattering on underwater optical
+        Index Terms— Autonomous underwater vehicles, underwater                        signals [5]. Guo et al. investigated the signal scintillation
+     wireless optical communication, optical beam alignment, bore-                     due to fluctuations in the sea environment, such as turbidity,
+     sight, jitter.                                                                    salinity, temperature, and air bubble [6]. Based on well-studied
+                                                                                       underwater channel characteristics, the pointing, acquisition,
+                                I. I NTRODUCTION                                       and tracking (PAT) system is proposed for underwater optical
+                                                                                       link alignment [7], [8]. The main concept is to develop a
+     I  N RECENT years, underwater wireless optical commu-
+        nication (UWOC) has gradually attracted the attention of
+     the underwater technology research community. UWOC can
+                                                                                       real-time beam director system to rapidly steer the optical
+                                                                                       beam towards the target and maintain the LOS link based on
+     provide a much higher data rate service than the traditional                      detected light intensity.
+     acoustic communication, which currently dominates underwa-                           However, the current PAT system cannot estimate the point-
+     ter [1]. In 2018, a light-emitting diode (LED) based system                       ing error caused by environmental disturbances and uncertain-
+     developed by Lu et al. achieved a data rate of 205 Mbps in                        ties. The bore-sight and jitter effect is still a problem as the
+     the sea environment [2]. In 2021, Fei et al. experimentally                       random nature of the sea environment cannot be measured
+     demonstrated a laser diode (LD) based 3 Gbps UWOC over                            and controlled [4]. As far as we know, sensor data measured
+     100 meters in a water tank [3]. Although the effective trans-                     by mobile platforms has not been considered for sharing
+     mission distance of optical signals is relatively short, this is                  with PAT systems to improve the stability of the link. The
+                                                                                       onboard sensor suite that includes pressure sensors, super short
+        Manuscript received May 20, 2022; accepted June 5, 2022. Date                  baseline (SSBL), Doppler velocity log (DVL), and fiber optic
+     of publication June 8, 2022; date of current version June 17, 2022.               gyro (FOG) can provide continuous and real-time observation
+     (Corresponding author: Yang Weng.)
+        Yang Weng, Yuki Sekimori, and Toshihiro Maki are with the Institute            of the environment and target platform [9]. There is also
+     of Industrial Science, The University of Tokyo, Tokyo 153-8505, Japan             no mobile platform-based control strategy to reduce pointing
+     (e-mail: yangweng@iis.u-tokyo.ac.jp; sekimori@iis.u-tokyo.ac.jp; maki@            errors.
+     iis.u-tokyo.ac.jp).
+        Takumi Matsuda is with the Institute of Industrial Science, The Univer-           We propose to combine the mobile platform and PAT system
+     sity of Tokyo, Tokyo 153-8505, Japan, and also with the School of Sci-            in the LOS link alignment task. The pointing error is identified
+     ence and Technology, Meiji University, Kanagawa 214-8571, Japan (e-mail:          in the motion model of the mobile platform so that the platform
+     tmatsuda@meiji.ac.jp).
+        Joni Pajarinen is with the Intelligent Autonomous Systems Laboratory,          can measure it using the sensor suite. The estimation results
+     TU Darmstadt, 64289 Darmstadt, Germany, and also with the Department              updated by the particle filter can be shared with the PAT
+     of Electrical Engineering and Automation, Aalto University, 02150 Espoo,          system and platform control unit. The thrusters are used to
+     Finland (e-mail: joni.pajarinen@aalto.fi).
+        Jan Peters is with the Intelligent Autonomous Systems Labora-                  adjust the position and orientation of the platform to control
+     tory, TU Darmstadt, 64289 Darmstadt, Germany (e-mail: jan.peters@                 the pointing error. We deployed the proposed method on the
+     tu-darmstadt.de).                                                                 AUV Tri-TON and the autonomous surface vehicle (ASV)
+        Color versions of one or more figures in this letter are available at
+     https://doi.org/10.1109/LPT.2022.3181336.                                         BUTTORI in the sea experiments. The experiment results
+        Digital Object Identifier 10.1109/LPT.2022.3181336                             show that our method can measure pointing errors caused by
+                            1041-1135 © 2022 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+                                          See https://www.ieee.org/publications/rights/index.html for more information.
+
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 14,2026 at 06:24:35 UTC from IEEE Xplore. Restrictions apply.
+     700                                                                                   IEEE PHOTONICS TECHNOLOGY LETTERS, VOL. 34, NO. 13, JULY 1, 2022
+
+
+
+                                                                                          The pointing errors caused by external disturbances consist
+                                                                                       of two components: bore-sight and jitter. The bore-sight is
+                                                                                       the displacement between the optical beam center and the
+                                                                                       center of the receiver due to the inaccurate receiver location
+                                                                                       information [12]. The jitter is the random offset of the beam
+                                                                                       center at the detector plane, which is mainly caused by
+                                                                                       platform vibration [4]. The position of the mobile platform
+                                                                                       may fluctuate due to the ocean currents and uncertainties in
+                                                                                       the dynamic model. The misalignment due to pointing errors
+                                                                                       can be modeled using the beam spread function (BSF) [13]:
+                                                                                         B S F(l R , r R )
+                                                                                                                               ∞
+                                                                                                                            1
+     Fig. 1. The establishment of a LOS link between two underwater mobile                   = E(l R , r R )ex p(−cl R ) +        E(l R , v)ex p(−cl R )
+                                                                                                                           2π 0
+     platforms on a horizontal plane at the same depth.                                                   l                     
+                                                                                               × ex p            (v(l R − l))dl − 1 J0 (vr R )vdv (1)
+                                                                                                                bβ
+                                                                                                               0
+     the environment and limit error growth by maneuvering the
+     mobile platform. The residual pointing error can be covered                       where E(l R , r R ) and E(l R , v) are irradiance distributions in
+                                                                                       spatial coordinates and spatial frequency domain, l R is the
+     by the current PAT system.
+        To summarize, the main contributions of introducing point-                     link distance between transceivers, r R is the distance from the
+     ing error control on mobile platforms are:                                        receiver to the center of optical beam. The parameter b and c
+                                                                                       are the scattering and attenuation coefficients, and β    is the
+        1) reduce the dimension of the link alignment task from a
+     three-dimensional space to a two-dimensional plane;                               scattering phase function.
+        2) measure and estimate bore-sight and jitter effects caused                      Displacement and jitter in distance l R and r R can affect
+                                                                                       the received light intensity and even interrupt the link during
+     by environmental disturbances and uncertainties;
+        3) maneuver the mobile platform to limit the growth of                         optical communication. We define the pointing error d to
+                                                                                       represent the displacement and jitter from optimal point, and
+     pointing errors;
+                                                                                       the mobile platform tries to control its position to mitigate this
+        The remainder of this letter is organized as follows.
+     Section II introduces pointing errors based on the underwater                     error:
+                                                                                                                                        1
+     platform motion model. In Section III, a method to measure                                                    d = (x 
+                                                                                                                           2
+                                                                                                                             + y )
+                                                                                                                                2 2
+                                                                                                                                                                  (2)
+     and control pointing error using platform sensors is proposed.
+     A detailed field experiment is conducted and discussed in                         where
+     Section IV. The conclusions are given in Section V.                                                     x  = x R − (x T + lo cos ψ T )                      (3)
+
+                                    II. M ODEL                                         and
+        A motion model of the mobile platform during the link                                                y = y R − (y T + lo sin ψ T )                       (4)
+     alignment task is presented in this section. The pointing error
+     due to external disturbances is identified in this model for                      where (x T , y T ) and (x R , y R ) is the position of the host and
+     measurement and control. As shown in Fig. 1, the LOS can                          target platform on the horizontal plane, respectively. The yaw
+     only be established when the omnidirectional receiver is at                       angle of the host platform is represented by ψ T .
+     least partially covered by the sector-shaped beam. We present                        The bore-sight and jitter caused by external disturbances can
+     the model of the LOS establishment between mobile platforms                       be identified in this model. The value of (x R , y R ) may become
+     on a horizontal plane. The pressure sensor is one of the                          inaccurate if there is no continuous observation of the receiver
+     few sensors that can provide accurate measurements under-                         position. Jitter in position (x T , y T ) and yaw orientation ψ T
+     water [9]. Determination of absolute depth allows the mobile                      occurs because of ocean currents and turbulence.
+     platforms to establish the LOS link at a specific depth, which
+     reduces the alignment task from a three-dimensional space to                                                     III. M ETHOD
+     a two-dimensional plane.                                                             We propose to utilize the equipment in the underwater
+        During underwater optical communication, the receiver is                       platform to measure and control the pointing error problem
+     expected to be located at the optimal point (x O , y O ) to detect                caused by external disturbances. As shown in Fig. 2, the
+     higher light intensity, which can increase the Signal-to-Noise                    pointing error estimate will be shared with the PAT system
+     Ratio (SNR) and limit the Bit Error Rate (BER) in communi-                        and the thruster system. The depth measured by the pressure
+     cation. The optimal point is at the center of the beam, and link                  sensor is used to maintain the mobile platform on a set
+     distance lo is affected by various factors such as absorption,                    horizontal plane for the link establishment. A DVL measures
+     scattering, scintillation, source power, and hardware [10], [11].                 the ground velocity, including surge velocity u T , sway veloc-
+     Ocean waves, turbulence, and uncertainties of the mobile                          ity v T . A FOG is used for measuring yaw orientation ψ T
+     platform can cause the position of the transceiver to shift,                      and yaw angular velocity r T . The acoustic positioning is
+     which optical communication systems cannot detect.                                implemented to obtain the initial receiver location information
+
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 14,2026 at 06:24:35 UTC from IEEE Xplore. Restrictions apply.
+     WENG et al.: POINTING ERROR CONTROL OF UNDERWATER WIRELESS OPTICAL COMMUNICATION                                                                                701
+
+
+
+
+     Fig. 2.     Mobile platform based pointing error measurement and control
+     method. The environmental parameters and platform status are measured by
+     four different sensors, estimated by the particle filter algorithm, and then the
+     results are transmitted to the PAT system and the thruster system for link
+     establishment.
+
+
+                                                                                        Fig. 3. Sea experiments at Hiratsuka Port, Japan. The yellow platform is the
+     and continuously observe the state of the target platform during                   hovering AUV Tri-TON, and the red platform is the ASV BUTTORI.
+     optical communication. The two-way travel time (TWTT)
+     ranging can measure the relative distance l R and bearing
+     angle α T R between the host and target platforms [14], [15].
+     The position of the target platform (x R , y R ) can be shared
+     through acoustic communication.
+        A particle filter algorithm is used to estimate the current
+     state based on measurement [15]. In the prediction phase, the
+     particle filter updates the position and orientation from time t
+     to t + t by measurement results:
+                 ,i
+             x tT+t = x tT ,i + (u tT ,i cos ψtT ,i − v tT ,i sin ψtT ,i )t    (5)
+                ,i
+            ytT+t = ytT ,i + (u tT ,i sin ψtT ,i + v tT ,i cos ψtT ,i )t       (6)
+                ,i
+            ψtT+t = ψtT ,i + rtT ,i t                                          (7)
+
+     where i indicates the ith particles in the estimator.
+       Once the TWTT acoustic ranging results are available,
+     the estimator calculates the difference between observed val-
+     ues and prediction values for weighting and resampling all
+     particles:
+
+                   W i = Wdi · Wψi                                               (8)
+                              
+                                  k2    −(d i )2
+                   Wdi = max exp ( d +            ), 1                           (9)
+                                   2     2(σd )2
+                            
+                                  kψ2   −(ψ i )2
+                   Wψ = max exp (
+                    i
+                                      +            ), 1                         (10)
+                                   2     2(σψ )2
+
+     where d and ψ are the difference in relative distance
+     and direction between observation and prediction, respectively.
+     kd and kψ are parameters for judging outliers.
+        Then, the host platform can estimate the current pointing                       Fig. 4. The states of AUV in the sea experiment (a) 1.0 s and (b) 16.0 s. The
+     errors by:                                                                         AUV Tri-TON is represented by the blue triangle, and the sharp corner of the
+                                                                                        triangle is the head of the vehicle. The red star marker is the ASV BUTTORI.
+                                                               T ,i                     The particle filter estimation results of the AUV Tri-TON are depicted by
+                        x̂  = x̂ R − (x T ,i + lo cos ψ              )         (11)    cyan dots. The orange point is the optimal point defined in this research for
+                                           T ,i                T ,i                     optical communication. The parameters listed in the bottom left corner are
+                        ŷ = ŷ − (y
+                                  R
+                                                  + lo sin ψ          )         (12)
+                                                                                        the time in the experiment, the position of the AUV Tri-TON (x T , y T ), the
+                                                                                        standard deviation of particle filter estimation results in the position, the yaw
+     where the variables with overline symbols are averaged from                        orientation ψ T , the standard deviation of particle filter estimation results in
+     all particles and the hat symbol indicates the variable from                       yaw, the surge velocity u T measured by DVL, the yaw angular velocity r T
+     estimation results.                                                                measured by FOG, and the pointing error d .
+        With this method, the pointing error due to external dis-
+     turbances and uncertainties can be measured and estimated                                          IV. E XPERIMENT AND D ISCUSSION
+     by mobile platforms. Based on the continuous measurements                            We conducted sea experiments to test the pointing error
+     from the sensor suite, the mobile platform can maneuver the                        control on the mobile platform. The hovering AUV Tri-TON
+     propellers to control the bore-sight and jitter problems.                          was used as the host platform, while the ASV BUTTORI
+
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 14,2026 at 06:24:35 UTC from IEEE Xplore. Restrictions apply.
+     702                                                                                   IEEE PHOTONICS TECHNOLOGY LETTERS, VOL. 34, NO. 13, JULY 1, 2022
+
+
+
+                                                                                       Mobile platforms are considered in the link alignment task
+                                                                                       and combined with the PAT system to maintain link stability.
+                                                                                       When boresight and jitter effects caused by environmental
+                                                                                       disturbances are identified in the motion model, we utilize
+                                                                                       the equipment in the mobile platform to measure and control
+                                                                                       the pointing error. The field experiment demonstrated that the
+     Fig. 5.   The pointing error d in the sea experiment.                            pointing error can be measured by the mobile platforms and
+                                                                                       can be controlled by the platform motion and the optical
+                                                                                       PAT system.
+
+                                                                                                                      R EFERENCES
+                                                                                        [1] S. Kumara and C. Vatsb, “Underwater communication: A detailed
+                                                                                            review,” in Proc. CEUR Workshop, 2021, pp. 1–11.
+                                                                                        [2] I.-C. Lu and Y.-L. Liu, “205 Mb/s LED-based underwater optical
+                                                                                            communication employing OFDM modulation,” in Proc. MTS/IEEE
+                                                                                            Kobe Techno-Oceans (OTO), May 2018, pp. 1–4.
+     Fig. 6.   The pointing error in the yaw direction. Clockwise angles are            [3] C. Fei et al., “100-m/3-Gbps underwater wireless optical transmission
+     expressed as positive values.                                                          using a wideband photomultiplier tube (PMT),” Opt. Exp., vol. 30, no. 2,
+                                                                                            pp. 2326–2337, 2022.
+                                                                                        [4] N. Saeed, A. Celik, T. Y. Al-Naffouri, and M.-S. Alouini, “Underwater
+                                                                                            optical wireless communications, networking, and localization: A sur-
+     served as the target platform for underwater optical commu-                            vey,” Ad Hoc Netw., vol. 94, Nov. 2019, Art. no. 101935.
+                                                                                        [5] C. Gabriel, M.-A. Khalighi, S. Bourennane, P. Leon, and V. Rigaud,
+     nication. To shorten the pointing error d in the experiment,                          “Monte-Carlo-based channel characterization for underwater optical
+     an motion planning method was deployed on the AUV Tri-                                 communication systems,” J. Opt. Commun. Netw., vol. 5, no. 1, pp. 1–12,
+     TON, which was validated in simulations in previous studies                            2013.
+                                                                                        [6] Y. Guo, S. Marie, M. Kong, M. Sait, T. K. Ng, and B. S. Ooi, “Under-
+     [16], [17]. No global navigation satellite system service or                           water turbulence on scintillating-fiber based omnidirectional underwa-
+     radio communications were used since it is not available                               ter wireless optical communication system,” Proc. SPIE, vol. 12028,
+     underwater. The expected link distance lo was set to 5 meters.                         pp. 72–81, Mar. 2022.
+        As shown in Fig. 4, AUV Tri-TON was deployed at a                               [7] N. D. Hardy et al., “Demonstration of vehicle-to-vehicle optical point-
+                                                                                            ing, acquisition, and tracking for undersea laser communications,” Proc.
+     random initial position of (5.91, 1.07) meters in one of the                           SPIE, vol. 10910, pp. 205–214, Mar. 2019.
+     experiments. The distance between the target platform and                          [8] P. B. Solanki, S. D. Bopardikar, and X. Tan, “Active alignment control-
+     the optimal point was 9.64 meters. Then, the AUV Tri-TON                               based LED communication for underwater robots,” in Proc. IEEE/RSJ
+                                                                                            Int. Conf. Intell. Robots Syst. (IROS), Oct. 2020, pp. 1692–1698.
+     started to align with the BUTTORI and controlled the pointing                      [9] M. R. Dhanak and N. I. Xiros, Springer Handbook of Ocean Engineer-
+     error. Based on our model, the environmental parameters                                ing. Cham, Switzerland: Springer, 2016.
+     and platform status were measured by four different sensors,                      [10] S. K. Sahu and P. Shanmugam, “A theoretical study on the impact
+                                                                                            of particle scattering on the channel characteristics of underwater
+     some of which were presented in the bottom left corner of                              optical communication system,” Opt. Commun., vol. 408, pp. 3–14,
+     Fig. 4. The pointing error estimated by the particle filter was                        Feb. 2018.
+     passed to the thruster system to adjust the motion of the                         [11] O. Korotkova, N. Farwell, and E. Shchepakina, “Light scintillation in
+                                                                                            oceanic turbulence,” Waves Random Complex Media, vol. 22, no. 2,
+     mobile platform. At the 16.0 second of the sea experiment,                             pp. 260–266, 2012.
+     the pointing error d was reduced to 0.60 meters. As shown                        [12] F. Yang, J. Cheng, and T. A. Tsiftsis, “Free-space optical communication
+                                                                                            with nonzero boresight pointing errors,” IEEE Trans. Commun., vol. 62,
+     in Fig. 5, the AUV Tri-TON kept the pointing error within                              no. 2, pp. 713–725, Feb. 2014.
+     1.5 meters. From 20 to 60 seconds in this sea experiment,                         [13] B. M. Cochenour, L. J. Mullen, and A. E. Laux, “Characterization
+     the mean of the pointing error was 0.68 meters and the                                 of the beam-spread function for underwater wireless optical commu-
+                                                                                            nications links,” IEEE J. Ocean. Eng., vol. 33, no. 4, pp. 513–521,
+     corresponding standard deviation was 0.37 meters. The sea                              Oct. 2008.
+     experiments show that the sensors on the mobile platform can                      [14] G. Ferri, R. Petroccia, T. Fabbri, A. Faggiani, and A. Tesei,
+     measure pointing errors caused by external disturbances. The                           “A network navigation system with opportunistic use of one-way and
+                                                                                            two-way acoustic ranging: The DANS20 experience,” in Proc. OCEANS,
+     thrusters successfully adjust the platform to limit the growth                         San Diego-Porto, Sep. 2021, pp. 1–8.
+     of pointing errors. In addition, the measured pointing error can                  [15] T. Matsuda, K. Fujita, Y. Hamamatsu, T. Sakamaki, and T. Maki,
+     be provided to the PAT system. The pointing error in the yaw                           “Parent–child-based navigation method of multiple autonomous under-
+                                                                                            water vehicles for an underwater self-completed survey,” J. Field Robot.,
+     direction is shown in Fig. 6. The residual pointing error in the                       vol. 39, no. 2, pp. 89–106, Mar. 2022.
+     sea experiment can be handled by the current PAT system [7].                      [16] Y. Weng, R. Akrour, J. Pajarinen, T. Matsuda, J. Peters, and T. Maki,
+                                                                                            “Reinforcement learning based underwater wireless optical communi-
+                                                                                            cation alignment for autonomous underwater vehicles,” IEEE J. Ocean.
+                                 V. C ONCLUSION                                             Eng., 2022, doi: 10.1109/JOE.2022.3165805.
+       In this letter, we propose to measure and control the                           [17] Y. Weng, T. Matsuda, Y. Sekimori, J. Pajarinen, J. Peters, and
+                                                                                            T. Maki, “Sim-to-real transfer for underwater wireless optical commu-
+     pointing error of optical communication between underwater                             nication alignment policy between AUVs,” in Proc. OCEANS-Chennai,
+     mobile platforms, which previous studies have not discussed.                           Feb. 2022, pp. 1–7.
+
+
+
+
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 14,2026 at 06:24:35 UTC from IEEE Xplore. Restrictions apply.
+

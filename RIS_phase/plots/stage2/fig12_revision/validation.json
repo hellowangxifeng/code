@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "filesChecked": 10,
+  "analyzerIssues": 0,
+  "unitTests": 19,
+  "selectionPoints": 155,
+  "independentReplicates": 8,
+  "samplesPerReplicate": 32768,
+  "dedicatedEntry": "passed",
+  "wideFOVIdentity": "passed",
+  "signature": "d89e72728c782c889a8cd6e418eecdd019d3ddaefe60f04512e474fe982fb8a6"
+}

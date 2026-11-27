@@ -1,0 +1,187 @@
+PAGE 2
+transmitter and the receiver is blocked. The NLOS configu-
+ration is based on the total internal reflection (TIR) principle.
+In this setup, the signal is transmitted towards the water-air
+interface, which is partially refracted and partially reflected
+at interfaces between the mediums with different refractive
+indices. The reflected signal is relayed to the receiver (facing
+the sea surface) [2]. So the NLOS arrangement overcomes
+the LOS UWOC alignment constraint. One of the challenges
+of this configuration is the varying sea surface slopes [3].
+The authors in [4] investigated the LOS and NLOS mod-
+els in an underwater sensor network taking into account
+the channel characteristics and the communication system
+parameters for the NLOS UWOC configuration. The authors
+in [5] studied and analyzed vertical linkages for underwater
+visible light communication (UWVLC) while taking under-
+water environment heterogeneity into account. In [6], the
+authors examined parameter optimization for an underwa-
+ter optical wireless vertical link that is vulnerable to link
+misalignment due to the slopes of the sea surface. Based
+on experimental data, Zedini et al. proposed a unified sta-
+tistical model in [7] to describe turbulence-induced fading
+in UWOC systems. Rahman et al. investigated the gener-
+alized Gamma (GG), exponential and generalized Gamma
+(EGG), Exponentiated Weibull (EW), and Gamma-Gamma
+() turbulence models for a mixed terrestrial wireless opti-
+cal communication-UWOC (TWOC-UWOC) system with
+multilayer UWOC channel in [8]. In [9], Huang et al.
+extended the underwater light transmission distance to 6 m
+by using reflective mirrors inside a water tank.
+Intelligent reflecting surface (IRS) is a revolutionary
+technology to improve the performance of wireless commu-
+nication systems by creating intelligent and reconfigurable
+wireless channels and radio propagation environments for
+beyond fifth-generation (B5G) and sixth-generation (6G)
+communication networks [10]. In RF, a significant num-
+ber of small reflecting elements are collectively adjusted
+to reconfigure the wireless signal transmission environment.
+These numerous inexpensive passive reflecting elements
+(also referred as meta-atoms or lattices) have the ability
+to independently adjust the reflection coefficients, that is,
+the amplitude and/or phase shift of the incident signal, and
+passively reflect it to the desired direction [11]. This method
+addresses the need for a smart radio environment (SRE), in
+which the radio propagation environment is transformed into
+an intelligent reconfigurable space that is crucial for trans-
+mitting radio signals from the transmitter to the intended
+receiver without producing new radio signals and thereby
+without incurring any further power consumption [12]. SRE
+is enabled by IRS which is often made of thin material and
+can be easily attached to indoor surfaces, including walls,
+ceilings, and buildings.
+Mirror-based optical IRS and meta-surface-based opti-
+cal IRS are the two different forms of optical intelligent
+reflecting surfaces (OIRS) [13]. Mirrors and other reflect-
+ing elements have long been actively used in optical
+systems. According to the application, small mirror elements
+with sizes ranging from many hundreds of micrometers
+to centimeters make up the mirror-based OIRS, which are
+also known as deformable mirrors. Micro-electro-mechanical
+systems (MEMS) enable their repositioning and reorienta-
+tion [11]. A discrete planar array of subwavelength unit
+cells make up meta-surface-based OIRS, which can modify
+reflected wave properties like phase, amplitude, and polarisa-
+tion. Though conceptually similar to RF meta-surfaces [11],
+optical meta-surfaces are realized at optical frequencies using
+nanoscale technologies that are very different from the con-
+ventional antenna technologies used in the RF band. In [14],
+Aboagye et al. used an OIRS in the indoor environment and
+evaluated the performance in terms of data rate and outage,
+considering the receiver’s orientation. The authors of [15]
+have described performance improvement by dynamically
+changing the wireless channels with the aid of an IRS. The
+authors in [16] analyzed the position of IRS in multi-user
+multiple input multiple outputs (MIMO) systems, where IRS
+is used to facilitate data transmission for both uplink as well
+as downlink phases. The authors in [17] utilized an OIRS
+to develop a configurable wireless indoor environment to
+improve the physical layer security. In order to relax the
+LOS constraint for free space optical (FSO) systems, the
+authors in [18] investigated the effect of OIRS’s physical
+characteristics, such as its size, location, and orientation, on
+the performance of the end-to-end FSO channel. The aver-
+age energy efficiency (EE) and transmission power needed
+for an IRS-assisted system and decode and forward (DF)
+relay-assisted systems are examined in [19]. Similar to [19],
+the authors in [20] compared an IRS-assisted system to a
+full-duplex (FD) DF relay-assisted system with hardware
+impairments.
+A. RELATED WORKS
+1) MIXED TERRESTRIAL-UWOC SYSTEMS
+In [21], Yang et al. have considered a mixed FSO-UWOC
+dual-hop transmission system considering both heterodyne
+detection and intensity modulation with direct detection
+(IM/DD). They assumed  fading for the FSO channel
+and EGG fading with pointing errors for the UWOC chan-
+nel and derived the closed-form expressions for the outage
+probability, average bit error rate, and average capacity in
+terms of the bivariate Fox’s H-function. In [22], the authors
+analyzed the outage probability, average bit error rate (BER),
+and ergodic capacity for various types of waters (fresh water,
+salty water) utilizing an RF-IRS in the terrestrial link for a
+mixed RF-UWOC system. In [23], the authors investigated
+the performance of triple hop IRS-assisted RF-FSO UWOC
+system considering Nakagami-m fading channel over the
+IRS-RF link and the  over the IRS-FSO and UWOC links.
+The performance is evaluated in terms of the average BER
+and outage probability. Further, in [24], the performance of
+a NOMA-based IRS-assisted hybrid RF-UWOC system is
+explored.
+VOLUME 4, 2023
+1775
+
+PAGE 13
+SALAM et al.: OIRS-ASSISTED UWC SYSTEM
+[25] L. B. Kumar, P. N. Ramavath, P. Krishnan, and A. K. Majumdar,
+“Underwater wireless optical communications based reconfigurable
+UOWSN for monitoring and discovering continental margin ore
+deposits,” Appl. Opt., vol. 61, no. 11, pp. 3141–3149, 2022.
+[26] S. A. H. Mohsan, A. Mazinani, N. Q. H. Othman, and H. Amjad,
+“Towards the Internet of Underwater Things: A comprehensive
+survey,” Earth Sci. Inform., vol. 15, pp. 735–764, Mar. 2022.
+[27] S. Kisseleff, S. Chatzinotas, and B. Ottersten, “Reconfigurable intelli-
+gent surfaces in challenging environments: Underwater, underground,
+industrial and disaster,” IEEE Access, vol. 9, pp. 150214–150233,
+2021.
+[28] Z. Tian et al., “Programmable acoustic metasurfaces,” Adv. Funct.
+Mater., vol. 29, no. 13, 2019, Art. no. 1808489.
+[29] Z. Sun, H. Guo, and I. F. Akyildiz, “High-data-rate long-range
+underwater communications via acoustic reconfigurable intelligent
+surfaces,” IEEE Commun. Mag., vol. 60, no. 10, pp. 96–102,
+Oct. 2022.
+[30] R. P. Naik and W.-Y. Chung, “Evaluation of reconfigurable intel-
+ligent surface-assisted underwater wireless optical communication
+system,” J. Lightw. Technol., vol. 40, no. 13, pp. 4257–4267,
+Jul. 1, 2022.
+[31] Y. Ata, H. Abumarshoud, L. Bariah, S. Muhaidat, and M. A. Imran,
+“Intelligent reflecting surfaces for underwater visible light communi-
+cations,” IEEE Photon. J., vol. 15, no. 1, pp. 1–10, Feb. 2023.
+[32] A. M. Abdelhady, A. K. S. Salem, O. Amin, B. Shihada, and
+M.-S. Alouini, “Visible light communications via intelligent reflect-
+ing surfaces: Metasurfaces vs mirror arrays,” IEEE Open J. Commun.
+Soc., vol. 2, pp. 1–20, 2021.
+[33] M.-A. Khalighi, T. Hamza, S. Bourennane, P. Léon, and J. Opderbecke,
+“Underwater wireless optical communications using silicon photo-
+multipliers,” IEEE Photon. J., vol. 9, no. 4, pp. 1–10, Aug. 2017.
+[34] E. Sarbazi, M. Safari, and H. Haas, “Statistical modeling of
+single-photon avalanche diode receivers for optical wireless commu-
+nications,” IEEE Trans. Commun., vol. 66, no. 9, pp. 4043–4058,
+Sep. 2018.
+[35] N. Saeed, A. Celik, T. Y. Al-Naffouri, and M.-S. Alouini, “Underwater
+optical wireless communications, networking, and localization: A
+survey,” Ad Hoc Netw., vol. 94, Nov. 2019, Art. no. 101935.
+[36] F. Miramirkhani and M. Uysal, “Visible light communication channel
+modeling for underwater environments with blocking and shadowing,”
+IEEE Access, vol. 6, pp. 1082–1090, 2018.
+[37] H. E. Nistazakis, E. A. Karagianni, A. D. Tsigopoulos, M. E. Fafalios,
+and G. S. Tombras, “Average capacity of optical wireless commu-
+nication systems over atmospheric turbulence channels,” J. Lightw.
+Technol., vol. 27, no. 8, pp. 974–979, Apr. 2009.
+[38] A. Lapidoth, S. M. Moser, and M. A. Wigger, “On the capacity of
+free-space optical intensity channels,” IEEE Trans. Inf. Theory, vol. 55,
+no. 10, pp. 4449–4461, Oct. 2009.
+[39] Y. B. A. Prudnikov and O. Marichev, Integrals and Series: More
+Special Functions. Boca Raton, FL, USA: CRC Press, 1999.
+[40] I. S. Gradshteyn and I. M. Ryzhik, Table of Integrals, Series and
+Products. New York, NY, USA: Academic, 2000.
+[41] L. Zhan, H. Zhao, W. Zhang, and J. Lin, “An optimal scheme for
+the number of mirrors in vehicular visible light communication via
+mirror array-based intelligent reflecting surfaces,” Photonics, vol. 9,
+no. 3, p. 129, 2022.
+[42] E. Zedini, H. Soury, and M.-S. Alouini, “Dual-hop FSO transmission
+systems over gamma–gamma turbulence with pointing errors,” IEEE
+Trans. Wireless Commun., vol. 16, no. 2, pp. 784–796, Feb. 2017.
+[43] A. Kilbas and M. Saigo, H-Transforms: Theory and Applications
+(Analytical Methods and Special Functions). 1t ed. Boca Raton, FL,
+USA: CRC Press, 2004.
+[44] M. F. Ali, D. N. K. Jayakody, Y. A. Chursin, S. Affes, and
+S. Dmitry, “Recent advances and future directions on underwater wire-
+less communications,” Arch. Comput. Methods Eng., vol. 27, no. 5,
+pp. 1379–1412, 2020.
+[45] C. Huang, A. Zappone, G. C. Alexandropoulos, M. Debbah, and
+C. Yuen, “Reconfigurable intelligent surfaces for energy efficiency
+in wireless communication,” IEEE Trans. Wireless Commun., vol. 18,
+no. 8, pp. 4157–4170, Aug. 2019.
+1786
+VOLUME 4, 2023

@@ -1,0 +1,330 @@
+\chapter{RIS下表面入射光场的光束扩展函数建模与验证}
+\label{chap:bsf}
+
+RIS 的相位设计以 RIS 下表面和液晶层上的入射光场为输入。入射光场决定了每个液晶单元接收到的功率、入射方向和入射相位，进而决定相位方案能把多少功率、以怎样的方向分布送往接收平面。水下光束在到达 RIS 之前经历了吸收和多次前向散射，RIS 本身随海浪倾斜和平移，水下发射机也随航行器缓慢漂移，入射光场需要在真实三维几何下计算。
+
+本章首先建立水下发射端的运动模型，与第三章的 RIS 运动共同构成冻结快照几何；然后把 RIS 下表面的光强分解为弹道分量与散射分量，分别推导有限束腰源在倾斜面板上的精确弹道光强表达式，以及完整 HG 相函数下的散射光束扩展函数（Beam Spread Function，BSF）；接着给出散射分量的无偏数值估计方法和自适应精度控制策略，在 18 个冻结快照上与独立 MC 结果及小角近似解析式进行比较；最后给出从 RIS 下表面经下层玻璃到液晶层的入射复光场与单元功率，作为第五章相位设计的输入。
+
+\section{水下发射端运动与冻结快照几何}
+\label{sec:c4_geometry}
+
+\subsection{水下发射端运动模型}
+
+水下发射机安装在航行器上，光轴与航行器本体固连。航行器在恒定深度上作平面运动，其位置和航向由纵向速度 $u$、横向速度 $v$ 和偏航角速度 $r$ 按航位推算方程更新\citing{weng2022pointing}：
+\begin{equation}
+\begin{aligned}
+x_{k}&=x_{k-1}+\Delta t\,(u_{k-1}\cos\psi_{k-1}-v_{k-1}\sin\psi_{k-1}),\\
+y_{k}&=y_{k-1}+\Delta t\,(u_{k-1}\sin\psi_{k-1}+v_{k-1}\cos\psi_{k-1}),\\
+\psi_{k}&=\psi_{k-1}+\Delta t\,r_{k-1}.
+\end{aligned}
+\label{eq:c4_deadreckon}
+\end{equation}
+文献\cite{weng2022pointing}给出了实测的 $(u,v,r)$ 序列，本文以 Ornstein--Uhlenbeck（OU）过程生成具有相同量级的速度输入：
+\begin{equation}
+\mathbf s_k=\boldsymbol\mu_s+e^{-\Delta t/\boldsymbol\tau_s}\odot(\mathbf s_{k-1}-\boldsymbol\mu_s)+\boldsymbol\sigma_s\odot\sqrt{1-e^{-2\Delta t/\boldsymbol\tau_s}}\odot\boldsymbol\varepsilon_k,\qquad \boldsymbol\varepsilon_k\sim\mathcal N(\mathbf 0,I_3),
+\label{eq:c4_ou}
+\end{equation}
+其中 $\mathbf s=[u,v,r]^{\mathrm T}$，均值 $\boldsymbol\mu_s=[0.008\,\mathrm{m/s},\ 0,\ 0.03^\circ/\mathrm s]^{\mathrm T}$，平稳标准差 $\boldsymbol\sigma_s=[0.012\,\mathrm{m/s},\ 0.008\,\mathrm{m/s},\ 0.12^\circ/\mathrm s]^{\mathrm T}$，相关时间均为 2\,s，$\odot$ 表示逐元素乘积。OU 过程保证了速度序列的平稳性和时间连续性。发射机光轴随航向变化：$R_{T,k}=R_z(\psi_k-\psi_0)R_{T,0}$，光轴方向 $\mathbf d_{T,k}$ 取 $R_{T,k}$ 的第三列。
+
+\subsection{冻结快照几何}
+
+光在 10\,m 量级距离上的传播时间为纳秒量级，远小于海浪和航行器运动的时间尺度，因此在任一时刻 $t_k$ 可以把发射机与 RIS 的位置和姿态冻结，作为一个静态几何计算光场。一个冻结快照由以下量确定：发射点 $\mathbf p_T$ 与光轴旋转 $R_T$，RIS 下表面中心 $\mathbf p_R$ 与姿态 $R_R$（由第三章的运动输出给出），以及由此导出的 RIS 法向 $\mathbf n_R=R_R\mathbf e_z$、光轴与法向的夹角（实际入射角）和光轴在面板上的落点。
+
+本章的快照集合按如下方式构造。发射机与 RIS 中心的初始距离为 10\,m；发射光轴的初始方向由先绕世界 $x$ 轴、再绕世界 $y$ 轴的两次主动旋转确定，取 6 组旋转角：$(0^\circ,30^\circ)$、$(0^\circ,60^\circ)$、$(0^\circ,80^\circ)$、$(45^\circ,45^\circ)$、$(-60^\circ,30^\circ)$ 和 $(30^\circ,80^\circ)$，覆盖从中等入射到掠入射、从入射面沿面板主轴到斜交的几何。每组旋转对应 3 种条件：静止平板、风速 3\,m/s 和风速 5\,m/s（风向 $50^\circ$）。有风条件下，RIS 运动由第三章的模型在 0.02--3\,Hz、200 个频率点、36 个方向点的谱离散下计算，与发射机运动在同一时钟下取样，形成共 18 个快照。表\ref{tab:c4_results}中的实际入射角显示，风速 3\,m/s 和 5\,m/s 时 RIS 姿态使入射角偏离静态值约 $0.2^\circ$ 和 $0.6^\circ$。
+
+RIS 下表面以 1\,cm 网格划分为 $100\times100$ 个记分单元，光强 $I$ 一律指面板法向的辐照度，单位为 $\mathrm{W/m^2}$。
+
+\section{入射光强的弹道—散射分解}
+\label{sec:c4_decomp}
+
+\subsection{分解定义}
+
+把 RIS 下表面一点 $\mathbf q$ 处的光强写为两部分之和：
+\begin{equation}
+I_{\mathrm{BSF}}(\mathbf q;t)=I_b(\mathbf q;t)+I_s(\mathbf q;t),
+\label{eq:c4_decomp}
+\end{equation}
+其中 $I_b$ 是到达面板前未经历任何散射的弹道分量，$I_s$ 是至少经历一次散射的散射分量。两者对应互斥的路径集合，分别对应第二章辐射输运方程碰撞次数展开中的零次项和其余各项之和。这一分解在后续相位设计中具有明确的物理含义：弹道光具有确定的相位，可以通过相位调制进行相干整形；散射光在多次随机散射后失去确定的相位关系，只能以非相干强度形式参与接收面的功率计算。
+
+\subsection{发射光源模型}
+
+水下光源为高斯光束，束腰位置 $\mathbf u=(u,v)$ 和横向斜率 $\boldsymbol\alpha=(\alpha_x,\alpha_y)$ 在光轴坐标系中独立分布：
+\begin{equation}
+f_u(\mathbf u)=\frac{2}{\pi w_0^2}e^{-2|\mathbf u|^2/w_0^2},\qquad
+f_\alpha(\boldsymbol\alpha)=\frac{2}{\pi\vartheta^2}e^{-2|\boldsymbol\alpha|^2/\vartheta^2},
+\label{eq:c4_source}
+\end{equation}
+其中发散参数 $\vartheta=0.01\,\mathrm{rad}$，束腰半径由 $w_0\vartheta=\lambda_0/(\pi n_w)$ 确定，$w_0=1.273\times10^{-5}\,\mathrm m$。光线的发射点和初始方向分别为
+\begin{equation}
+\mathbf p_0=\mathbf p_T+R_T[u,v,0]^{\mathrm T},\qquad
+\mathbf s_0=\frac{R_T[\alpha_x,\alpha_y,1]^{\mathrm T}}{\sqrt{1+|\boldsymbol\alpha|^2}}.
+\label{eq:c4_launch}
+\end{equation}
+该源模型与 MC 程序中的抽样完全一致，从而保证解析模型与 MC 结果描述的是同一个物理问题。
+
+\section{弹道分量的精确表达式}
+\label{sec:c4_ballistic}
+
+\subsection{斜率到面板面积的变换}
+
+设 RIS 下表面一点的世界坐标为 $\mathbf q=\mathbf p_R+R_R[x_R,y_R,0]^{\mathrm T}$。对给定的发射位置 $\mathbf p_0$，记该点在光轴坐标系中的位移为
+\begin{equation}
+\mathbf r_0=R_T^{\mathrm T}(\mathbf q-\mathbf p_0)=(\xi-u,\ \eta-v,\ z)^{\mathrm T},\qquad \ell_0=|\mathbf r_0|,
+\label{eq:c4_r0}
+\end{equation}
+其中 $(\xi,\eta,z)^{\mathrm T}=R_T^{\mathrm T}(\mathbf q-\mathbf p_T)$。未经散射的光线沿直线到达 $\mathbf q$ 所需的横向斜率为 $\boldsymbol\alpha=(\xi-u,\eta-v)/z$。光线在斜率空间中的概率密度需要转换为面板真实面积上的功率密度。设 $\mathbf n_T=R_T^{\mathrm T}\mathbf n_R$ 为面板法向在光轴坐标系中的表示，面板上面积元 $dA_R$ 投影到垂直于光轴、距离为 $z$ 的平面上，面积为 $dA_R(\mathbf n_T\cdot\mathbf r_0)/\ell_0$，再换算为斜率空间面积。由几何关系可得
+\begin{equation}
+\left|\frac{\partial(\alpha_x,\alpha_y)}{\partial A_R}\right|=\frac{\mathbf n_T\cdot\mathbf r_0}{z^3}.
+\label{eq:c4_jacobian}
+\end{equation}
+式(\ref{eq:c4_jacobian})同时包含了面板相对光轴的倾斜和光线相对光轴的偏斜，因此在计数结果之外不需要再额外乘入射角余弦。
+
+\subsection{有限束腰的弹道光强}
+
+将斜率密度、Beer--Lambert 生存概率与式(\ref{eq:c4_jacobian})相乘，并对束腰位置积分，得到弹道光强：
+\begin{equation}
+I_b(\mathbf q)=P_0\int_{\mathbb R^2}f_u(\mathbf u)\,
+f_\alpha\!\left(\frac{\xi-u}{z},\frac{\eta-v}{z}\right)
+e^{-c\ell_0}\,\frac{[\mathbf n_T\cdot\mathbf r_0]_+}{z^3}\,
+\mathbf 1_{\{z>0,\ \ell_0\le L_{\max}\}}\,d^2\mathbf u,
+\label{eq:c4_Ib}
+\end{equation}
+其中 $[x]_+=\max(x,0)$ 表示只计入从面板正面到达的光线，$L_{\max}=200\,\mathrm m$ 为与 MC 程序一致的最大光程。束腰半径仅 12.7\,$\mu$m，远小于面板上约 0.1\,m 的光斑尺寸，式(\ref{eq:c4_Ib})的积分采用每轴 3 点的矩匹配求积：节点为 $0$、$\pm\sqrt3w_0/2$，权重为 $2/3$、$1/6$、$1/6$，两轴取张量积。该规则精确匹配束腰位置分布的二阶矩 $w_0^2/4$ 和四阶矩。面板记分单元上的平均光强以 $6\times6$ 点 Gauss--Legendre 求积计算，并以 $4\times4$ 点结果检查收敛，两者的最大相对差为 $1.34\times10^{-11}\%$。
+
+取点源极限 $w_0\to0$，式(\ref{eq:c4_Ib})化为闭式
+\begin{equation}
+I_b^{\mathrm{point}}(\mathbf q)=\frac{2P_0}{\pi\vartheta^2}
+\exp\!\left[-\frac{2\rho^2}{\vartheta^2z^2}-c\sqrt{z^2+\rho^2}\right]
+\frac{[\mathbf n_R\cdot(\mathbf q-\mathbf p_T)]_+}{z^3},\qquad \rho^2=\xi^2+\eta^2.
+\label{eq:c4_Ib_point}
+\end{equation}
+式(\ref{eq:c4_Ib_point})保留了实际光程上的衰减和精确的落点 Jacobian，适用于任意 RIS 姿态和偏轴落点。
+
+\section{散射分量的光束扩展函数}
+\label{sec:c4_scatter}
+
+\subsection{碰撞次数展开形式的精确BSF}
+
+记 $\Gamma_m$ 为恰好经历 $m$ 次散射、在此之前未穿越 RIS 首次计数平面或发射平面、最后首次到达 RIS 下表面的全部路径集合。第 $j$ 段自由程为 $s_j$，第 $j$ 次散射后的方向为 $\mathbf s_j$，末次散射后到达面板的剩余距离为 $\tau_m$，落点为 $\mathbf H_m$。在完整 HG 相函数下，散射光强可写为
+\begin{equation}
+I_s(\mathbf q)=P_0\sum_{m=1}^{\infty}\int_{\Gamma_m}f_u(\mathbf u)f_\alpha(\boldsymbol\alpha)
+\left[\prod_{j=1}^{m}b\,e^{-cs_j}\,p_g(\mathbf s_{j-1}\cdot\mathbf s_j)\,ds_j\,d\Omega_j\right]
+e^{-c\tau_m}\,\delta_A(\mathbf q-\mathbf H_m)\,d^2\mathbf u\,d^2\boldsymbol\alpha,
+\label{eq:c4_Is}
+\end{equation}
+其中 $\delta_A$ 为按面板真实面积定义的二维 Dirac 函数，$p_g$ 为式(\ref{eq:c2_hg})的 HG 相函数。式(\ref{eq:c4_Is})与辐射输运方程的 Neumann 级数解 $L_s=\sum_{m\ge1}(\mathcal T\mathcal S)^mL_b$ 等价，其中 $\mathcal T$ 为输运算子，$\mathcal S$ 为散射算子，散射光强为 $I_s=\int_{\mathbf s\cdot\mathbf n_R>0}L_s(\mathbf q,\mathbf s)(\mathbf s\cdot\mathbf n_R)\,d\Omega$。有限 RIS 的裁剪直接作用在落点 $\mathbf H_m$ 上，发射机与 RIS 的三维位置和姿态全部通过路径边界进入计算，不需要用单一入射角代替整个几何。
+
+\subsection{无偏数值估计方法}
+
+式(\ref{eq:c4_Is})是高维路径积分，本文采用强制首次散射的随机估计器求值。按式(\ref{eq:c4_source})抽样源参数，设无散射初始光线到达首个 RIS 平面的距离为 $L$（受总光程上限约束），首次散射位置在 $[0,L)$ 内按截断指数分布抽样：
+\begin{equation}
+Q=1-e^{-bL},\qquad s_1=-\frac1b\ln(1-UQ),\qquad w_1=Q\,e^{-as_1}.
+\label{eq:c4_forced}
+\end{equation}
+该抽样保证每个样本至少经历一次散射，样本全部用于估计散射分量。此后的散射间距按参数为 $b$ 的指数分布抽样，每段路径的吸收以连续权重 $e^{-as}$ 计入，方向按式(\ref{eq:c2_hg_sample})更新。由于
+\begin{equation}
+\left(be^{-bs}\right)e^{-as}=be^{-cs},
+\label{eq:c4_equiv}
+\end{equation}
+这一抽样方式与以 $c$ 为参数抽样自由程、每次碰撞乘以 $b/c$ 的标准 MC 具有相同的路径积分期望，但权重和随机实现不同，因此构成对 MC 结果的独立检验。到达面板前的最后一段按真实段长处理，不发生虚构碰撞。第 $j$ 个记分单元的散射光强估计为
+\begin{equation}
+\widehat I_{s,j}=\frac{P_0}{N\Delta A}\sum_{k=1}^{N}w_k\mathbf 1\{\mathbf H_k\in A_j\},\qquad
+\widehat I_{\mathrm{BSF},j}=\overline I_{b,j}+\widehat I_{s,j},
+\label{eq:c4_estimator}
+\end{equation}
+其中 $N$ 为样本数，$\Delta A$ 为单元面积，$\overline I_{b,j}$ 为式(\ref{eq:c4_Ib})的单元平均。该估计器不读取 MC 结果，不以 $I_{\mathrm{MC}}-I_b$ 定义散射项，也不复用 MC 的随机种子。
+
+计算中的总光程上限为 200\,m，散射次数上限为 1000 次。对清澈大洋水，总光程截断造成的未计功率存在直接上界 $P_0e^{-aL_{\max}}=1.25\times10^{-10}\,\mathrm W$；200\,m 内纯散射泊松过程的平均散射次数仅为 $bL_{\max}=7.4$，散射次数上限的截断概率远小于光程截断。程序实际报告的最大截断散射权重为 $4.35\times10^{-12}\,\mathrm W$。
+
+\subsection{自适应精度控制}
+
+以全板面二维相对标准误差作为数值精度指标：
+\begin{equation}
+\epsilon_{\mathrm{num}}=\frac{\|\mathrm{SE}(\widehat I_s)\|_F}{\|\overline I_b+\widehat I_s\|_F},
+\label{eq:c4_se}
+\end{equation}
+$\|\cdot\|_F$ 为 Frobenius 范数。标准误差由每个发射样本的一阶矩和二阶矩计算，跨批次合并时保留批次间的均值项。每批抽取 $8\times10^6$ 个强制散射样本，逐批累加直到 $\epsilon_{\mathrm{num}}\le10^{-3}$，即整体二维 1$\sigma$ 标准误差不超过 0.1\%。每批结果单独保存，计算可从中断处继续。全部场景达标后，以独立随机种子重复计算，检查精度的可复现性。
+
+\section{小角近似BSF解析式}
+\label{sec:c4_sbsf}
+
+课题组前期工作在小角近似下给出了一个散射 BSF 的解析表达式，下文称为 S-BSF。
+% 【待补充】此处补充课题组前期工作（S-BSF 式(3-18)来源论文）的参考文献。
+对其散射指数利用恒等式 $e^H=1+(e^H-1)$，并对径向作 Fourier--Bessel 逆变换，可将 S-BSF 显式拆分为弹道与散射两部分：
+\begin{align}
+I_b^{\mathrm{S}}&=\frac{2P_0\mu}{\pi W(z)^2}\exp\!\left[-cz-\frac{2\rho^2}{W(z)^2}\right],\label{eq:c4_sbsf_b}\\
+I_s^{\mathrm{S}}&=\frac{P_0\mu e^{-cz}}{2\pi}\int_0^\infty e^{-W(z)^2\kappa^2/8}\left[e^{H(\kappa,z)}-1\right]J_0(\kappa\rho)\,\kappa\,d\kappa,\label{eq:c4_sbsf_s}
+\end{align}
+其中
+\begin{equation}
+\mu=\frac{\mathbf n_R\cdot(\mathbf q-\mathbf p_T)}{|\mathbf q-\mathbf p_T|},\qquad
+W(z)=\sqrt{w_0^2+\vartheta^2z^2},\qquad
+H(\kappa,z)=bk_1\frac{e^{k_2z\kappa}-1}{k_2\kappa},\quad H(0,z)=bk_1z,
+\label{eq:c4_sbsf_par}
+\end{equation}
+$J_0$ 为零阶 Bessel 函数，$k_1=1.05$、$k_2=-0.07973$ 为前期工作中拟合得到的散射核参数。数值计算中用 $\operatorname{expm1}$ 函数和零频极限消除积分核在 $\kappa\to0$ 处的 $0/0$ 型，并以复合 Simpson 公式计算 Hankel 积分。本文直接使用原有参数，不针对 MC 结果重新拟合。
+
+式(\ref{eq:c4_sbsf_b})与式(\ref{eq:c4_Ib_point})的结构相同，区别在于前者以单一的投影因子 $\mu$ 和轴向距离 $z$ 近似处理倾斜面板。式(\ref{eq:c4_sbsf_s})的散射核由小角近似和参数拟合得到。由于 $k_1=1.05>1$，零频处的散射核不满足相函数的严格归一化：在固定轴向截面上，S-BSF 预测的总功率为 $P_0e^{(-c+bk_1)z}$，比能量守恒值略高。对于 RIS 斜置并可能截断光斑的情形，S-BSF 还需要对真实板面积分。下文以完整 HG 模型为参照，量化 S-BSF 在不同几何下的系统偏差。
+
+\section{模型验证与结果分析}
+\label{sec:c4_results}
+
+\subsection{比较指标}
+
+以原始 $10^6$ 光子 MC 结果作为独立参照，比较时不对 MC 图做平滑，不重新标定功率，不对齐平移，也不缩放峰值。比较指标包括：完整 HG 模型（式(\ref{eq:c4_decomp})）与 MC 的全板面相对 $L_2$ 误差；两者的总功率相对差；原始 MC 自身的二维统计噪声估计；以及 S-BSF 相对完整 HG 模型的二维 $L_2$ 偏差。由于 MC 的像素噪声在弱光区域显著，单纯的 $L_2$ 误差需要与 MC 自身噪声对照才能判断模型是否存在系统偏差。
+
+\subsection{数值精度}
+
+全部 18 个场景都达到了预设精度。图\ref{fig:c4_precision}右图给出了各场景散射分量数值求值的二维标准误差，范围为 0.0927\%--0.0999\%，均低于 0.1\% 的目标；独立种子复验同样通过。所需样本数随入射角增大而增加：$30^\circ$ 入射时 3200 万个样本即可达标，$80^\circ$ 附近的掠入射场景在风速 5\,m/s 时需要 6 亿至 9.5 亿个样本。掠入射时光斑在面板上被拉长、单位面积功率降低，散射光在面板上的分布更加弥散，降低相对标准误差需要更多样本。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c4/precision_overview.png}
+\caption{18个快照的模型—MC差异与模型数值精度。左：完整HG模型与原始MC的相对 $L_2$ 差异及原始MC噪声估计；右：散射分量数值求值的二维标准误差}
+\label{fig:c4_precision}
+\end{figure}
+
+\subsection{与独立MC结果的比较}
+
+表\ref{tab:c4_results}汇总了 18 个场景的比较结果。完整 HG 模型与原始 MC 的像素相对 $L_2$ 误差为 3.95\%--14.97\%，原始 MC 自身的二维噪声估计为 3.98\%--14.63\%，两者在每个场景上几乎重合（图\ref{fig:c4_precision}左）。这表明模型与 MC 的差异主要来自 MC 有限光子数带来的统计噪声，模型本身没有可分辨的系统偏差。总功率相对差的绝对值不超过 0.317\%，按 MC 标准误差换算的最大 $|z|$ 值为 1.908，处于统计涨落范围内。
+
+\begin{table}[htbp]
+\caption{18个冻结快照的BSF模型验证结果}
+\label{tab:c4_results}
+\centering
+\small
+\begin{tabular}{cccccccc}
+\toprule
+旋转角 & 条件 & 入射角/$^\circ$ & 样本/百万 & 数值SE/\% & MC噪声/\% & $L_2$差/\% & S-BSF偏差/\% \\
+\midrule
+\multirow{3}{*}{$(0^\circ,30^\circ)$} & 静态 & 30.000 & 32 & 0.0945 & 3.979 & 3.954 & 0.160 \\
+ & $U=3$ & 29.814 & 32 & 0.0929 & 4.000 & 4.078 & 0.160 \\
+ & $U=5$ & 29.445 & 32 & 0.0957 & 4.071 & 4.094 & 0.159 \\
+\midrule
+\multirow{3}{*}{$(0^\circ,60^\circ)$} & 静态 & 60.000 & 40 & 0.0987 & 5.202 & 5.178 & 0.321 \\
+ & $U=3$ & 59.814 & 40 & 0.0977 & 5.255 & 5.109 & 0.316 \\
+ & $U=5$ & 59.444 & 48 & 0.0927 & 5.414 & 5.260 & 0.296 \\
+\midrule
+\multirow{3}{*}{$(0^\circ,80^\circ)$} & 静态 & 80.000 & 64 & 0.0957 & 8.427 & 8.628 & 0.551 \\
+ & $U=3$ & 79.814 & 72 & 0.0955 & 8.567 & 8.364 & 0.602 \\
+ & $U=5$ & 79.444 & 600 & 0.0999 & 12.663 & 12.985 & 2.176 \\
+\midrule
+\multirow{3}{*}{$(45^\circ,45^\circ)$} & 静态 & 60.000 & 40 & 0.0994 & 5.208 & 5.182 & 0.329 \\
+ & $U=3$ & 59.816 & 40 & 0.0978 & 5.250 & 4.913 & 0.326 \\
+ & $U=5$ & 59.457 & 48 & 0.0948 & 5.445 & 5.547 & 0.321 \\
+\midrule
+\multirow{3}{*}{$(-60^\circ,30^\circ)$} & 静态 & 64.341 & 48 & 0.0935 & 5.584 & 5.624 & 0.365 \\
+ & $U=3$ & 64.380 & 48 & 0.0943 & 5.609 & 5.624 & 0.329 \\
+ & $U=5$ & 64.450 & 64 & 0.0991 & 5.759 & 5.579 & 0.361 \\
+\midrule
+\multirow{3}{*}{$(30^\circ,80^\circ)$} & 静态 & 81.351 & 72 & 0.0949 & 9.025 & 8.964 & 0.634 \\
+ & $U=3$ & 81.143 & 80 & 0.0952 & 9.172 & 9.229 & 0.679 \\
+ & $U=5$ & 80.734 & 952 & 0.0997 & 14.631 & 14.969 & 2.933 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+图\ref{fig:c4_case30}和图\ref{fig:c4_case60}分别给出了 $30^\circ$ 和 $60^\circ$ 静态入射场景的六面板比较。上排依次为原始 MC、S-BSF 和完整 HG 模型的总光强，使用同一色标；下排依次为弹道分量、散射分量（使用自身色标）以及模型与 MC 残差除以合成标准误差得到的 $z$ 分数图。$z$ 分数在光斑区域内呈现正负交替的随机分布，没有成片的同号区域，说明两者的差异不具有空间结构。弹道分量集中在光斑中心，构成光强的主体；散射分量形成以光斑为中心、向外缓慢衰减的宽背景，峰值约为弹道峰值的 3\%，但覆盖整个面板。$60^\circ$ 入射时光斑沿入射面方向被拉长，轴比明显大于 $30^\circ$ 入射的情形。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c4/comparison_r1_c1.png}
+\caption{$30^\circ$ 静态入射场景RIS下表面光强的模型与MC比较}
+\label{fig:c4_case30}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c4/comparison_r2_c1.png}
+\caption{$60^\circ$ 静态入射场景RIS下表面光强的模型与MC比较}
+\label{fig:c4_case60}
+\end{figure}
+
+\subsection{小角近似的适用范围}
+
+S-BSF 相对完整 HG 模型的二维 $L_2$ 偏差随入射角增大而增大：$30^\circ$ 入射时约为 0.16\%，$60^\circ$ 附近约为 0.3\%，$80^\circ$ 附近的静态和 3\,m/s 场景约为 0.55\%--0.68\%，而 $80^\circ$ 附近风速 5\,m/s 的两个场景达到 2.18\% 和 2.93\%（图\ref{fig:c4_case80}）。功率偏差的范围为 $-6.25\%\sim+0.30\%$，较大的负偏差同样出现在掠入射场景。掠入射时面板上不同位置到光源的轴向距离差异显著，光斑被拉长到与面板尺寸可比，RIS 姿态的微小变化还会改变光斑被面板截断的比例；S-BSF 以单一投影因子和小角散射核处理整个光斑，在这些场景中的近似误差随之增大。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c4/comparison_r6_c3.png}
+\caption{$(30^\circ,80^\circ)$ 旋转、风速 5\,m/s 场景（实际入射角 $80.73^\circ$）的模型与MC比较}
+\label{fig:c4_case80}
+\end{figure}
+
+综合上述结果：在入射角不超过约 $65^\circ$ 时，S-BSF 与完整 HG 模型的偏差在 0.4\% 以内，可以作为快速计算的解析近似；在掠入射场景，尤其是 RIS 姿态随风浪变化的掠入射场景，应采用完整 HG 模型。第五章采用清澈大洋水与 $40^\circ$ 入射，介于 $30^\circ$ 与 $60^\circ$ 两组场景之间，两种模型在这一范围内的偏差为 0.16\%--0.33\%。
+
+\section{液晶层入射复光场}
+\label{sec:c4_lc_field}
+
+第五章的相位设计和波动传播需要液晶层上的入射复光场，而不仅是 RIS 下表面的光强。本节给出从下表面经下层玻璃到液晶层的光强映射、相位模型以及单元功率的计算方法。
+
+\subsection{下层玻璃中的光强映射}
+
+对液晶层（局部高度 $h=h_i$）上的一点 $\boldsymbol\xi$，先由第二章式(\ref{eq:c2_fq})求出从中心源经水层和下层玻璃到达该点的切向量 $\mathbf q$，再得到对应的下表面交点
+\begin{equation}
+\mathbf x_b=\boldsymbol\xi-h\frac{\mathbf q}{\kappa_g},\qquad d=-s'_z,
+\label{eq:c4_xb}
+\end{equation}
+其中 $\kappa_g=\sqrt{n_g^2-q^2}$，$d$ 为光源在 RIS 局部坐标中到下表面的法向距离。光线从下表面进入玻璃后，同一束光覆盖的面积按面积 Jacobian 之比变化，并乘以水—玻璃界面的 Fresnel 透射率：
+\begin{equation}
+I_h(\boldsymbol\xi)=I_b(\mathbf x_b)\,T_{wg}(\mathbf q)\,\frac{\det J_w}{\det J_{wg}},\qquad
+\det J_w=\left(\frac{d}{\kappa_w}\right)^2\left(1+\frac{q^2}{\kappa_w^2}\right),
+\label{eq:c4_Ih}
+\end{equation}
+其中 $J_w$ 为仅含水层的位移 Jacobian，$J_{wg}$ 为水层加玻璃层的 Jacobian，由式(\ref{eq:c2_jacobian})取 $a_J=d/\kappa_w+h/\kappa_g$、$b_J=d/\kappa_w^3+h/\kappa_g^3$ 得到。对有限束腰，式(\ref{eq:c4_Ih})在 9 个源节点上分别计算后加权求和。同时检查折射前的下表面交点位于 1\,m 面板之内。
+
+\subsection{入射相位模型}
+
+弹道光的相位采用基模高斯光束模型。对中心源到点 $\boldsymbol\xi$ 的折射路径，由式(\ref{eq:c4_xb})找到下表面交点后，定义
+\begin{equation}
+\mathbf v_b=(\mathbf x_b,0)^{\mathrm T}-\mathbf s',\qquad
+z_b=\mathbf v_b\cdot\mathbf d',\qquad
+\rho_b^2=|\mathbf v_b|^2-z_b^2,\qquad
+z_{\mathrm R}=\frac{\pi n_ww_0^2}{\lambda_0},
+\label{eq:c4_gauss_par}
+\end{equation}
+其中 $\mathbf s'$ 与 $\mathbf d'$ 分别为光源位置和光轴方向在 RIS 局部坐标中的表示。液晶层上的入射相位与入射复场为
+\begin{equation}
+\Phi_h(\boldsymbol\xi)=k_0\left[n_w\left(z_b+\frac{\rho_b^2z_b}{2(z_b^2+z_{\mathrm R}^2)}\right)+n_g\ell_g\right]-\arctan\frac{z_b}{z_{\mathrm R}},\qquad
+U_h(\boldsymbol\xi)=\sqrt{I_h(\boldsymbol\xi)}\,e^{i\Phi_h(\boldsymbol\xi)},
+\label{eq:c4_phase}
+\end{equation}
+其中 $\ell_g=hn_g/\kappa_g$ 为玻璃中的几何路径长度。式(\ref{eq:c4_phase})的第一项为水中高斯光束的轴向相位与波面曲率相位，第二项为玻璃中的传播相位，第三项为 Gouy 相位。$|U_h|^2$ 的单位为 $\mathrm{W/m^2}$，即 $U_h$ 为通量振幅。对单个局部平面波，通量振幅与电场振幅的关系为
+\begin{equation}
+I_n=\frac{\epsilon_0c_0\kappa}{2}|\mathcal E|^2,\qquad U=\sqrt{\frac{\epsilon_0c_0\kappa}{2}}\,\mathcal E,
+\label{eq:c4_flux}
+\end{equation}
+相应地，界面上通量振幅的透射系数为 $\sqrt T$。
+
+散射光只在统计意义上定义：其强度为 $I_s$，复场的均值为零。散射光子包的随机路径长度不对应确定的相干相位，因此散射光以光子包的位置、方向和功率表示，在接收面以非相干强度叠加。MC 光子包折射到液晶层的位置为
+\begin{equation}
+\boldsymbol\xi_j=\mathbf x_{b,j}+h_i\frac{\mathbf q_{\mathrm{in},j}}{\kappa_{g,j}},\qquad \mathbf q_{\mathrm{in},j}=n_w\hat{\mathbf d}'_{j,xy},
+\label{eq:c4_packet}
+\end{equation}
+$\hat{\mathbf d}'_j$ 为光子包到达下表面时的方向在局部坐标中的表示。只有落在通光区 $D_m$ 内的光子包参与后续传播。
+
+\subsection{单元功率与参考点}
+
+每个液晶单元接收到的弹道功率及其功率加权参考点为
+\begin{equation}
+P_m^{(b)}=\int_{D_m}I_{h_i}(\boldsymbol\xi)\,d^2\boldsymbol\xi,\qquad
+\mathbf r_m=\frac{1}{P_m^{(b)}}\int_{D_m}\boldsymbol\xi\,I_{h_i}(\boldsymbol\xi)\,d^2\boldsymbol\xi,
+\label{eq:c4_unit}
+\end{equation}
+积分采用 6 阶 Gauss--Legendre 张量积公式：
+\begin{equation}
+\int_{D_m}f\,dA\approx\frac{d_xd_y}{4}\sum_{r,s}w_rw_sf\!\left(\mathbf c_m+\Big(\frac{d_xx_r}{2},\frac{d_yx_s}{2}\Big)\right).
+\label{eq:c4_gl}
+\end{equation}
+为了降低 MC 弹道光子的统计抖动，每个单元的总功率取为“MC 总功率 $-$ MC 弹道功率 $+$ 确定性弹道功率”，散射光子包保留其原始功率 $P_0w/N_\gamma$。这一替换不引入任何依据接收结果拟合的系数。每个单元的入射切向量 $\mathbf q_{\mathrm{in},m}$ 和入射几何曲率 $H_{\mathrm{in},m}=J_{wg}^{-1}$ 也在参考点 $\mathbf r_m$ 处计算，作为第五章相位反解与衍射传播的输入。
+
+单元功率满足以下账本关系：
+\begin{equation}
+P_{\mathrm{in},b}=P_{\mathrm{pupil}}+P_{\mathrm{interface\ loss}}+P_{\mathrm{omitted}},
+\label{eq:c4_ledger}
+\end{equation}
+即入射弹道功率等于进入单元通光区的功率、界面反射损失与极弱单元省略功率之和，程序中该等式的残差小于 $10^{-10}\,\mathrm W$。
+
+\section{本章小结}
+
+本章建立了 RIS 下表面与液晶层入射光场的计算模型。以航位推算方程和 OU 速度过程描述水下发射端运动，与第三章的 RIS 运动共同构成 18 个冻结快照。将下表面光强分解为弹道分量与散射分量：弹道分量对有限束腰源在任意 RIS 姿态下给出了精确的面积 Jacobian 和闭式点源极限；散射分量以完整 HG 相函数下辐射输运的碰撞次数展开为定义，用强制首次散射估计器无偏求值，并以 0.1\% 的整体二维标准误差为目标自适应控制样本数。在全部 18 个快照上，模型与独立 MC 的差异与 MC 自身的统计噪声一致，总功率差不超过 0.317\%；小角近似 S-BSF 在入射角不超过约 $65^\circ$ 时与完整模型的偏差小于 0.4\%，在随风浪变化的掠入射场景中偏差增大到 2\%--3\%。最后给出了从下表面经玻璃到液晶层的光强映射、高斯入射相位、散射光子包的传递方式以及单元功率与参考点，为第五章的相位设计和波动传播提供了输入。

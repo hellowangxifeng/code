@@ -1,0 +1,1074 @@
+PAGE 1
+IEEE PHOTONICS JOURNAL, VOL. 16, NO. 4, AUGUST 2024
+7301914
+Performance Analysis of Reconﬁgurable Intelligent
+Surface-Assisted Underwater Wireless Optical
+Communication Systems
+Qi Zhang
+, Dian-Wu Yue
+, Senior Member, IEEE, and Xian-Ying Xu
+Abstract—With the in-depth exploration of the ocean, the In-
+ternet of Underwater Things (IoUT) technology has attracted
+increasing attention. Underwater wireless optical communication
+(UWOC) provides the possibility of massive data transmission for
+IoUT. The underwater optical link of UWOC can be interrupted
+by the obstruction of marine animals and plants, seamounts, and
+some underwater equipment. In this paper, we present a reconﬁg-
+urable intelligent surface (RIS) assisted UWOC system to solve the
+problem of link occlusion. The cascaded turbulence channel fading
+coefﬁcients from source to destination through RIS are modeled
+as Gamma-Gamma distribution, and the pointing errors caused
+by beam jitter and RIS jitter are considered. In the RIS-assisted
+UWOC systems with intensity modulation and direct detection
+(IM-DD), we apply the approximate distribution of the sum of
+Gamma-Gamma random variables to derive the probability den-
+sity function (PDF) of the instantaneous received signal-to-noise ra-
+tio (SNR) for the ﬁrst time. Based on the PDF, the novel closed-form
+expression of outage probability is given, and the outage probability
+analysis results show that when the number of reﬂecting elements is
+very large (i.e., tends to inﬁnity), the outage probability asymptoti-
+cally approaches zero. Subsequently, the closed-form expressions of
+the ﬁnite-SNR diversity order, the asymptotical diversity order, and
+the convergence speed of ﬁnite-SNR diversity order to asymptotical
+diversity order are proposed. Additionally, the ergodic channel
+capacity expression is investigated. Finally, we give simulation
+results to validate our derived results and analyze the impacts of
+the number of reﬂecting elements of RIS and the pointing errors
+on the above system performance indicators.
+Index Terms—Underwater wireless optical communication,
+reconﬁgurable intelligent surface, outage probability, diversity
+order, ergodic channel capacity.
+I. INTRODUCTION
+A
+S A promising concept, the Internet of Underwater Things
+(IoUT) is a powerful technology for realizing the smart
+ocean. The goal of IoUT is to connect the underwater sensor net-
+works and autonomous underwater vehicles (AUVs) through a
+Manuscript received 26 March 2024; revised 16 May 2024; accepted 28
+May 2024. Date of publication 31 May 2024; date of current version 10
+June 2024. This work was supported in part by the National Natural Science
+Foundation of China under Grant 62301108 and in part by the Science and
+Technology Program of Liaoning Province under Grant 2023JH26/10300010.
+(Corresponding author: Dian-Wu Yue.)
+Qi Zhang and Dian-Wu Yue are with the College of Information Science
+and Technology, Dalian Maritime University, Dalian 116026, China (e-mail:
+zhangqi0081@dlmu.edu.cn; dwyue@dlmu.edu.cn).
+Xian-Ying Xu is with the School of Information Science and Engineer-
+ing, Dalian Polytechnic University, Dalian 116034, China (e-mail: xuxiany@
+dlpu.edu.cn).
+Digital Object Identiﬁer 10.1109/JPHOT.2024.3407882
+stable wireless link to promote seamless underwater operations,
+such as marine environmental monitoring, oceanographic data
+collection, seabedresources exploration, rescueandsalvage, and
+so on [1], [2], [3]. Underwater wireless communication (UWC)
+in IoUT can transmit data by using wireless carriers, i.e. acoustic
+wave, radio frequency (RF) wave, and optical wave [4], [5].
+Although acoustic signals can propagate over long distances
+with small signal attenuation, they usually have low bandwidth
+(typically on the order of Kbps), high delay, poor directivity and
+may affect marine organisms. On the other hand, RF signals
+support higher data rates (typically on the order of Mbps) and
+have low power consumption, but at the expense of decreased
+communication range and high signal attenuation. Compared
+with underwater acoustic and radio frequency communications,
+underwater wireless optical communication (UWOC) has the
+lowest link delay, the highest transmission rate (typically on
+the order of Gbps), and the lowest implementation cost. It is
+particularly well-suited to high-speed and large-capacity under-
+water data transmission [4], [5]. Moreover, UWOC can be com-
+bined with the existing RF communications to establish mixed
+RF-UWOC systems for realizing the information transmission
+between the IoUT and other platforms. For example, [6] studied
+a dual-hop RF-UWOC transmission system and analyzed the
+outage probability and bit error rate (BER). The secrecy perfor-
+mance for a dual-hop mixed RF-UWOC system was discussed
+in [7] and [8]. In conclusion, UWOC shows broad application
+prospects in IoUT systems.
+UWOC systems require that the transmitting light source
+and the receiving detector must be aligned. Considering the
+high transmission rate of UWOC, even short-term blocking
+or occlusion can lead to sudden communication interruption,
+resulting in the loss of large amounts of transmission informa-
+tion. This situation is fatal to a reliable IoUT system. In the
+underwater environment, marine animals and plants, seamounts,
+andoffshoreplatformequipmentcanoccludeorblocktheoptical
+link between the light source and the detector, increasing the
+possibility of optical information loss. The emerging concept
+of reconﬁgurable intelligent surfaces (RISs) opens the door
+for reducing the adverse effects of obstacles and blockages on
+underwater wireless optical links.
+RIS is a new and revolutionary technology that was initially
+used for RF communication links. Speciﬁcally, the RIS is a
+planar surface including multiple low-cost passive reﬂecting
+elements,eachofwhichcanindependentlycontroltheamplitude
+© 2024 The Authors. This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see
+https://creativecommons.org/licenses/by/4.0/
+
+PAGE 2
+7301914
+IEEE PHOTONICS JOURNAL, VOL. 16, NO. 4, AUGUST 2024
+and/or phase changes of the incident signals [9]. It is used
+to reconﬁgure the wireless propagation environment through
+software-controlled reﬂection [9]. This technology can be used
+in beyond 5 G and 6 G RF mobile communication systems [10],
+[11], [12], [13], [14]. RIS for optical communications is dif-
+ferent from that for RF communications. The hardware imple-
+mentation of RIS for optical signals can be divided into three
+main categories, namely, metasurface-, mirror array-, and liquid
+crystal-based RIS [15].
+At present, RISs for optical signals are mainly used in indoor
+visible light communications (VLC) and free space optical com-
+munications (FSOC). For instance, considering metasurface-
+based and mirror array-based RIS models, [16] studied the tem-
+poral characteristics of the RIS-based indoor VLC channel using
+radiometric concepts. [17] devoted to investigating the effect
+of VLC RIS and putting forward a joint resource management
+method for a RIS-aided VLC system to maximize the overall
+spectral efﬁciency. [18] investigated physical layer security in a
+RIS-aided VLC system with multiple legitimate users and one
+eavesdropper. [19] designed a RIS-assisted system to improve
+the coverage of hybrid VLC/RF indoor wireless communication.
+Recently, the liquid crystal-based RIS has been studied in the
+VLC system. [20] proposed for the ﬁrst time the concept of
+receivers using tunable liquid crystal-based RIS in VLC. In [21],
+a liquid crystal RIS-based VLC receiver design was proposed,
+and its operating principles and the channel model for a VLC
+system with such a receiver were provided.
+For the RIS-assisted FSOC system, some research results are
+also presented. In [22], with the aim to increase the commu-
+nication coverage and improve the system performance, RISs
+are considered in an FSOC setup, in which both atmospheric
+turbulence and pointing errors are considered. Considering link
+distances and jitter ratios at the RIS position, [23] carried out
+a performance analysis of RIS-aided FSOC links. In [24], a
+controllable multi-branch FSOC system based on optical RISs
+was proposed, and the asymptotic average BER and the outage
+probability were derived. [25] reported the performance analysis
+of multiple RISs-assisted FSOC and investigated the symbol
+error rate (SER) performance by utilizing the selection of the
+best RIS from the multiple available RISs.
+Although some work has been done on RISs for optical
+signals in VLC and FSOC, research on RIS-assisted underwater
+communication systems still needs to be made available [26],
+[27]. [28] proposed a RIS-assisted dual-hop mixed RF-UWOC
+system, but RIS is used in the RF link. [26] brought the concept
+of RIS to UWOC links, and the central limit theorem was applied
+for performance evaluation. [27] studied the outage probability
+over log-normal channels in a RIS-assisted UWOC system. In an
+underwater environment, ocean turbulence has a strong impact
+on the performance of UWOC systems. Turbulence fading is not
+considered in the indoor VLC [16], [17], [18], [19], [20], [21],
+so the results of VLC are not applicable to UWOC systems. Fur-
+ther, we have summarized the contributions of existing research
+related to the RIS-assisted FSOC and UWOC systems in Table I.
+From Table I, some works consider the single-reﬂecting element
+RIS[23],[24].Comparedwithsingle-reﬂectingelementRIS,the
+modeling and analysis of multi-reﬂecting element RIS channel
+TABLE I
+EXISTING RESEARCH ON RIS-ASSISTED FSOC AND UWOC SYSTEMS
+are more challenging. In existing works of [22] and [26], the
+central limit theorem is commonly used to analyze the channel
+of multi-reﬂecting element RIS. However, the results obtained
+by the central limit theorem are only suitable for the case with
+a large number of reﬂecting elements. For the case with a small
+number of RIS reﬂecting elements, the results revealed that
+the difference between the analytical and simulation results is
+very large, and it is difﬁcult to evaluate the system performance
+accurately.
+Against the above background, we establish the multi-
+reﬂecting element RIS-assisted UWOC system model in the
+environment with obstacles, and the fading coefﬁcients of the
+cascaded turbulence channels from source to destination through
+RIS are modeled as Gamma-Gamma distribution. To the best of
+our knowledge, such a system setup in conjunction with the pro-
+posed analysis has not yet been investigated. The contributions
+made by this paper are enumerated below:
+r We present a general framework to analyze the perfor-
+mance of the multi-reﬂecting element RIS-assisted UWOC
+systems. In addition, the ocean turbulence fading and the
+pointing errors caused by beam jitter and RIS jitter are
+considered.
+r For the RIS-assisted UWOC systems, the probability den-
+sity function (PDF) of instantaneous SNR has been derived
+by using a novel method, i.e., the one with the approxi-
+mate distribution of the sum of Gamma-Gamma random
+variables. Unlike the results obtained by the central limit
+theorem, the derivation results based on the approximate
+distribution method can accurately evaluate the system
+performance and are not limited by the number of reﬂecting
+elements.
+r Novel closed-form expressions quantifying the outage
+probability, the ﬁnite-SNR diversity order, the asymptoti-
+cal diversity order, the convergence speed of ﬁnite-SNR
+diversity order to asymptotical diversity order, and the
+ergodic capacity of the RIS-assisted UWOC systems have
+been derived. Notably, this is the ﬁrst time to evaluate the
+ﬁnite-SNR diversity order and its convergence speed in
+RIS-assisted wireless optical communication systems.
+
+PAGE 4
+7301914
+IEEE PHOTONICS JOURNAL, VOL. 16, NO. 4, AUGUST 2024
+A. Path Loss
+In the underwater environment, the path loss is the propa-
+gation attenuation of optical signals, which is mainly caused
+by the absorption and scattering effects of various components
+of seawater, including water molecules, phytoplankton, non-
+pigment suspended particles, and colored dissolved organic
+matter. The general theoretical models of path loss include
+Beer-Lambert’s law and radiative transfer equation (RTE) [4],
+[5]. RTE can describe the energy conservation of an optical
+wave passing through a steady medium. However, since the RTE
+is an integro-differential equation involving independent vari-
+ables [29], ﬁnding an exact analytical solution is very difﬁcult
+for many practical UWOC applications [4]. Thus, few analyt-
+ical RTE models have been given in recent years. Compared
+with RTE, Beer-Lambert’s law provides the simplest and most
+widely used scenario to describe the propagation attenuation
+of optical signals in the underwater environment. In order to
+facilitate subsequent analysis, we approximate path loss by the
+exponential attenuation model of Beer-Lambert’s law, which
+ignores the multiple scattering effect [30].
+According
+to
+Beer-Lambert’s
+law,
+we
+obtain
+hi
+l =
+exp(−cLi), i ∈{srn, rnd},
+where
+c
+is
+the
+extinction
+coefﬁcient which is the sum of absorption and scattering
+coefﬁcients. Under the ﬁxed wavelength and a stable water
+quality environment, c is a constant. Lsrn and Lrnd are link
+distances from source to the nth reﬂecting element and from
+the nth reﬂecting element to destination, respectively. The
+separation between reﬂecting elements is much smaller than the
+link distance. Then, it can be considered that the link distances
+from the source to the N reﬂecting elements are the same,
+i.e., Lsrn = L1 (n = 1, 2, . . . , N). Similarly, Lrnd = L2
+(n = 1, 2, . . . , N). Therefore, the path loss coefﬁcient is
+considered identical for the N paths, and we can get
+hln = hsrn
+l
+hrnd
+l
+= exp [−c (Lsrn + Lrnd)]
+= exp [−c (L1 + L2)]
+= hl ,
+n = 1, 2, . . . , N .
+(2)
+B. Underwater Turbulence
+htn = hsrn
+t
+hrnd
+t
+denotes the cascaded turbulence channel
+fading coefﬁcient from the source to the destination through
+the nth reﬂecting element. hsrn
+t
+and hrnd
+t
+are characterized by
+Gamma distribution, and their PDF are given as [31]
+fhsrn
+t
+(hsrn
+t
+) = α(αhsrn
+t
+)α−1
+Γ (α)
+exp (−αhsrn
+t
+) ,
+(3)
+fhrnd
+t
+
+hrnd
+t
+
+=
+β
+
+βhrnd
+t
+β−1
+Γ (β)
+exp
+
+−βhrnd
+t
+
+,
+(4)
+where Γ(·) is the Gamma function, α and β are the turbu-
+lence parameters from source to RIS and RIS to destination,
+respectively. By ﬁxing hsrn
+t
+and using the change of variable,
+hrnd
+t
+= htn/hsrn
+t
+, the conditional PDF can be obtained as
+f (htn/hsrn
+t
+) = β(βhtn/hsrn
+t
+)β−1
+hsrn
+t
+Γ (β)
+exp
+	−βhtn
+hsrn
+t
+
+.
+(5)
+Then, the PDF of htn can be given as
+lfhtn (htn) =
+ ∞
+0
+f (htn/hsrn
+t
+) fhsrn
+t
+(hsrn
+t
+) dhsrn
+t
+= 2(αβ)
+α+β
+2
+Γ (α) Γ (β)h
+(α+β)
+2
+−1
+tn
+Kα−β
+
+2
+
+αβhtn
+
+, (6)
+where Kp(·) is modiﬁed Bessel function of the second kind with
+order p. In (6), we obtain that the cascaded turbulence channel
+fading coefﬁcient from the source to the destination through
+the nth reﬂecting element (i.e., htn) is modeled by a Gamma-
+Gamma distribution. ht1, ht2, . . . , htn, . . . , htN are indepen-
+dent and identically distributed (i.i.d). Under the assumption of
+plane wave propagation, the turbulence parameters, α and β, can
+be calculated as [exp(0.225σ2
+Bi/(1 + 0.259σ12/5
+Bi
+)
+7/6) −1]−1
+[26], [31], where σ2
+Bi (i = 1, 2) represents the Rytov variance
+of the two paths, which can be given in [32].
+C. Pointing Error
+In RIS-assisted wireless optical communication systems, hpn
+is the channel fading coefﬁcient caused by the pointing error
+of the path from the source to the destination through the nth
+reﬂecting element, which is affected by beam jitter and RIS
+jitter [24]. Beam jitter means that the beam vibrates due to jitter
+at the source, and RIS jitter refers to the normal vector deﬂection
+of the reﬂecting surface caused by the jitter of the RIS. Since the
+sizeofRISismuchsmallerthanthecommunicationlinkdistance
+and the reﬂecting elements are located on the same reﬂecting
+surface, they experience identical pointing error. Then, we can
+get
+hpn = hp ,
+n = 1, 2, . . . , N .
+(7)
+hp can be approximated by [33]
+hp ≈A0 exp
+	
+−2R2
+ω2zeq
+
+,
+R ≥0 ,
+(8)
+and according to the pointing error model in [24], the PDF of
+hp can be given as
+fhp (hp) = ξ2
+Aξ2
+0
+hp
+ξ2−1 ,
+0 ≤hp ≤A0 ,
+(9)
+where
+ξ =
+
+
+
+
+ω2
+zeq
+4σ2
+θ(L1 + L2)2 + 16σ2
+φL2
+2
+,
+(10)
+and A0 = [erf(v0)]2 is the fraction of the collected power at
+R = 0, R is the pointing error radial displacement at the receiver,
+ωzeq = ωz
+√πerf(v0)/[2v0 exp(−v2
+0)] is the equivalent beam
+width, erf(·) is the error function, v0 =
+
+π/2DR/ωz, DR is
+receiver aperture radius, and ωz is the beam width. σ2
+θ and σ2
+φ
+
+PAGE 5
+ZHANG et al.: PERFORMANCE ANALYSIS OF RECONFIGURABLE INTELLIGENT SURFACE-ASSISTED UWOC SYSTEMS
+7301914
+are variances of pointing error angle and deﬂection error angles,
+respectively.
+III. SYSTEM PERFORMANCE ANALYSIS
+A. PDF of Instantaneous SNR
+We assume that all RIS reﬂecting elements have the same
+reﬂection coefﬁcient, that is, ρn = ρ (n = 1, 2, · · · , N). Then,
+the instantaneous SNR can be given as
+γ =
+Pte
+	N
+n=1 hlnhtnhpnρn
+
+2
+σ2n
+=
+Pteρ2
+	N
+n=1 hlnhtnhpn
+
+2
+σ2n
+.
+(11)
+Replacing (2) and (7) in (11), the instantaneous SNR can be
+expressed as
+γ =
+Pteρ2h2
+l h2
+p
+	N
+n=1 htn
+
+2
+σ2n
+= ¯γh2
+p
+	N
+n=1 htn
+
+2
+= ¯γh2
+ph2
+t ,
+(12)
+where path loss hl is deterministic in contrast to hp and ht, which
+are random fading variables. Thus, we let ¯γ = Pteρ2h2
+l /σ2
+n
+denote fading-free SNR, i.e., average SNR [34], [35]. ht =
+N
+n=1 htn represents the sum of i.i.d. Gamma-Gamma random
+variables, and its PDF can be calculated as (13), shown at the
+bottom of this page, but there is no closed-form solution for
+the multi-dimensional integration in (13). Several methods were
+used in the literature to obtain approximate solutions. Some of
+these literatures convert the integration into an inﬁnite sum [36],
+and some use the central limit theorem to obtain approximate
+PDF [22], [26]. However, these methods are complex and have
+limited applications. Here, we apply an alternative method to
+solve the PDF of ht.
+According to [37], the sum of N identically distributed
+Gamma-Gamma random variables, i.e., Y = N
+n=1 Xn with
+Xn ∼ΓΓ(αx, βx, Ωx) (ΓΓ(·) denotes Gamma-Gamma distri-
+bution), can be accurately approximated by another Gamma-
+Gamma random variable with parameters (αy, βy, Ωy) [37]. The
+parameters are given by
+αy = gαx ,
+βy = gβx ,
+Ωy = NΩx ,
+(14)
+where
+g = N
+
+1 + 2
+N
+N
+
+n=1
+N
+
+m=n+1
+μnm
+−1
+,
+(15)
+and μnm is the correlation coefﬁcient between Xn and Xm.
+Since ht1, ht2, . . . , htn, . . . , htN are independent and
+identically distributed, the correlation coefﬁcient between htn
+and htm is zero, and we have htn ∼ΓΓ(α, β, 1) from (6).
+Therefore, according to (14) and (15), we obtain
+ht =
+N
+
+n=1
+htn ∼ΓΓ (αh, βh, N) ,
+(16)
+where αh = Nα and βh = Nβ. Then, the PDF of ht can be
+expressed as
+fht (ht) =
+2
+	αhβh
+N
+
+ αh+βh
+2
+Γ (αh) Γ (βh)
+h
+αh+βh
+2
+−1
+t
+× Kαh−βh
+
+2
+
+αhβh
+N
+ht
+
+.
+(17)
+For the convenience of subsequent calculation, we use Eq.
+(03.04.26.0009.01) in [38] to rewrite the Bessel function in (17)
+as
+Kαh−βh
+
+2
+
+αhβh
+N
+ht
+
+= 1
+2G2,0
+0,2
+
+αhβh
+N
+ht
+
+· · ·
+αh −βh
+2
+, βh −αh
+2
+
+,
+(18)
+where Gm,n
+p,q (·|·) is Meijer-G function. Substituting (18) into
+(17), we obtain (19) shown at the bottom of the next page. Then,
+the property of Meijer-G function of Eq. (07.34.16.0001.01)
+in [38] is used within (19), it can be calculated as
+fht (ht) =
+αhβh
+NΓ (αh) Γ (βh)
+× G2,0
+0,2
+	αhβh
+N
+ht
+
+· · ·
+αh −1, βh −1
+
+.
+(20)
+Let h = hpht denote the joint channel fading coefﬁcient and the
+PDF of h can be calculated as
+fh(h) =
+ A0
+0
+fhp (hp) fh|hp (h |hp ) dhp
+=
+ A0
+0
+1
+hp
+fhp (hp) fht
+	 h
+hp
+
+dhp ,
+(21)
+where fh|hp(h|hp) is the conditional PDF. Substituting (9)
+and (20) into (21), we can obtain (22), shown at the bottom
+fht (ht)
+=
+ ∞
+0
+ ∞
+0
+· · ·
+ ∞
+0
+fht1 (ht1)fht2 (ht2) · · · fht(N−1)
+
+ht(N−1)
+
+fhtN
+
+ht −
+N−1
+
+n=1
+htn
+
+dht1dht2 · · · dht(N−1) .
+(13)
+
+PAGE 9
+ZHANG et al.: PERFORMANCE ANALYSIS OF RECONFIGURABLE INTELLIGENT SURFACE-ASSISTED UWOC SYSTEMS
+7301914
+Substituting (27) and (54) into (53), we obtain the integral
+equation as (55) shown at the bottom of this page. By applying
+Eq. (07.34.21.0013.01) in [38] for the integration of the product
+of two Meijer-G functions in (55), we obtain the closed-form
+expression of the ergodic channel capacity as (56) shown at the
+bottom of this page.
+IV. SIMULATION RESULTS
+In this section, we verify the derived closed-form expressions
+through Monte Carlo simulation. Unless otherwise stated, we
+consider threshold SNR γth = 15 dB, detector aperture diame-
+ter DR = 5 cm, noise variance σ2
+n = −100 dBm, the reﬂection
+coefﬁcient of reﬂecting elements ρ = 1, the extinction coefﬁ-
+cient c = 0.15 m−1, wavelength λ= 530 nm, the link distance
+L1 = L2 = 50 m, the dissipation rate of mean-squared tem-
+perature [32] χT1 = χT2 = 1 × 10−5 K2 · s−3, the Kolmogorov
+microscale length [32] η1 = η2 = 7.5 × 10−5, the dissipation
+rate of turbulent kinetic energy per unit mass of ﬂuid [32]
+ε1 = 3 × 10−2 m2 · s−3 and ε2 = 5 × 10−4 m2 · s−3. Based on
+these parameters, the turbulence parameters are set to α = 4.37
+and β = 1.24.
+We ﬁrst conﬁrm the accuracy of the approximate distri-
+bution of the sum of Gamma-Gamma random variables, i.e.,
+ht = N
+n=1 htn ∼ΓΓ(αh, βh, N). In Fig. 2, we give the exact
+cumulative distribution function (CDF) and the approximate
+CDF for different numbers of reﬂecting elements. The exact
+CDF is the empirical CDF based on the sum of the N i.i.d
+randomly generated Gamma-Gamma random variables from
+(6), while the approximate CDF is the empirical CDF based on
+the randomly generated Gamma-Gamma random variables from
+(17). From Fig. 2, it can be found that the approximate CDFs
+are well-matched with the exact CDFs. Further, Kolmogorov
+Smirnov statistic [43] is used as goodness of ﬁt. This quantiﬁes
+the vertical distance between the approximate CDF and the
+exact CDF, and the distance should not be greater than the
+so-called maximum difference Dm. For 1 × 104 samples we
+used, Dm = 0.0136 and conﬁdence level of 0.05 are usually
+selected [43]. We ﬁnd that the distance is smaller than Dm
+for different numbers of reﬂecting elements. Therefore, it can
+be concluded that the approximate distribution we applied is
+accurate.
+InFig.3,weanalyzetheoutageprobabilityperformanceofthe
+RIS-assisted UWOC system with different numbers of reﬂecting
+elements. We consider the number of reﬂecting elements of
+N = 2, 4, 8, 16, 24, 32, 40, 48, 56. It can be observed
+from Fig. 3 that the analysis results in our derived closed-form
+expression of (30) are consistent with the simulation results,
+which veriﬁes the accuracy of the derivation. Even if the number
+of reﬂection elements is small, such as N = 2 and N = 4, our
+results still accurately evaluate the system performance. From
+Fig. 3, the outage probability decreases with the increase in
+the number of reﬂecting elements of RIS. For example, SNR
+of ¯γ = 21 dB is required for N = 8 in order to achieve a
+target outage probability of Pout = 10−3. The SNR decreases
+to 13.8 dB, 9.7 dB and 7 dB, and an extra SNR of 7.2 dB,
+11.3 dB and 14 dB is required for N = 16, N = 24 and N = 32.
+It can also be shown from Fig. 3 that when the number of
+IRS reﬂecting elements reaches a certain number, the outage
+probability performance of the UWOC system is signiﬁcantly
+improved. However, the outage probability performance will im-
+prove more slowly with the increase in the number of reﬂecting
+elements. This is also consistent with the results in Fig. 4. From
+Fig. 4, the outage probability decreases with the increase of N,
+but the decline speed becomes slower. The outage probability
+performance gain G(N) also decreases with the increase in the
+number of reﬂecting elements. When the number of reﬂective
+elements is relatively large, G(N) tends to be stable. Although
+G(N) tends to be stable with the increase of N, the value of
+G(N) is always greater than 1, i.e., G(N) > 1. This means that
+the outage probability always decreases with the increase of N.
+Therefore, it can be concluded that when N →∞, the outage
+probability approaches zero. This is consistent with our analysis
+of Pout(N)N→∞.
+CS (¯γ) =
+⎧
+⎪
+⎨
+⎪
+⎩
+2
+⎡
+⎢⎣G6,2
+4,8
+⎛
+⎜
+⎝α2
+hβ2
+hγth
+16N2A2
+0¯γ
+
+0, 1
+2, ξ2
+2 ,
+ξ2 + 1
+2
+b, 1, −1
+2
+⎞
+⎟
+⎠
+⎤
+⎥⎦
+2
+−2G6,3
+5,9
+⎛
+⎜
+⎝α2
+hβ2
+hγth
+16N2A2
+0¯γ
+
+0, 0, 1
+2, ξ2
+2 , ξ2 + 1
+2
+b, 1, 1, −1
+2
+⎞
+⎟
+⎠
+×G6,1
+3,7
+⎛
+⎜
+⎝α2
+hβ2
+hγth
+16N 2A2
+0¯γ
+
+1
+2, ξ2
+2 , ξ2 + 1
+2
+b, −1
+2
+⎞
+⎟
+⎠
+⎫
+⎪
+⎬
+⎪
+⎭
+/
+⎧
+⎪
+⎨
+⎪
+⎩
+min
+
+ξ2, αh, βh
+
+⎡
+⎢⎣G6,1
+3,7
+⎛
+⎜
+⎝α2
+hβ2
+hγth
+16N 2A2
+0¯γ
+
+1
+2, ξ2
+2 , ξ2 + 1
+2
+b, −1
+2
+⎞
+⎟
+⎠
+⎤
+⎥⎦
+2⎫
+⎪
+⎬
+⎪
+⎭
+.
+(52)
+C =
+αhβhξ2
+2 ln(2)NΓ (αh) Γ (βh) A0¯γ
+1
+2
+ ∞
+0
+γ−1
+2 G1,2
+2,2
+	
+τγ
+
+1, 1
+1, 0
+
+G3,0
+1,3
+	 αhβh
+NA0¯γ
+1
+2 γ
+1
+2
+
+ξ2
+ξ2 −1, αh −1, βh −1
+
+dγ .
+(55)
+C =
+2αh+βh−5αhβhξ2
+ln(2)πNΓ (αh) Γ (βh) A0τ
+1
+2 ¯γ
+1
+2 G8,1
+4,8
+⎛
+⎜
+⎝
+α2
+hβ2
+h
+16N 2A2
+0τ ¯γ
+
+−1
+2, 1
+2, ξ2
+2 , ξ2 + 1
+2
+b, −1
+2, −1
+2
+⎞
+⎟
+⎠.
+(56)
+
+PAGE 13
+ZHANG et al.: PERFORMANCE ANALYSIS OF RECONFIGURABLE INTELLIGENT SURFACE-ASSISTED UWOC SYSTEMS
+7301914
+capacity is reduced by 5.75%. Similarly, when σθ = 2 × 10−3
+and σφ increases from 1 × 10−3 to 2 × 10−3 and 3 × 10−3, the
+ergodic capacity at ¯γ = 20 dB decreases from 8.19 to 7.72 and
+6.97 bit · s−1 · Hz−1, which is decreased by 5.74% and 14.90%.
+V. CONCLUSION
+In this paper, we investigated a RIS-assisted UWOC system
+with IM-DD in an underwater environment with obstacles. The
+cascaded turbulence channel fading coefﬁcients from source
+to destination through RIS are modeled as Gamma-Gamma
+distribution, and the pointing error caused by beam jitter and
+RIS jitter has been considered. The probability density func-
+tion of instantaneous received SNR is proposed by using the
+approximate distribution of the sum of Gamma-Gamma ran-
+dom variables, and the novel closed-form expression of outage
+probability is derived. Then, based on the outage probability
+result, the ﬁnite-SNR diversity order, the asymptotical diversity
+order, and the convergence speed of ﬁnite-SNR diversity order to
+asymptotical diversity order have been analyzed. Furthermore,
+the ergodic channel capacity is also investigated. Finally, the
+simulation results are presented to conﬁrm the accuracy of
+our derivations. Analytical and simulation results show that in-
+creasing the number of reﬂecting elements improves the outage
+probability performance and the ergodic channel capacity, while
+the pointing error deteriorates the system performance. When
+the number of reﬂecting elements is very large (i.e., tends to
+inﬁnity), the outage probability asymptotically approaches zero.
+Additionally, appropriately increasing the number of reﬂecting
+elements can improve the ﬁnite-SNR diversity order and its
+convergence speed, and the asymptotical diversity order depends
+on the number of reﬂecting elements, the pointing error, and the
+minimum turbulence parameter.
+REFERENCES
+[1] R. A. Khalil, N. Saeed, M. I. Babar, and T. Jan, “Toward the Internet of
+Underwater Things: Recent developments and future challenges,” IEEE
+Consum. Electron. Mag., vol. 10, no. 6, pp. 32–37, Nov. 2021.
+[2] Z. Liu, X. Meng, Y. Liu, Y. Yang, and Y. Wang, “AUV-aided hybrid data
+collectionschemebasedonvalueofinformationforInternetofUnderwater
+Things,” IEEE Internet Things J., vol. 9, no. 9, pp. 6944–6955, May 2022.
+[3] S. A. H. Mohsan, Y. L. Li, M. Sadiq, J. W. Liang, and M. A. Khan,
+“Recent advances, future trends, applications and challenges of Internet of
+Underwater Things (IoUT): A comprehensive review,” J. Mar. Sci. Eng.,
+vol. 11, no. 1, Jan. 2023, Art. no. 124.
+[4] Z. Zeng, S. Fu, H. Zhang, Y. Dong, and J. Cheng, “A survey of underwater
+optical wireless communications,” IEEE Commun. Surveys Tuts., vol. 19,
+no. 1, pp. 204–238, Firstquarter 2017.
+[5] M. F. Ali, D. N. K. Jayakody, and Y. Li, “Recent trends in underwater
+visible light communication (UVLC) systems,” IEEE Access, vol. 10,
+pp. 22169–22225, 2022.
+[6] H. Lei, Y. Zhang, K.-H. Park, I. S. Ansari, G. Pan, and M.-S. Alouini,
+“Performance analysis of dual-hop RF-UWOC systems,” IEEE Photon.
+J., vol. 12, no. 2, Apr. 2020, Art. no. 7901915.
+[7] Y. Lou, R. Sun, J. Cheng, D. Nie, and G. Qiao, “Secrecy outage analysis of
+two-hop decode-and-forward mixed RF/UWOC systems,” IEEE Commun.
+Lett., vol. 26, no. 5, pp. 989–993, May 2022.
+[8] H. Lei, C. Zhu, I. S. Ansari, K.-H. Park, and G. Pan, “Secrecy outage
+performance analysis of dual-hop RF-UOWC systems,” IEEE Syst. J.,
+vol. 17, no. 2, pp. 2133–2144, Jun. 2023.
+[9] Q. Wu and R. Zhang, “Towards smart and reconﬁgurable environment:
+Intelligent reﬂecting surface aided wireless network,” IEEE Commun.
+Mag., vol. 58, no. 1, pp. 106–112, Jan. 2020.
+[10] E. Basar, M. Di Renzo, J. De Rosny, M. Debbah, M.-S. Alouini, and
+R. Zhang, “Wireless communications through reconﬁgurable intelligent
+surfaces,” IEEE Access, vol. 7, pp. 116753–116773, 2019.
+[11] D.-W. Yue, H. H. Nguyen, and Y. Sun, “mmWave doubly-massive-MIMO
+communications enhanced with an intelligent reﬂecting surface: Asymp-
+totic analysis,” IEEE Access, vol. 8, pp. 183774–183786, 2020.
+[12] Z. Wang, Z. Liu, Y. Shen, A. Conti, and M. Z. Win, “Location awareness
+in beyond 5G networks via reconﬁgurable intelligent surfaces,” IEEE J.
+Sel. Areas Commun., vol. 40, no. 7, pp. 2011–2025, Jul. 2022.
+[13] A. Shojaeifard et al., “MIMO evolution beyond 5G through reconﬁgurable
+intelligent surfaces and ﬂuid antenna systems,” Proc. IEEE, vol. 110, no. 9,
+pp. 1244–1265, Sep. 2022.
+[14] Z. Chen et al., “Reconﬁgurable-intelligent-Surface-Assisted B5G/6G
+wireless communications: Challenges, solution, and future opportunities,”
+IEEE Commun. Mag., vol. 61, no. 1, pp. 16–22, Jan. 2023.
+[15] S. Sun, T. Wang, F. Yang, J. Song, and Z. Han, “Intelligent reﬂecting
+surface-aided visible light communications: Potentials and challenges,”
+IEEE Veh. Technol. Mag., vol. 17, no. 1, pp. 47–56, Mar. 2022.
+[16] A. M. Abdelhady, O. Amin, A. K. S. Salem, M.-S. Alouini, and B. Shihada,
+“Channel characterization of IRS-Based visible light communication sys-
+tems,” IEEE Trans. Commun., vol. 70, no. 3, pp. 1913–1926, Mar. 2022.
+[17] S. Sun, F. Yang, J. Song, and Z. Han, “Joint resource management for
+intelligent reﬂecting surface-aided visible light communications,” IEEE
+Trans. Wireless Commun., vol. 21, no. 8, pp. 6508–6522, Aug. 2022.
+[18] S. Sun, F. Yang, J. Song, and Z. Han, “Optimization on multiuser physical
+layer security of intelligent reﬂecting surface-aided VLC,” IEEE Wirel.
+Commun. Lett., vol. 11, no. 7, pp. 1344–1348, Jul. 2022.
+[19] R. K. Pal, S. P. Dash, S. Aïssa, and D. Ghose, “Outage probability analysis
+of RIS-Assisted indoor Wide-FOV-VLC/RF wireless communication,”
+IEEE Wirel. Commun. Lett., vol. 13, no. 1, pp. 34–38, Jan. 2024.
+[20] A. R. Ndjiongue, T. M. N. Ngatched, O. A. Dobre, and H. Haas, “Re-
+conﬁgurable intelligent surface-based VLC receivers using tunable liquid-
+crystals: The concept,” J. Lightw. Technol., vol. 39, no. 10, pp. 3193–3200,
+May 2021.
+[21] S. Aboagye, A. R. Ndjiongue, T. M. N. Ngatched, and O. A. Do-
+bre, “Design and optimization of liquid crystal RIS-based visible light
+communication receivers,” IEEE Photon. J., vol. 14, no. 6, Dec. 2022,
+Art. no. 7355607.
+[22] L. Yang, W. Guo, D. B. da Costa, and M.-S. Alouini, “Free-space
+optical communication with reconﬁgurable intelligent surfaces,” 2020,
+arXiv:2012.00547.
+[23] A. R. Ndjiongue, T. M. N. Ngatched, O. A. Dobre, A. G. Armada, and
+H. Haas, “Analysis of RIS-Based Terrestrial-FSO link over G-G turbu-
+lence with distance and jitter ratios,” J. Lightw. Technol., vol. 39, no. 21,
+pp. 6746–6758, Nov. 2021.
+[24] H. Wang et al., “Performance analysis of multi-branch reconﬁgurable
+intelligent surfaces-assisted optical wireless communication system in
+environment with obstacles,” IEEE Trans. Veh. Technol., vol. 70, no. 10,
+pp. 9986–10001, Oct. 2021.
+[25] N. Vishwakarma and R. Swaminathan, “Performance analysis of multiple
+optical reﬂecting surfaces assisted FSO communication,” in Proc. IEEE
+Wireless Commun. Netw. Conf., 2023, pp. 1–6.
+[26] R. P. Naik and W.-Y. Chung, “Evaluation of reconﬁgurable intelligent
+surface-assisted underwater wireless optical communication system,” J.
+Lightw. Technol., vol. 40, no. 13, pp. 4257–4267, Jul. 2022.
+[27] Y. Ata, H. Abumarshoud, L. Bariah, S. Muhaidat, and M. A. Imran, “In-
+telligent reﬂecting surfaces for underwater visible light communications,”
+IEEE Photon. J., vol. 15, no. 1, Feb. 2023, Art. no. 7300609.
+[28] S. Li, L. Yang, D. B. d. Costa, M. D. Renzo, and M.-S. Alouini, “On the
+performance of RIS-Assisted dual-hop mixed RF-UWOC systems,” IEEE
+Trans. Cogn. Commun. Netw., vol. 7, no. 2, pp. 340–353, Jun. 2021.
+[29] C. Li, K.-H. Park, and M.-S. Alouini, “On the use of a direct radiative trans-
+fer equation solver for path loss calculation in underwater optical wireless
+channels,” IEEE Wireless Commun. Lett., vol. 4, no. 5, pp. 561–564,
+Oct. 2015.
+[30] I. C. Ijeh, M. A. Khalighi, M. Elamassie, S. Hranilovic, and M. Uysal,
+“Outage probability analysis of a vertical underwater wireless optical link
+subject to oceanic turbulence and pointing errors,” IEEE J. Opt. Commun.
+Netw., vol. 14, no. 6, pp. 439–453, Jun. 2022.
+[31] M. A. Al-Habash, L. C. Andrews, and R. L. Phillips, “Mathematical model
+for the irradiance probability density function of a laser beam propagating
+through turbulent media,” Opt. Eng., vol. 40, no. 8, pp. 1554–1562, 2001.
+[32] M. Elamassie, M. Uysal, Y. Baykal, M. Abdallah, and K. Qaraqe, “Effect
+of eddy diffusivity ratio on underwater optical scintillation index,” J. Opt.
+Soc. Amer. A, vol. 34, no. 11, pp. 1969–1973, Nov. 2017.
+
+PAGE 14
+7301914
+IEEE PHOTONICS JOURNAL, VOL. 16, NO. 4, AUGUST 2024
+[33] A.A.FaridandS.Hranilovic,“Outagecapacityoptimizationforfree-space
+optical links with pointing errors,” J. Lightw. Technol., vol. 25, no. 7,
+pp. 1702–1710, Jul. 2007.
+[34] M. Elamassie and M. Uysal, “Asymptotic performance of generalized
+transmit laser selection over lognormal turbulence channels,” IEEE Com-
+mun. Lett., vol. 24, no. 8, pp. 1762–1766, Aug. 2020.
+[35] Z. Rahman, N. V. Tailor, S. M. Zafaruddin, and V. K. Chaubey, “Uniﬁed
+performance assessment of optical wireless communication over multi-
+layer underwater channels,” IEEE Photon. J., vol. 14, no. 5, Oct. 2022,
+Art. no. 7349114.
+[36] M. R. Bhatnagar and Z. Ghassemlooy, “Performance analysis of gamma-
+gamma fading FSO MIMO links with pointing errors,” J. Lightw. Technol.,
+vol. 34, no. 9, pp. 2158–2169, May 2016.
+[37] T.V.Pham,T.C.Thang,andA.T.Pham,“Averageachievablerateofspatial
+diversity MIMO-FSO over correlated gamma-gamma fading channels,”
+IEEE J. Opt. Commun. Netw., vol. 10, no. 8, pp. 662–674, Aug. 2018.
+[38] “Wolfram research,” Accessed: Jan. 30, 2024. [Online]. Available: http:
+//functions.wolfram.com
+[39] S. Tang, X. Zhang, and Y. Dong, “Temporal statistics of irradiance in
+moving turbulent ocean,” in Proc. IEEE MTS/IEEE OCEANS, 2013,
+pp. 1–4.
+[40] M. Elamassie and M. Uysal, “Outage performance analysis of vertical
+underwater VLC links,” in Proc. IEEE 30th Signal Process. Commun.
+Appl. Conf., 2022, pp. 1–5.
+[41] S. Loyka and G. Levin, “Diversity-multiplexing tradeoff via asymptotic
+analysis of large MIMO systems,” in Proc. IEEE Int. Symp. Inf. Theory,
+2007, pp. 2826–2830.
+[42] M. Elamassie, S. M. Sait, and M. Uysal, “Finite-SNR diversity gain anal-
+ysis of FSO systems over gamma-gamma fading channels with pointing
+errors,” IEEE Commun. Lett., vol. 25, no. 6, pp. 1940–1944, Jun. 2021.
+[43] M. Lovric, International Encyclopedia of Statistical Science. New York,
+NY, USA: Springer, 2010.

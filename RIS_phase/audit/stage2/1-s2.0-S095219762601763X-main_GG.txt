@@ -1,0 +1,151 @@
+PAGE 7
+J. Wu et al.
+and Monte-Carlo-based radiative-transfer analyzes show that sea-foam 
+layers can produce strong scattering in the visible and near-infrared 
+spectral bands. These studies provide the physical basis for representing 
+wind-enhanced foam effects through effective thickness and extinction 
+parameters in a computationally tractable simulation model.
+4.2.3. Deterministic attenuation of the atmospheric channel
+The absorption and scattering of light in the atmosphere are mainly 
+caused by gas molecules, water vapor, and aerosols, as shown in Zhang 
+et al. (2024a). 
+𝐿air = e−𝛼air⋅𝑑air ,
+(13)
+where 𝛼air is the propagation attenuation coefficient in air, and 𝑑air is 
+the propagation distance of the beam in air.
+4.2.4. Geometric loss
+During the propagation of the beam, due to the inherent divergence 
+of the laser, its spot diameter gradually increases with propagation 
+distance, resulting in geometric loss (Trinh et al., 2025). First, the spot 
+diameter of the laser after underwater propagation is given as follows.
+𝐷1 = 𝐷0 + 2𝑑sea tan
+(𝜃aod
+2
+)
+,
+(14)
+where 𝐷0 is the initial beam diameter of the laser; 𝜃𝑎𝑜𝑑 is the laser 
+divergence angle, defined as the total expansion angle across the 
+beam waist. During the subsequent propagation through air, the spot 
+continues to expand within the range of 𝑑𝑎𝑖𝑟, and the resulting total 
+spot diameter at the AAV receiving plane is given as follows. 
+𝐷𝑓= 𝐷0 + 2(𝑑sea + 𝑑air) tan
+(𝜃aod
+2
+)
+.
+(15)
+Geometric loss refers to the reduction in power density caused by 
+beam divergence. When the laser spot diameter exceeds the receiver 
+aperture, only a portion of the energy is captured. The geometric loss 
+factor is given as follows. 
+𝐿g =
+( 𝐷𝑓
+𝐷𝑟
+)2
+,
+(16)
+where 𝐷𝑟 is the effective diameter of the AAV laser receiver. If 𝐷𝑓> 𝐷𝑟, 
+significant loss occurs. Conversely, if the receiver fully covers the laser 
+spot, 𝐷𝑓≤𝐷𝑟, the loss is negligible.
+4.2.5. Pointing error
+As shown in Fig. 4, in cross sea–air optical wireless communication, 
+the airborne and underwater uncrewed platforms are typically subject 
+to control inaccuracies, environmental disturbances, and structural 
+vibrations, which cause deviations in the propagation direction of the 
+laser beam (Zhang et al., 2025). Such pointing errors can result in the 
+laser spot deviating from the center of the receiver, thereby reducing 
+the received power. In this work, we consider angular perturbations 
+in two orthogonal directions at both the underwater transmitter and 
+the aerial receiver, modeling them as independent zero-mean Gaussian 
+random variables, as follows. 
+{
+𝜃tx,𝑥, 𝜃tx,𝑦∼(0, 𝜎2
+tx)
+𝜃rx,𝑥, 𝜃rx,𝑦∼(0, 𝜎2
+rx),
+(17)
+where 𝜃tx,𝑥 and 𝜃tx,𝑦 denote the angular errors of the transmitter in the 
+horizontal and vertical directions respectively; 𝜃rx,𝑥 and 𝜃rx,𝑦 denote the 
+angular errors of the receiver in the horizontal and vertical directions, 
+respectively; 𝜎2
+tx and 𝜎2
+rx denote the standard deviations of the angular 
+jitter at the transmitter and receiver, respectively.
+The total pointing error angle vector is the sum of the transmitter 
+and receiver errors, and it still follows a Gaussian distribution in each 
+direction, as expressed below. 
+𝜎𝑎𝑙𝑙=
+√
+𝜎2
+tx + 𝜎2
+rx.
+(18)
+Fig. 4. Beam distribution on the AAV receiving plane.
+According to the small-angle paraxial propagation model in geomet-
+rical optics, the angular error can be linearly projected into a spatial 
+displacement over a propagation distance 𝐿= 𝑑𝑠𝑒𝑎+ 𝑑𝑎𝑖𝑟. Therefore, 
+the random beam spot displacement caused by platform jitter is given 
+as follows. 
+𝑟1 = 𝐿⋅
+√(𝜃tx,𝑥+ 𝜃rx,𝑥
+)2 + (𝜃tx,𝑦+ 𝜃rx,𝑦
+)2.
+(19)
+In addition, due to the accuracy limitations of the subsequent align-
+ment algorithm, the distance between the refraction point and the AAV 
+is regarded as the residual alignment error distance 𝑟2. Therefore, the 
+total offset distance is 𝑟= 𝑟1 + 𝑟2.
+Since the angular errors in the horizontal and vertical directions are 
+independent, the offset distance follows a Rayleigh distribution, whose 
+probability density function is given as follows. 
+𝑝(𝑟) = 2𝑟
+𝜎2
+𝑠
+exp
+(
+−𝑟2
+𝜎2
+𝑠
+)
+,
+(20)
+where 𝜎𝑠= 𝐿⋅𝜎𝜃 is the standard deviation of the pointing error in the 
+spatial plane.
+The beam radius at a propagation distance 𝑎, assuming the beam 
+follows a Gaussian distribution during propagation, is given as follows. 
+𝑤(𝑧) = 𝑤0 ⋅
+√
+1 +
+(
+𝑧
+𝑧𝑅
+)2
+,
+(21)
+where 𝑤0 is the beam waist radius at the transmitter, and 𝑧𝑅= 𝜋𝑤2
+0∕𝜆0
+is the characteristic distance at which the beam begins to noticeably 
+diverge.
+Based on the above analysis, the instantaneous coupling efficiency 
+caused by pointing errors is expressed as follows (Cui et al., 2023). 
+𝐻𝑝(𝑟) = 𝐴0 ⋅exp
+(
+−2𝑟2
+𝑤2
+𝑒
+)
+,
+(22)
+where 𝐴0 ∈(0, 1] represents the maximum coupling efficiency under 
+ideal alignment, i.e., when 𝑟= 0.
+4.2.6. Angle of arrival fluctuation
+As shown in Fig. 5, during the propagation of the beam through 
+seawater and the atmosphere, it is also affected by refractive index 
+fluctuations within the medium, resulting in random deviations in the 
+propagation direction. This phenomenon is referred to as angle-of-
+arrival fluctuations (Yi et al., 2024), which disrupt the beam collima-
+tion and lead to energy spreading and a reduction in received power. 
+The turbulence strength is typically characterized by the Rytov variance 
+Engineering Applications of Artiϧcial Intelligence 181 (2026) 115479 
+7 

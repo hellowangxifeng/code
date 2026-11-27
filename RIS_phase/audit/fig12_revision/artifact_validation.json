@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "frames": [
+    {
+      "figure": "Fig12a_radius",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "daebc1f6089a081436457784916069312e14bd526c2647bfb73e02c6283e63af",
+      "pdfSHA256": "19bd2e9a0c5a20814a40095001e40ccb70ac5620f7cbdc1c178dc64c7e5be46a"
+    },
+    {
+      "figure": "Fig12b_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "2d25a2430b315be633daadb31cf271615dc4b937ed55bbe3724d3f86eeabca58",
+      "pdfSHA256": "369932d4fe97811cf3b2948347ef464a241535291f025a89a1995e6bfc8e1bb9"
+    },
+    {
+      "figure": "Fig12c_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "1c37e5e94db29b4cd6d0654ac96c7802537f7b3ee11d74d5c9c857f2fc4468c0",
+      "pdfSHA256": "6cb3389f4a6ff606d999f0d1930fad9abe6407b078af4c27622dbd73d0d61df2"
+    },
+    {
+      "figure": "Fig13a_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "d72e2a31824e0f648fe813c06620c8843759c001cf31640954622149b3a9be66",
+      "pdfSHA256": "a12ee9e8078a958ae40c86ebb95ce30814e5b2dc2a953b275455c64ebd8efcaf"
+    },
+    {
+      "figure": "Fig13b_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "c30337e4b7e41be830d023322f8d0db2bfee28daaa6e219d2cdac1de5ca4bcb7",
+      "pdfSHA256": "1cc6f01af58c7240041430419888e6879f0935fc430b8e2a48f822e168286750"
+    },
+    {
+      "figure": "Fig14a_aber",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "7317987ffd68117da9d3902e8502c4da49d82da992d1744d9f36572ec9f5d635",
+      "pdfSHA256": "7d62c8e13b6cc0dc201f3b12410e4102b3fb5251e6aac20edfc11ec5c67af0d0"
+    },
+    {
+      "figure": "Fig14b_op",
+      "widthIn": 2.6700000762939453,
+      "heightIn": 2.369999991522895,
+      "fonts": [
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPSMT"
+      ],
+      "pngSHA256": "e6c270a5d9634300517f4b241ba5536e76744fafca65edafa25571fec7de319c",
+      "pdfSHA256": "262692d760fff1ace9a76f075eeb404ece734e00e05ae7bfffff909743b00bd8"
+    }
+  ],
+  "mergedPages": 7,
+  "selectionAudit": "155 independent minima/maxima passed",
+  "pairedAudit": "62 paired differences and conservative intervals independently reproduced in Python",
+  "familywiseResolved": 61,
+  "sourceSHA256": {
+    "rp_fig12_run.m": "12b3e5356e638cec262c5e6545749580d1de3c3be890f37354a10a6f7fc0f42c",
+    "rp_fig12_select.m": "926798e5f403fdd979d90f2b01144d8708179167ff8494f9c814740879e45631",
+    "rp_fig12_metrics.m": "312ea21172c96032811763692aa9e5d083c1487811cb1c4c2db20f273fc4422d",
+    "rp_aperture_channel.m": "1dc3031188658cdbc04341073f50859fe02ad5e72c814b9028b9fd85cea30c90",
+    "run_fig12_revision.m": "3490b46accb2361558daa020e2a4568636ab6a0d4ce7577f87a1ca2840b7c168",
+    "plots/rp_fig12_plot.m": "71f0d7e29a8c157b4d6f6445d811a165fc71c422b7007640f1c85988197c803d",
+    "plots/rp_fig12_report.m": "090b0e0295483cc23730f0b69ec19700e179380bb24574123a730d7b0cc6448b",
+    "plots/rp_fig12_finalize.py": "f823582c54ef75758a0f0ed55ee466013114eb36a2d2ca3961a79240028e2cb5",
+    "plots/rp_stage2_plot.m": "d798362e7be5c512540a82ea727177eafd220eba1b8f6b146dc617fd0bbe1348",
+    "plots/rp_stage2_graphics_audit.m": "318dbcf212f99ba29e6a9bbe2049212ad11ce706fa138d23fe3e193da659281d",
+    "plots/rp_stage2_report.m": "071551b61e036869a55ada2bcd795ca623e7ad4f0988affe5dc82eb8bd15066b"
+  },
+  "scope": "Fig12 three-cm revision and deleted dedicated Fig11 artifacts",
+  "historicalAuditNote": "The earlier all-stage audit has a pre-existing README hash mismatch against its older baseline; no README edits or baseline resets were made in this revision.",
+  "conditionsSHA256": "bc1ba9e613f3b466728d109ae0fcc48da0bb85eb26925788aaf666b05c8e7021"
+}

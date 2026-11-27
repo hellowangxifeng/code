@@ -1,0 +1,121 @@
+PAGE 2
+4350
+IEEE TRANSACTIONS ON VEHICULAR TECHNOLOGY, VOL. 74, NO. 3, MARCH 2025
+be relayed through intermediate nodes, extending the effective
+range of communication beyond what is achievable with a
+single hop. Additionally, OIRS offer a promising solution by
+strategically deploying reﬂective surfaces underwater to redirect
+and enhance optical signals, thus facilitating communication in
+challenging NLOS scenarios. These advancements expand the
+capabilities of UWOC systems, providing greater ﬂexibility and
+reliability in underwater communication applications.
+In addressing the limitations of NLOS-UWOC setups, re-
+searchers have delved into two distinct types of OIRS: mirror-
+array (MA)-based and meta-surface-based [6]. MA-based OIRS
+function akin to controllable mirrors, meticulously directing
+reﬂected beams towards the speciﬁc users [7]. On the other
+hand, meta-surface-based OIRS utilize sub-lambda-sized atoms
+to delay or phase-shift incoming signals, facilitating constructive
+interference at the destination.
+In the context of free-space optical (FSO) communication
+systems, a novel approach involving phased array (PA) and MA
+technologies for FSO-based OIRS has been proposed in [8].
+This method offers advantages such as cost-effectiveness and
+extended reach, making it suitable for various communication
+system applications. Similar to RF-based intelligent reﬂecting
+surface (RF-IRS), a PA-based OIRS comprises programmable
+phased modulation units. Both MA and PA-based OIRS allow
+for beam convergence, deﬂection, and splitting, enhancing the
+versatility and efﬁciency of wireless optical communication
+systems [8]. Further, in [9], a signal-to-noise ratio (SNR) based
+mirror assignment (SMA) scheme optimizes mirror element al-
+location in OIRS for enhanced user throughput and fairness, out-
+performing conventional methods. The SMA approach promises
+fair transmission rates in multi-user scenarios. In the domain of
+indoor visible light communication (VLC), the utilization of
+OIRS has been explored to enhance performance. For instance,
+in [10], an OIRS was employed in an indoor VLC system, with
+considerations for receiver orientation. The system’s perfor-
+mance was evaluated in terms of achievable data rate and outage.
+Furthermore, the potential of OIRS in multi-user multiple input
+multiple output (MIMO) systems has been investigated in [11].
+Here, OIRS facilitates data transmission for both the uplink and
+downlink phases, enhancing system efﬁciency. In [12], the au-
+thors optimize MIMO VLC systems with OIRS, enhancing ca-
+pacity by aligning OIRS elements and deriving optimal emission
+power. Two proposed algorithms, location-aided interior-point
+(LIP) algorithm and the log-det-based alternating optimization
+(LDAO) algorithm, show signiﬁcant capacity improvements
+and superior performance in numerical results. Physical layer
+security has also been enhanced through the use of OIRS, as
+explored in [13]. The authors investigated how OIRS can create
+a ﬂexible wireless environment to increase secrecy rates.
+A. Related Works
+1) Mixed Terristrial-UWC System: In the study detailed
+in [14], the investigation focuses on the outage probability,
+average bit error rate (BER), and ergodic capacity. The research
+implements amplify and forward (AF) and decode and forward
+(DF) relays across various water types in the terrestrial link
+of a mixed RF-UWOC system, incorporating a RF-IRS. Liang
+Yang et al. in [15] consider a mixed FSO-UWOC dual-hop
+transmission system, incorporating heterodyne detection and in-
+tensity modulation with direct detection (IM/DD). They develop
+closed-form expressions for outage probability, average BER,
+and average capacity, assuming gamma gamma (GG) fading for
+the FSO channel and exponential and generalized gamma (EGG)
+fading with pointing errors for the UWOC channel. In [16], the
+authors explore the performance of a triple-hop IRS-assisted
+RF-FSO system convergent with UWOC. They investigate the
+average BER and outage probability, considering Nakagami-m
+fading over the IRS-RF link and GG fading over the IRS-FSO
+and UWOC links. Our work [17] examines the performance of
+IRS-assisted and DF relay-assisted links within an integrated
+RF-UWOC system. Key ﬁndings underscore the inﬂuence of
+buoy positioning relative to the underwater destination, with
+the UWOC link exhibiting the highest spectral efﬁciency (SE)
+but limited range. The RF link parameters are critical within a
+speciﬁc distance range. Moreover, the study demonstrates that
+the IRS link outperforms the DF relay link and the direct link
+in SE under speciﬁc conditions, albeit with reduced energy
+efﬁciency (EE). Importantly, IRS proves valuable when the
+direct path is obstructed, suggesting its potential for enhancing
+system performance in challenging underwater environments.
+2) Completely UWC System: Huang et al. demonstrated the
+use of mirrors for underwater signal reﬂection in their study [18],
+extending light transmission distance within a water tank setup.
+The LOS and NLOS models in underwater sensor networks
+were explored by authors in [19], utilizing the water-air in-
+terface as a mirror for NLOS communication. Tang et al.
+investigated NLOS UWOC path loss through Monte Carlo
+simulations in [20], emphasizing the signiﬁcance of consid-
+ering sea surface slopes and seawater scattering properties.
+Yildiz et al. introduced a closed-form expression for under-
+water path loss in [21], emphasizing optimal NLOS reﬂection
+gains. Meanwhile, authors highlighted the potential of IRS in
+various challenging environments in [22], with emphasis on
+underground and underwater Internet of Things (IoT) scenarios.
+Kisseleff et al. examined the beneﬁts of IRS deployment in
+challenging environments in [23], showcasing its reliability in
+mitigating challenges like attenuation and turbulence-induced
+effects. In [24], Naik et al. evaluated the performance of a
+meta-surface based OIRS considering various factors such as
+underwater turbulence and beam direction errors. Similarly, Ata
+et al. utilized the oceanic turbulence optical power spectrum
+(OTOPS) model to analyze the characteristics of the underwater
+turbulent environment and highlighted the reliability enhance-
+ments that IRS bring to UWOC systems in [25]. Our prior
+investigation in [26] explores the potential of OIRS in enhancing
+UWOC systems, evaluating key metrics such as SE and out-
+age probability. Furthermore, in [27], we investigated dynamic
+strategies for optimizing UWOC systems, aiming to enhance
+system performance and adaptability in challenging underwater
+environments. Through adaptive mirror assignment, the study
+seeks to improve efﬁciency and effectiveness in UWOC systems.
+Recently, in [28], the authors investigated the application of si-
+multaneous transmit and reﬂect (STAR)-IRS in UWOC systems,
+demonstrating its effectiveness in addressing the underwater
+challenges.
+Communication systems, inherently designed for multiple
+users, employ various multiple access techniques to efﬁciently
+allocate resources such as time, frequency, power, and code
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:28:29 UTC from IEEE Xplore.  Restrictions apply. 

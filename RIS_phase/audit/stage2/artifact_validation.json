@@ -1,0 +1,224 @@
+{
+  "status": "historical_snapshot_with_fig2_fig3_superseded",
+  "readme_unchanged": true,
+  "wris_unchanged": true,
+  "protected_wris_files": 90,
+  "typora_documents": 9,
+  "figures": [
+    {
+      "stem": "Fig1_irradiance",
+      "png_sha256": "3cdcc31de972991842bb4583ada520d2d1371b24f4a59be1f7c1043d4297a429",
+      "fig_sha256": "96539fc882c650f1504d7c8c3f7432af1318d001c14f1869e140243d0b9d91cf"
+    },
+    {
+      "stem": "Fig2_aber",
+      "png_sha256": "4e5bd94f12ea0923e3c4d61d879462810b04e84f7d515410b7fd2ad9198f05f7",
+      "fig_sha256": "4d83f2d158696237defed2168b45b812b4e1026950211d86ca02cd60a0a70e59"
+    },
+    {
+      "stem": "Fig3_op",
+      "png_sha256": "36615e683828c674b8dc886699f6500780fc750197cb66295074d2a51860992f",
+      "fig_sha256": "8de148ab2c4707d1404896d30cdc06d05a7d8fc6def542917c7c8a4162ac6054"
+    },
+    {
+      "stem": "Fig4_width_tradeoff",
+      "png_sha256": "e015ac03ed4a58961acb457ede2e57523e46c365a5ccba132614402b6eea886e",
+      "fig_sha256": "c4ffe8fe2c0098a19a2f0edb800a1a4367826b4309198c88a4725de9c5a33bf7"
+    },
+    {
+      "stem": "Fig5_sensitivity",
+      "png_sha256": "d838148178677a371d8cefcc274af91c734bc9b9b754663e7a9cb43194ab4c04",
+      "fig_sha256": "2d5d3d0c6aa2809ba6912fd72a4c14ad2c0c9ced6ec1892a57268847a3d02f1a"
+    },
+    {
+      "stem": "Fig6_objective_phase",
+      "png_sha256": "bd6bf234b4be3af058b903f0e51be1391ab43332b2f48ac39639c675f8dd4a2e",
+      "fig_sha256": "5d6045dfdffc69e02caa0966c4f0d5980d819d82430fc38898882aa9637ab03c"
+    },
+    {
+      "stem": "Fig8_radial_profiles",
+      "png_sha256": "43ae513a159199a68ac6ef669ed94c5e3c17f035a458985415e8a71ce13882e2",
+      "fig_sha256": "095ada93380a17e99f98776fa4de05a87ae6f2f392acd5f7e9b0c252619ba7d4"
+    },
+    {
+      "stem": "Fig9_turbulence",
+      "png_sha256": "f93aefc95b706fd981a83300a3bf9c49007b069a0f2ee4e2782bf2b8cc2edcdd",
+      "fig_sha256": "d7aa7a59f8f12ba3784da34937b68a71c61cf44bb80d9118130e5b3925d8ff55"
+    },
+    {
+      "stem": "Fig10_incidence",
+      "png_sha256": "86174a44f6fb48e74ab8955e2e93ec931741d3dd5c24f6c3403406d2d35e2aef",
+      "fig_sha256": "5bb67baf4e48c18ce2c753061a90408d1327cf7607f04815ee622a688c56ca0e"
+    },
+    {
+      "stem": "Fig11_width_jitter_maps",
+      "png_sha256": "d6d35e0258531bc90c8c7a43618fb1f32a27639c9e62728d779920111a894b71",
+      "fig_sha256": "d026637c4f033f590af6d2911fdfdd067d5882d51da3625c6c0013b8c212551e"
+    },
+    {
+      "stem": "Fig12_adaptive_widths",
+      "png_sha256": "d31b185257dec928bed10626b7db40e20f44fecc22299e519eb073e71e987738",
+      "fig_sha256": "f0af7ae53d70d2577111ae7ebec488863d11a369d181d0401e52f614f95cc866"
+    }
+  ],
+  "programs": [
+    {
+      "file": "phase_z10_ABER.csv",
+      "units": 1600,
+      "sha256": "91aa24e4e3de061799703dadd7cb116d96acc48c5fcf434f42387f0ea27c38ec"
+    },
+    {
+      "file": "phase_z10_OP.csv",
+      "units": 1600,
+      "sha256": "91aa24e4e3de061799703dadd7cb116d96acc48c5fcf434f42387f0ea27c38ec"
+    },
+    {
+      "file": "phase_z10_Power.csv",
+      "units": 1600,
+      "sha256": "bcbd29f6071e78c9bcd2b344a6e6c48a208d8bfe530509b4e11d58d2a8239e32"
+    },
+    {
+      "file": "phase_z5_ABER.csv",
+      "units": 1600,
+      "sha256": "3a32ce9a5f1bf4e6a61136e9fc8b5ae398cb1a2fdf891abeb5117c9be6ce4f33"
+    },
+    {
+      "file": "phase_z5_OP.csv",
+      "units": 1600,
+      "sha256": "3a32ce9a5f1bf4e6a61136e9fc8b5ae398cb1a2fdf891abeb5117c9be6ce4f33"
+    },
+    {
+      "file": "phase_z5_Power.csv",
+      "units": 1600,
+      "sha256": "a1510495c1077b732b32880ea9922872457839b11310e36a593016620bb23808"
+    },
+    {
+      "file": "phase_z7.5_ABER.csv",
+      "units": 1600,
+      "sha256": "dd0b4a2c2db52d19982b5858fdb107ce7a6e771aa3c17bf023fb009bd8c79479"
+    },
+    {
+      "file": "phase_z7.5_OP.csv",
+      "units": 1600,
+      "sha256": "dd0b4a2c2db52d19982b5858fdb107ce7a6e771aa3c17bf023fb009bd8c79479"
+    },
+    {
+      "file": "phase_z7.5_Power.csv",
+      "units": 1600,
+      "sha256": "988511642e2154d9ec06e0db6099d09860c9a21335153b454afec5cb1b20466f"
+    }
+  ],
+  "tables": {
+    "all_candidates": 149,
+    "objective_comparison": 9,
+    "sensitivity": 924,
+    "width_jitter": 1209,
+    "adaptive_widths": 155,
+    "turbulence_scan": 2424,
+    "incidence_z7.5": 72,
+    "incidence_z10": 72,
+    "validation_adaptive": 155
+  },
+  "sources": {
+    "plots\\rp_plot.m": "21d7b9090a83af8d7a3b81ce438a6ec76691fc9b34b10bf89301e815b8e665fc",
+    "plots\\rp_report.m": "63bf6c9b549f4abf9443b875c359125e89771568908ee79f1dde006bf2cb197d",
+    "plots\\rp_s2_axes.m": "3886778c0d359706f3123035575281720c3ac89973bb3a3271b7342f769cec3a",
+    "plots\\rp_s2_finish.m": "c2862240e38c88c1af2e447fce2f1862b8697fd4504a847a39e89dd0f53465bf",
+    "plots\\rp_s2_legend.m": "69fcb87fad2dc85378909004c810144bef14d779cca2f0028d501708f47a5e1c",
+    "plots\\rp_s2_plot_box.m": "e39081dfe9a763b41ea1f25e2baec175522ce4efe5cf1eb338e6ee8d984790c5",
+    "plots\\rp_s2_style.m": "54b14a1fca2b3ae618c598d2beea71b61f4f69015c35e633c5d866dc42a7e161",
+    "plots\\rp_stage2_graphics_audit.m": "bf8ccf22d3dc214907e4d70fa95db692552507bac578df4ebb3cec36cd04763e",
+    "plots\\rp_stage2_plot.m": "2432541f23735037d6be57385c4ca69b7dbf2a02c93bfead7bc4b056e14cbeec",
+    "plots\\rp_stage2_plot_aber.m": "99eadecbea7ed40cd312044226e544749b78c63fdb01e89eb83766007b92e4e4",
+    "plots\\rp_stage2_plot_angles.m": "ee750fea997622c8a82ce8506b95bbfb66137ddb0e29cdfd4d1087b7fec0db00",
+    "plots\\rp_stage2_plot_irradiance.m": "73647bd49716764c2071d838049f7f82750271cc8dde7a6f8b78ab2ded041b9f",
+    "plots\\rp_stage2_plot_links.m": "a987ae30c6212a0abc4c84de25b40ee2cef5a1e5a3e636477edb928cdcd0baf0",
+    "plots\\rp_stage2_plot_radial.m": "91f09d3bf75ecb6dfb1248f4b5c9554b48d3560ba883e70a7b1d0169196e187c",
+    "plots\\rp_stage2_plot_sensitivity.m": "933a0967084ca331ba14ce524d1d99c47a069a32a81207dfb59c87ca5f415e95",
+    "plots\\rp_stage2_plot_turbulence.m": "e21f7aa3dacec39e1d724cc2b2dae36939ed655d913b400eab152da0ad45b8cf",
+    "plots\\rp_stage2_plot_width_jitter.m": "c3bb6baaad4b25d9bdfe5030ec5bb1f224a3ce44545a8aac23de9f2b0d5478b0",
+    "plots\\rp_stage2_report.m": "30c87f8165f96419f82b9122dde9807d0cafcd2a6920868baf621dffbf45fac6",
+    "RisFieldConsistencyTest.m": "72f837f302e38f42ee1863a3c8bbc3ffcc5a80eeaac926197f06924c7f8385d0",
+    "RisLinkPhysicsTest.m": "3ceab0759182437810fb50de03d6a8f89b0e78ee9aa181ad91fab39df66470b4",
+    "rp_aperture_channel.m": "b69d9d844af9f49e2c3b1881521198bab2275329607c2c1e799c8ac70a36c55b",
+    "rp_bsf_ballistic.m": "eae1b827b6b32a40cb719fa7af3a9e42341b6bb29a22dc491d48e50c84586a35",
+    "rp_carrier_landing.m": "84e09bfd774ab9def6bc0e6b534e004930f6b5a834b703432e1e4175f63ae939",
+    "rp_check_config.m": "147833c96091cabed391981030b9c3aa5ceff387420ac178f14abdfb359fc6b4",
+    "rp_command.m": "2c2f169b31a6dbf197b98fad372981fb54a9ac8c770270c1fe175eb9ec8f2db1",
+    "rp_config.m": "53c244d9437e212e6cdf1402615fe8e1226acef44f56caecda4e645d4df27e2c",
+    "rp_deposit_power.m": "8ca157f8dbdc7bd7521856e4b81919008fec006fae6b69050726e1a62ea621ce",
+    "rp_diffraction_check.m": "2481a4013da65b659d7500002d4a7738f5e39832fab8702e66dcec79e9b1956f",
+    "rp_direct_channel.m": "c0ed708189a77b3d18a63c9abc5b8405a23928db5e59314dba855e57a415aecc",
+    "rp_direct_density.m": "cd0c1c43842a396900de0c885e007c2d8e50f582f6b222c9ee5f045920239a46",
+    "rp_direct_wave.m": "8294bf7ec6becdc128cd58d3bf761dbc8adcab82d40e80bb817bd9163c6f1e7f",
+    "rp_fading_response.m": "afa9d2055c9e2d9c79e35db79844a720ce36089fa4163cb1d03744ad1399a9d5",
+    "rp_finite_phase.m": "c0a2b6a0f03f89e72025da04121f120e5bc4f7ec362550606eeea218b0f48b21",
+    "rp_fourier_window.m": "ef0c0ccf5535c1502d667e704fec490b6107cdd5043bbeb18e85eb988f650ccc",
+    "rp_fresnel.m": "e0d7d6a2b028670b88d72ea347af40d33ba3f5137edd68f372b73216362bf3fd",
+    "rp_gauss_legendre.m": "463b617c1994bc7425e348eedc45d95dfe330851ba781f1e169b6d415d5da92f",
+    "rp_geometry.m": "91b7e3e7e6efc1b5e943bd2958543b2dba02beba8fe33c9470c5108844531593",
+    "rp_illuminate.m": "713c63a02ba98b9325518e66f3cbbc79c5912f814abe10c9ee6e4e778f800836",
+    "rp_incident_field.m": "0610eff7781e31068cd2070f562a86a575172b80c12176fc8c0ebe6a593891ab",
+    "rp_layer_path.m": "2a529a669ffcd96ab45bedb2a3a43ab3d919a636eda5bdf9ad9252f659aa7233",
+    "rp_link_metrics.m": "5225a12bcd3c1d9adb37b987396b0f92a4c0aa29c4ad75999fd524d375abf166",
+    "rp_link_samples.m": "bd8b7dbfe51d382916dce45876670da83a2c463adca3caf05af3a3de6eaa2d32",
+    "rp_mc.m": "7ad7ffde7fb8c927647bf595b30a8b10f275ba1d04b17a6bac313587f7e4c80e",
+    "rp_modulated_field.m": "fb9ea8c9832889c7b63f9ea49780ebb3f635f21360e602764473d7ed88e4900c",
+    "rp_paraxial.m": "8cab48d3e290b71c505371939acb0f947dd644affcb423f32a24b1eef22ccebd",
+    "rp_phase.m": "829521cff5c2fa16f7d9d06766c2a58deff0d70bcd2b74c4031c9a42458d52d6",
+    "rp_phase_profile.m": "755d7d545ebb727d9ab9b19436cd5d270a3bb0e8d1a1f15a01a9ee1e74be610c",
+    "rp_pixel_intensity.m": "2f352bc5a4819ef8590e6c30fc9b0548cce383cf294b0ead43a8d0530b23acc1",
+    "rp_proxy_wave.m": "e572756cfaf6c8e2bcf4bb91db8f497b7b5b4f89e7945e9a30447f926cd6ae46",
+    "rp_receiver_window.m": "e8c3a76163d4b59b66681e1251542817ddcb6d8706071a56bb64d48be1a14c13",
+    "rp_run.m": "8831eea41ab44c22228c4d1224e94497c15023ffca41d6f8932b1a748f284055",
+    "rp_setup.m": "e0dfb15cc3531e76e1c1515426f425aa10f2028beea7a7cf2271f6d6c90b5b24",
+    "rp_spot_stats.m": "023933fcf94ceb4bf012e7e21a7c17e5904f7db3503081a1c08494a5e590f884",
+    "rp_stage2_angle_case.m": "d96348d17af8a09d1e5ec238b8b6a7624b4fdc8010c4352cc99619e7206c294c",
+    "rp_stage2_angle_distance.m": "ff33502e06994fe7c5ceff5f9b49e47cfcaf2e792a5a20367f0b991c4ff84509",
+    "rp_stage2_apply_refinements.m": "ac72e0dcc6acc8e9d2f5819b4e03507a617bafcb94dd0d192d174c5a6e196560",
+    "rp_stage2_compact_design.m": "79ce3d18a1734a17d6cc50f2be996a20ddf1a2c0962920185c512a53cac841bd",
+    "rp_stage2_config.m": "407ca3030f33503ebfe7fafe055c52a8d99254336926fcbd8902eaed5c42e33b",
+    "rp_stage2_distance.m": "062f5f8c8da8c2b98ab1c6f7eccfe68de006cbde6eba91f2715354249a85fbe9",
+    "rp_stage2_distance_complete.m": "d48c74ddb3015a9df8aa7f4344ffff5b7a613c03819b90d2bfef0fbfd704823f",
+    "rp_stage2_extend.m": "28accfd573b6d16e95b6ad4d47671d71aec599b3693acf6bf3bdc036869a7d97",
+    "rp_stage2_finish.m": "a2f56dfc46cf0d0ea5ea48f7e88daad874167fa72c0d578deb7d905a7cecd09d",
+    "rp_stage2_merge_angles.m": "b918cdc5fd022750ae22e7bd67c237b4ac810b3ba80db1de0ac2b8431a3c248f",
+    "rp_stage2_optical_signature.m": "66694286888de6de3d32d5a55b68fc808c9f4ce0b6b0ceec563cb006be8a3c82",
+    "rp_stage2_promote.m": "48fc3456af2506b0bba506c39f4714ecc160ae121e655a8fd7d64e1d22c86eaa",
+    "rp_stage2_receiver.m": "6a9b1c56303aa6abb6cd18d864593a231eb5070e4fa79a1bc49c44263478f3ba",
+    "rp_stage2_receiver_signature.m": "8879a051d2206da23979603823e622b1143c10b2365691897c0ad461570d62a4",
+    "rp_stage2_receiver_worker.m": "0ca25950576b9738a06209941e7aba0b99842290458c96ea2ef0f8e579018b0b",
+    "rp_stage2_run.m": "621393ccb6c37f3dc3f80f94ece699489c0a0d69d3f0e195bc9e0367ae626587",
+    "rp_stage2_scene.m": "d3165b14736dec81a2a56f3a3d2415b19a3dfb1615c0e9d45d3f6a1aaf811041",
+    "rp_stage2_select.m": "8237b130afbb13c6659290cbfb88fbce8fa16e3515ee44c137a0c38685b41e54",
+    "rp_stage2_sensitivity.m": "8338707ebb13520a7d6d0ffbc635560ec83faeb2b2d50753e79db884650477cc",
+    "rp_stage2_signature.m": "d6ec00cd7e0531e65b7fd64bebd4a8d1a60721015bb4374bfece3c61c5f44d1b",
+    "rp_stage2_sort_bank.m": "f08141f495e13dc76a3dc04c0070182abfaa326fcb0d6297972129bea700d940",
+    "rp_stage2_turbulence_scan.m": "7e9ade780d4b4c4d380272920687c587f3ecb8c6b469433054c909a360794ec6",
+    "rp_stage2_validate.m": "58f4f8deabe69b164894ce551a83e38ea8014ba95949360abeaf3c1f2c013ce9",
+    "rp_stage2_validate_adaptive.m": "c335d586e6cb2c29c66dfb3b42bd9b29416975ab2ca502b1a56bad4633443d76",
+    "rp_stage2_wave.m": "412cebc865156b0801028122e9fd7648120c4eae199cdacb2eebc3cc12369e80",
+    "rp_stage2_width_jitter.m": "f5f8d43b39758cf2d88326d8847a4b14d8ae3d9210aa99081d3f8571bd04addd",
+    "rp_stage2_worker_refresh.m": "e085488a095662c9ad6e92037f4246f31e82e96923d2bfe20707e21045abd322",
+    "rp_study_check.m": "5c5868c1fe3e5b5225d460e8916930934bbfbd8449e523c8fa4f54d5bc23ea08",
+    "rp_study_config.m": "3090bc75ba30dfd522e3e13e0c8a308eab8860cd42793c21ba0b264d7790b625",
+    "rp_study_optical_check.m": "de92197a39ab21b1c03f67069662514f3eb5b202150d988a2b5c6fd578da9999",
+    "rp_study_progress.m": "b1e7cced004c5f8de4cc6406cc3c4dd1b196ffb56dd38b15a368748172e6ba1c",
+    "rp_study_scene.m": "665fe0a29d92d521f4ad0699e56f72aa64a3204f489e483831828436d2d8ef8f",
+    "rp_study_validate.m": "378a2f3d45d5764a7b929db91d46ec704ecbdfacdb8f76bd42d157f12d57241a",
+    "rp_trace.m": "00da4cfb4d7b2295cd6f17c5c218c0363d162306ea6568c6f5abfb1aaa871866",
+    "rp_turbulence.m": "d78c69ad717ffeb751b66a0b7160053cde8825694b4eafee95454734c602f7e6",
+    "rp_validate.m": "eff3e7463b8d9129e2fe074d893d77ee6525c09492202fed4ab6b2710c78c5fe",
+    "rp_vertical_command.m": "b5686a217f724f8fafe9f2ee25eac77822a583417eba05aa90eff5ca02404271",
+    "rp_wave.m": "bf0555f725197e97b2c91a39f679cc957776a947adf9117873cb6a60bedfcf78",
+    "rp_zero_phase.m": "a35e3950a4822f42b4fd7f34ba8f409c10cb28cb6244557da06bff3b7c8b6aa8",
+    "run_ris_phase.m": "800a61a9078ce60be16e2f00689ca8876c0e69473a38939897398edcc5e81487"
+  },
+  "originalAuditStatus": "passed",
+  "supersededFigures": [
+    "Fig2_aber",
+    "Fig3_op"
+  ],
+  "currentFig2Fig3Audit": "plots/stage2/fixed_receiver/artifact_validation.json",
+  "readmeNote": "Original stage2 baseline retained. README was subsequently externally updated; this revision did not write it."
+}

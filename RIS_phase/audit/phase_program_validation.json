@@ -1,0 +1,751 @@
+{
+  "program_count": 93,
+  "passed": true,
+  "scope": "affine phase-only envelope, 1 um electrode centers, 0.021 degree command grid; no voltage/fringing calibration",
+  "records": [
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\circular_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\flat_top_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\gaussian_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\original_w000.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 0.0,
+      "gradient_identity_error": 0.0,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\refined_circular_w040_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\refined_circular_w080_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_05.0\\refined_circular_w080_margin-0.010.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\circular_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\flat_top_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\gaussian_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\original_w000.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 0.0,
+      "gradient_identity_error": 0.0,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\refined_circular_w040_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\refined_circular_w080_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_07.5\\refined_circular_w080_margin-0.010.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\circular_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\flat_top_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w040.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w060.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w080.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w100.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w120.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w140.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w160.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w180.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\gaussian_w200.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\original_w000.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 0.0,
+      "gradient_identity_error": 0.0,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\refined_circular_w040_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\refined_circular_w080_margin-0.005.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    },
+    {
+      "file": "results\\finite_width\\z_10.0\\refined_circular_w080_margin-0.010.mat",
+      "passed": true,
+      "max_command_deg": 15.414000000000001,
+      "command_grid_error": 5.684341886080802e-14,
+      "gradient_identity_error": 5.551115123125783e-17,
+      "max_phase_increment_per_1um_rad": 3.139132320079891
+    }
+  ]
+}

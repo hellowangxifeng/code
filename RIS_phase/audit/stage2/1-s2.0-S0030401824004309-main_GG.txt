@@ -1,0 +1,912 @@
+PAGE 3
+Optics Communications 566 (2024) 130693
+3
+H.-S. Cha et al.
+Fig. 2. Pointing error with multiple receiver lenses on the receiver plane.
+fluctuation caused by scintillation [9], and the pointing error factor
+between the 𝑖th transmitter lens and the 𝑗th receiver lens, respectively.
+Note that pointing error is caused by misalignment between the center
+of the transmitted beam footprint and the receiver lens, which might
+be introduced by several factors such as the mobility of transmitter and
+receiver, mechanical vibration, unequal number between transmitter
+and receiver, etc.
+2.1. Atmospheric turbulence-induced fading
+The atmospheric turbulence-induced fading factor ℎ𝑎𝑖𝑗can be mod-
+eled as a log-normal random variable or a gamma-gamma random
+variable depending on the strength of turbulence [2]. This strength
+of turbulence can be determined by Rytov variance denoted as 𝜎2
+𝑅=
+1.23𝑘7∕6𝐶2
+𝑛𝑧11∕6, where 𝐶2
+𝑛is the refractive index structure parameter.
+ℎ𝑎𝑖𝑗can be typically modeled as a log-normal random variable if
+𝜎2
+𝑅≤0.3 and a gamma-gamma random variable, otherwise [23]. In
+this paper, we assume strong turbulence following a gamma-gamma
+turbulence model and the probability density function (PDF) of ℎ𝑎𝑖𝑗is
+given by
+𝑓ℎ𝑎𝑖𝑗(ℎ𝑎𝑖𝑗) = 2(𝛼𝛽)
+𝛼+𝛽
+2
+𝛤(𝛼)𝛤(𝛽) ℎ𝑎𝑖𝑗
+𝛼+𝛽
+2 −1𝐾𝛼−𝛽
+(
+2
+√
+𝛼𝛽ℎ𝑎𝑖𝑗
+)
+,
+(3)
+where 𝛤(⋅) is the Gamma function, 𝐾𝑣(⋅) is the 𝑣th-order modified
+Bessel function of the second kind, and 𝛼and 𝛽are the effective number
+of small-scale and large-scale eddies in the scattering environment,
+respectively. Here, 𝛼and 𝛽are defined as [24]
+𝛼=
+[
+exp
+(
+0.49𝜎2
+𝑅
+(1 + 1.11𝜎12∕5
+𝑅
+)7∕6
+)
+−1
+]−1
+,
+𝛽=
+[
+exp
+(
+0.51𝜎2
+𝑅
+(1 + 0.69𝜎12∕5
+𝑅
+)5∕6
+)
+−1
+]−1
+.
+(4)
+Note that the 𝑛th moment of a gamma-gamma random variable can be
+obtained as [23]
+E[ℎ𝑛
+𝑎𝑖𝑗] = 𝛤(𝛼+ 𝑛)𝛤(𝛽+ 𝑛)
+(𝛼𝛽)𝑛𝛤(𝛼)𝛤(𝛽) .
+(5)
+Since 𝛤(𝛼+ 1) = 𝛼𝛤(𝛼), the first moment in (5) can be reduced as
+1. In other words, the atmospheric turbulence-induced fading factor
+ℎ𝑎𝑖𝑗cannot affect the received average power while the instantaneous
+power of received signal is dependent on ℎ𝑎𝑖𝑗.
+2.2. Pointing error
+The displacement affecting the pointing error factor ℎ𝑝𝑖𝑗can be
+divided into two major parts as shown in Fig. 2. Boresight is the
+displacement between the center of the beam footprint and the receiver
+lens. In our scenario, the boresight is expressed in vector form as 𝐫𝑖𝑗=
+[𝑥𝑡𝑖−𝑥𝑟𝑗, 𝑦𝑡𝑖−𝑦𝑟𝑗]⊺which is caused by misalignment between the center
+of the beam footprint transmitted from the 𝑖th transmitter lens and
+the 𝑗th receiver lens. Jitter is the unpredictable random displacement
+caused by the tremor of the transmitter or/and the receiver lenses.
+Then, the jitter between the 𝑖th transmitter and the 𝑗th receiver lens
+can be expressed as 𝐫𝑢𝑖𝑗= [𝑥𝑢𝑖𝑗, 𝑦𝑢𝑖𝑗]⊺, where 𝑥𝑢𝑖𝑗and 𝑦𝑢𝑖𝑗are the value of
+the jitter with respect to the horizontal and vertical axes, respectively.
+Each jitter value follows a Gaussian distribution as 𝑥𝑢𝑖𝑗∼(0, 𝜎2
+𝑝) and
+𝑦𝑢𝑖𝑗∼(0, 𝜎2
+𝑝), where 𝜎2
+𝑝is the variance of the jitter. If the transmitter
+lenses are placed on the same platform, the pointing error arises from
+the vibration of that platform, and thereby the jitter value can be
+assumed as 𝑥𝑢1𝑗= 𝑥𝑢2𝑗= ⋯= 𝑥𝑢𝑀𝑗, 𝑦𝑢1𝑗= 𝑦𝑢2𝑗= ⋯= 𝑦𝑢𝑀𝑗. However, in
+our work, the jitter values are assumed to be different for a general case,
+which can be reduced to a dependent case. Then, the total displacement
+position vector can be expressed as 𝐫𝑝𝑖𝑗= 𝐫𝑖𝑗+ 𝐫𝑢𝑖𝑗= [𝑥𝑝𝑖𝑗, 𝑦𝑝𝑖𝑗]⊺=
+[𝑥𝑡𝑖−𝑥𝑟𝑗+ 𝑥𝑢𝑖𝑗, 𝑦𝑡𝑖−𝑦𝑟𝑗+ 𝑦𝑢𝑖𝑗]⊺.
+In our scenario, we adopt Gaussian beam whose intensity envelope
+in the transverse plane is given by a Gaussian function. For a circular
+receiver lens with the radius of 𝑟𝑎, the fraction of the power collected
+by the 𝑗th receiver lens from the 𝑖th transmitter lens can be expressed
+as [22]
+ℎ𝑝𝑖𝑗= ∫
+𝑟𝑎
+−𝑟𝑎∫
+√
+𝑟2𝑎−𝑦2
+−
+√
+𝑟2𝑎−𝑦2
+2
+𝜋𝑤𝑧
+× exp
+(
+−
+2((𝑥−𝑥𝑝𝑖𝑗)2 + (𝑦−𝑦𝑝𝑖𝑗)2)
+𝑤2
+𝑧
+)
+𝑑𝑥𝑑𝑦,
+(6)
+where 𝑤𝑧is the received beamwidth at distance 𝑧. Since 𝑥𝑝𝑖𝑗and 𝑦𝑝𝑖𝑗
+contain the location of the receiver lens, the received power at each
+receiver lens varies depending on its location. The beamwidth 𝑤𝑧with a
+Gaussian beam in atmospheric turbulence channel can be approximated
+as [25]
+𝑤𝑧≈𝑤0
+⎡
+⎢
+⎢⎣
+⎛
+⎜
+⎜⎝
+1 + 𝜁
+(
+𝜆𝑧
+𝜋𝑤2
+0
+)2⎞
+⎟
+⎟⎠
+⎤
+⎥
+⎥⎦
+1
+2
+,
+(7)
+where 𝑤0 is the beamwidth at 𝑧= 0 and 𝜁= (1+2𝑤2
+0∕𝜌2
+0(𝑧)). The coher-
+ence length at distance 𝑧can be expressed as 𝜌0(𝑧) = (0.55𝐶2
+𝑛𝑘2𝑧)−3∕5,
+where 𝑘is the wavenumber. In particular, if 𝑤𝑧> 6𝑟𝑎is satisfied, (6)
+can be approximated by [22]
+ℎ𝑝𝑖𝑗≈𝐴0 exp
+⎛
+⎜
+⎜⎝
+−
+2(𝑥2
+𝑝𝑖𝑗+ 𝑦2
+𝑝𝑖𝑗)
+𝑤2
+𝑧𝑒𝑞
+⎞
+⎟
+⎟⎠
+,
+(8)
+where 𝑤2
+𝑧𝑒𝑞= 𝑤2
+𝑧
+√
+𝐴0𝜋
+2𝑣exp(−𝑣2) is the equivalent beamwidth, 𝐴0 = [erf(𝑣)]2,
+𝑣=
+√
+𝜋𝑟𝑎
+√
+2𝑤𝑧
+, and erf(𝑧) is the error function.
+2.3. Received SNR with spatial diversity
+For spatial diversity in a MIMO-FSO system, MRC and EGC can
+be adopted, but the performance of EGC with low complexity closely
+approaches to that of MRC [11]. Thus, in our work, we adopt EGC
+technique at the receiver plane. After adopting the EGC technique at
+the receiver plane, the total received signal power can be written as
+𝑦𝑑𝑖𝑣=
+𝑀
+∑
+𝑖=1
+𝑁
+∑
+𝑗=1
+𝜂ℎ𝑙ℎ𝑎𝑖𝑗ℎ𝑝𝑖𝑗𝑥+ 𝑛,
+(9)
+where 𝑛= ∑𝑁
+𝑗=1 𝑛𝑗is the AWGN with variance 𝑁𝑁0∕2. Then, the SNR
+for the MIMO diversity system is expressed as [15]
+𝛾𝑑𝑖𝑣=
+| ∑𝑀
+𝑖=1
+∑𝑁
+𝑗=1 𝜂ℎ𝑙ℎ𝑎𝑖𝑗ℎ𝑝𝑖𝑗𝑃𝑡∕𝑀|
+2
+𝑁𝑁0∕2
+,
+(10)
+
+PAGE 5
+Optics Communications 566 (2024) 130693
+5
+H.-S. Cha et al.
+without requiring these information, while our proposed scheme is
+robust to the atmospheric turbulence and the pointing error.
+4. Beam pointing method for maximizing average SNR
+In a dynamic network such as high mobility scenario, channel
+conditions can change abruptly in short period of time, and obtaining
+an optimized beam coordinates in a highly dynamic network may be
+impractical, since the optimization problem needs to be re-solved at
+each time slot 𝑡to effectively adapt to network dynamics. Furthermore,
+the frequent training period for channel estimation is required in a high
+dynamic network, and the feedback of CSI to a transmitter introduces
+a high signaling overhead. Therefore, it is important to obtain a robust
+beam pointing with respect to the dynamics of FSOC channel, i.e., at-
+mospheric turbulence and pointing error, for providing a stable link
+performance.
+In this section, we aim to determine the optimal transmit beam
+coordinates that maximize the average received SNR without an in-
+stantaneous CSI. We first investigate the statistical expectation of the
+received SNR in terms of atmospheric turbulence and pointing error
+and derive the optimal transmit beam coordinates to maximize the
+average received SNR with Algorithm 1.
+4.1. Statistical expectation of diversity SNR
+In (11), two random variables, i.e., the atmospheric turbulence
+and the pointing error, are included, which makes the channel vary
+over time, and should be known at the transmitter to obtain the
+optimal beam coordinates. In order to obtain the beam coordinates
+robust against the atmospheric turbulence and pointing error, we first
+investigate the statistical expectation of the received SNR in terms of
+atmospheric turbulence and pointing error. The expectation of 𝛾𝑑𝑖𝑣𝑖can
+be derived by
+E[𝛾𝑑𝑖𝑣𝑖] =E
+[ 𝑁
+∑
+𝑘1=1
+𝑁
+∑
+𝑘2=1
+𝜂2ℎ2
+𝑙𝑃2
+𝑡
+𝑀2𝑁𝑁0∕2ℎ𝑎𝑖𝑘1 ℎ𝑎𝑖𝑘2 ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2
+]
+(17)
+=
+𝜂2ℎ2
+𝑙𝑃2
+𝑡
+𝑀2𝑁𝑁0∕2
+𝑁
+∑
+𝑘1=1
+𝑁
+∑
+𝑘2=1
+E[ℎ𝑎𝑖𝑘1 ℎ𝑎𝑖𝑘2 ] E[ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 ].
+Since the atmospheric turbulence follows a gamma-gamma distribution,
+the first expectation term in (17) can be obtained as
+E[ℎ𝑎𝑖𝑘1 ℎ𝑎𝑖𝑘2 ] =
+{
+1
+for 𝑘1 ≠𝑘2,
+𝛤(𝛼+2)𝛤(𝛽+2)
+(𝛼𝛽)2𝛤(𝛼)𝛤(𝛽)
+for 𝑘1 = 𝑘2.
+(18)
+Note that E[ℎ𝑎𝑖𝑘1 ℎ𝑎𝑖𝑘2 ] = E[ℎ2
+𝑎𝑖𝑘1 ] for 𝑘1 = 𝑘2, and thus it can be obtained
+by substituting 𝑛= 2 into (5). Also, when 𝑘1 ≠𝑘2, E[ℎ𝑎𝑖𝑘1 ℎ𝑎𝑖𝑘2 ] =
+E[ℎ𝑎𝑖𝑘1 ]E[ℎ𝑎𝑖𝑘2 ] = 1 since two variables are independent and E[ℎ𝑎𝑖𝑗] = 1.
+The second expectation term in (17) stands for the expectation of the
+pointing error factor, specifically for the jitter. Firstly, ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 can be
+expressed as
+ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 =𝐴2
+0 exp
+⎛
+⎜
+⎜⎝
+−
+2(𝑥2
+𝑝𝑖𝑘1 + 𝑥2
+𝑝𝑖𝑘2 + 𝑦2
+𝑝𝑖𝑘1 + 𝑦2
+𝑝𝑖𝑘2 )
+𝑤2
+𝑧𝑒𝑞
+⎞
+⎟
+⎟⎠
+(19)
+=𝑜𝑘1𝑘2 exp
+⎛
+⎜
+⎜⎝
+−
+(𝑥𝑝𝑖𝑘1 + 𝑥𝑝𝑖𝑘2 )2 + (𝑦𝑝𝑖𝑘1 + 𝑦𝑝𝑖𝑘2 )2
+𝑤2
+𝑧𝑒𝑞
+⎞
+⎟
+⎟⎠
+,
+where 𝑜𝑘1𝑘2 can be expressed as
+𝑜𝑘1𝑘2 = 𝐴2
+0 exp
+⎛
+⎜
+⎜⎝
+−
+(𝑥𝑟𝑘1 −𝑥𝑟𝑘2 )2 + (𝑦𝑟𝑘1 −𝑦𝑟𝑘2 )2
+𝑤2
+𝑧𝑒𝑞
+⎞
+⎟
+⎟⎠
+.
+(20)
+Note that (20) is independent with the jitter and is determined by the
+displacement between the center of the 𝑘th and the 𝑙th receiver lenses.
+Then, the expectation of (19) with respect to the jitter can be written
+as
+E[ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 ] = 𝑜𝑘1𝑘2 E
+[
+exp
+(
+−
+4𝑍𝑖𝑘1𝑘2
+𝑤2
+𝑧𝑒𝑞
+)]
+,
+(21)
+where 𝑍𝑖𝑘1𝑘2 = 𝑋2
+𝑖𝑘1𝑘2 + 𝑌2
+𝑖𝑘1𝑘2 , 𝑋𝑖𝑘1𝑘2 = (𝑥𝑝𝑖𝑘1 + 𝑥𝑝𝑖𝑘2 )∕2 and 𝑌𝑖𝑘1𝑘2 =
+(𝑦𝑝𝑖𝑘1 + 𝑦𝑝𝑖𝑘2 )∕2. Note that the random variables 𝑋𝑖𝑘1𝑘2 ∼(𝜇𝑖𝑘1𝑘2,𝑋, 𝜎2
+𝑝)
+and 𝑌𝑖𝑘1𝑘2 ∼(𝜇𝑖𝑘1𝑘2,𝑌, 𝜎2
+𝑝) follow Gaussian distribution, where 𝜎2
+𝑝is
+the variance of the jitter and the means of 𝑋𝑖𝑘1𝑘2 and 𝑌𝑖𝑘1𝑘2 are written
+respectively as
+𝜇𝑖𝑘1𝑘2,𝑋=𝑥𝑡𝑖−
+𝑥𝑟𝑘1 + 𝑥𝑟𝑘2
+2
+,
+𝜇𝑖𝑘1𝑘2,𝑌=𝑦𝑡𝑖−
+𝑦𝑟𝑘1 + 𝑦𝑟𝑘2
+2
+.
+(22)
+Consequently, 𝑍𝑖𝑘1𝑘2 is a non-central chi-square random variable and
+its PDF can be given by
+𝑓𝑍𝑖𝑘1𝑘2
+(𝑍𝑖𝑘1𝑘2 ) =
+1
+2𝜎2
+𝑝
+exp
+⎛
+⎜
+⎜⎝
+−
+𝑠2
+𝑖𝑘1𝑘2 + 𝑍𝑖𝑘1𝑘2
+2𝜎2
+𝑝
+⎞
+⎟
+⎟⎠
+𝐼0
+(√
+𝑍𝑖𝑘1𝑘2
+𝑠𝑖𝑘1𝑘2
+𝜎2
+𝑝
+)
+,
+(23)
+where 𝑠2
+𝑖𝑘1𝑘2 = 𝜇2
+𝑖𝑘1𝑘2,𝑋+𝜇2
+𝑖𝑘1𝑘2,𝑌and 𝐼𝑣(𝑥) is the 𝑣th order modified Bessel
+function. Note that (21) can be calculated by using (23), which is given
+by
+E[ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 ] =
+𝑜𝑘1𝑘2
+2𝜎2
+𝑝
+exp
+(
+−2𝜎2
+𝑝𝑞𝑖𝑘1𝑘2
+)
+× ∫
+∞
+0
+exp
+(
+−𝑝𝑍𝑖𝑘1𝑘2
+)
+𝐼0
+(
+2
+√
+𝑞𝑖𝑘1𝑘2 𝑍𝑖𝑘1𝑘2
+)
+dZik1k2 ,
+(24)
+where 𝑝= (4∕𝑤2
+𝑧𝑒𝑞+ 1∕2𝜎2
+𝑝) and 𝑞𝑖𝑘1𝑘2 = 𝑠2
+𝑖𝑘1𝑘2 ∕(4𝜎4
+𝑝). Then, (24) can be
+solved with the help of the integral identity given by [31, eq. (6.614.3)]
+E[ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 ] =
+𝑜𝑘1𝑘2
+2𝜎2
+𝑝
+√
+𝑝𝑞𝑖𝑘1𝑘2
+exp
+((1 −4𝑝𝜎2
+𝑝
+2𝑝
+)
+𝑞𝑖𝑘1𝑘2
+)
+× 𝑀−1
+2 ,0
+(𝑞𝑖𝑘1𝑘2
+𝑝
+)
+,
+(25)
+where 𝑀𝑢,𝑣(𝑧) is the Whittaker function and 𝑀(𝑎, 𝑏, 𝑧) is Kummer’s
+(confluent hypergeometric) function [32]. With the property of
+𝑀(𝑏, 𝑏, 𝑧) = exp(𝑧), (25) can be reduced as
+E[ℎ𝑝𝑖𝑘1 ℎ𝑝𝑖𝑘2 ] =
+𝑜𝑘1𝑘2
+2𝑝𝜎2
+𝑝
+exp
+(1 −2𝑝𝜎2
+𝑝
+𝑝
+𝑞𝑖𝑘1𝑘2
+)
+.
+(26)
+The expected value of diversity SNR 𝛾𝑑𝑖𝑣𝑖affected by the 𝑖th trans-
+mitter can be expressed using (17), (18) and (26) as (see Appendix B
+for details)
+E[𝛾𝑑𝑖𝑣𝑖] =
+𝜂2ℎ2
+𝑙𝑃2
+𝑡
+𝑝𝜎2
+𝑝𝑀2𝑁𝑁0
+{
+𝐴2
+0𝑇
+𝑁
+∑
+𝑘1=1
+exp
+( 1 −2𝑝𝜎2
+𝑝
+𝑝
+𝑞𝑖𝑘1𝑘1
+)
++ 2
+𝑁
+∑
+𝑘1=2
+𝑘1−1
+∑
+𝑘2=1
+𝑜𝑘1𝑘2 exp
+( 1 −2𝑝𝜎2
+𝑝
+𝑝
+𝑞𝑖𝑘1𝑘2
+)}
+,
+(27)
+where 𝑇= 𝛤(𝛼+2)𝛤(𝛽+2)
+(𝛼𝛽)2𝛤(𝛼)𝛤(𝛽) .
+4.2. Optimal beam pointing algorithm
+To obtain the beam coordinates that maximize the average SNR,
+the proposed algorithm in Section 3 can be adopted. Since we utilize
+Algorithm 1 for maximizing the average SNR, we do not need the
+instantaneous CSI such as the atmospheric turbulence-induced fading
+and the jitter to perform Algorithm 1. Here we point out that it is not
+necessary to find the optimal beam coordinates in real time, since we
+
+PAGE 6
+Optics Communications 566 (2024) 130693
+6
+H.-S. Cha et al.
+Algorithm 2 AO Algorithm for optimize the average SNR
+Input : 𝜎2
+𝑅, 𝜎2
+𝑝, (𝑥𝑟𝑗, 𝑦𝑟𝑗), 𝑧, 𝑤0
+Output : 𝑥𝑡𝑖, 𝑦𝑡𝑖
+1: procedure Find(̂𝑥𝑡𝑖,̂ 𝑦𝑡𝑖)
+2:
+Set iteration number 𝑠= 0
+3:
+Substitute initial value into 𝑥(𝑠)
+𝑡𝑖, 𝑦(𝑠)
+𝑡𝑖
+4:
+for Until convergence do
+5:
+Set 𝑠= 𝑠+ 1
+6:
+Find 𝑥(𝑠)
+𝑡𝑖from (29) with fixed 𝑦(𝑠−1)
+𝑡𝑖
+7:
+Find 𝑦(𝑠)
+𝑡𝑖with fixed 𝑥(𝑠)
+𝑡𝑖
+8:
+Compute the error 𝜖= |||𝑥(𝑠)
+𝑡𝑖−𝑥(𝑠−1)
+𝑡𝑖
+, 𝑦(𝑠)
+𝑡𝑖−𝑦(𝑠−1)
+𝑡𝑖
+|||
+9:
+end for
+10:
+return 𝑥(𝑠)
+𝑡𝑖, 𝑦(𝑠)
+𝑡𝑖
+11: end procedure
+use the statistical CSI. The optimal beam coordinates can be obtained
+by solving the following problem
+(̂𝑥𝑡𝑖,̂ 𝑦𝑡𝑖) = arg max
+(𝑥𝑡,𝑦𝑡)
+{
+𝐴2
+0𝑇
+𝑁
+∑
+𝑘1=1
+exp
+(̃
+𝑝(𝜇2
+𝑖𝑘1𝑘1,𝑋+ 𝜇2
+𝑖𝑘1𝑘1,𝑌)
+)
++ 2
+𝑁
+∑
+𝑘1=2
+𝑘1−1
+∑
+𝑘2=1
+𝑜𝑘1𝑘2 exp
+(̃
+𝑝(𝜇2
+𝑖𝑘1𝑘2,𝑋+ 𝜇2
+𝑖𝑘1𝑘2,𝑌)
+)}
+,
+(28)
+wherẽ 𝑝= (1 −2𝑝𝜎2
+𝑝)∕4𝜎4
+𝑝𝑝. Note that 𝑥𝑡𝑖and 𝑦𝑡𝑖are coupled, which
+makes the problem difficult. Thus, similar to (12), AO algorithm can
+be employed where each coordinate is obtained by fixing the other
+variables. With the fixed 𝑦(𝑠)
+𝑝𝑖𝑗at the 𝑠th iteration, we first take the partial
+derivative of (28) with respect to 𝑥𝑡𝑖, which is given by
+𝜕̃𝑔(𝑥𝑡𝑖)
+𝜕𝑥𝑡𝑖
+= 𝐴0𝑇
+𝑁
+∑
+𝑘1=1̃
+𝑣𝑖𝑘1𝑘1 𝜇𝑖𝑘1𝑘1,𝑋exp(̃𝑝𝜇2
+𝑖𝑘1𝑘1,𝑋)
++ 2
+𝑁
+∑
+𝑘1=2
+𝑘1−1
+∑
+𝑘2=1
+𝑜𝑘1𝑘2̃𝑣𝑖𝑘1𝑘2 𝜇𝑖𝑘1𝑘2,𝑋exp(̃𝑝𝜇2
+𝑖𝑘1𝑘2,𝑋),
+(29)
+wherẽ 𝑣𝑖𝑘1𝑘2 = 2̃𝑝exp(̃𝑝(𝜇(𝑠)
+𝑖𝑘1𝑘2,𝑌)2), and̃ 𝑔(𝑥𝑡𝑖) is the objective function in
+(28). By setting (29) to zero, we can obtain the optimal 𝑥-coordinate at
+the 𝑠th iteration.
+Now we adopt the Newton’s method to find the coordinate where
+(29) equals to zero. As seen in (29), the Rytov variance and the
+variance of the jitter are only included, which makes the beam pointing
+algorithm robust to the effects of the atmospheric turbulence and
+the pointing error. Through this approach, the average SNR can be
+enhanced while achieving the robustness against the effects of the
+atmospheric turbulence and the jitter. It is worth noting that the opti-
+mal coordinates at each transmitter has the same value, and therefore
+the optimal beam coordinates are independent on the configuration
+of transmitter lenses. In the following section, we will show that the
+optimal coordinates to maximize the average SNR approaches the
+centroid of receiver lenses.
+Remark 1. The algorithm proposed in Section 3 for obtaining beam
+pointing to maximize instantaneous SNR requires instantaneous CSI,
+such as atmospheric turbulence fading and jitter between a transmitter
+and receiver lens, which incurs high complexity and high signaling
+overhead. On the other hand, optimizing average SNR only requires
+statistical CSI such as Rytov variance and the standard deviation of the
+jitter, and thus it can further reduce system complexity and overhead
+which makes it suitable for practical implementation. Besides, under
+certain atmospheric conditions, it can be confirmed in Section 5 that
+aligning the transmitter’s beam to the centroid of receiver lenses is a
+reasonable method to achieve comparable performance to the proposed
+algorithm, without requiring any information about channel conditions.
+Table 1
+Simulation parameters.
+Parameters
+Value
+Number of transmitter lenses, 𝑀
+[1, 7]
+Number of receiver lenses, 𝑁
+7
+Minimum beamwidth, 𝑤0
+0.03 [m]
+Radius of receiver lens
+0.03 [m]
+Effective photo-electric conversion ratio, 𝜂
+0.9
+Visibility , 𝑉
+20 [km]
+Propagation length, 𝑧
+1000 [m]
+Turbulence model
+Gamma–Gamma random variable
+Strength of turbulence, 𝜎2
+𝑅
+{0.3, 0.6, 0.9, 1.2}
+Standard deviation of jitter, 𝜎𝑝
+[0.005, 0.085]
+Wavelength, 𝜆
+1550 [nm]
+Convergence error, 𝑒
+10−7
+Average transmit power, 𝑃𝑡
+5 [dBm]
+Noise power, 𝑁0
+−174 [dBm/Hz]
+Bandwidth
+20 [GHz]
+5. Simulation results
+In this section, we evaluate the effectiveness of proposed algorithm
+through extensive simulations. Although, the proposed algorithm can
+be applied to arbitrary receiver arrangement, we consider 7 receiver
+lenses arranged in a circular shape with a radius of 0.12 [m] and sepa-
+rated by an angle of 𝜋∕5 [rad], depicted in Fig. 3(b) for our simulations.
+Note that the distance between receiver lenses should be greater than
+𝜌0(𝑧) which guarantees uncorrelated channel from a transmitter lens to
+each receiver lens. The detailed simulation parameters are summarized
+in Table 1, unless otherwise specified.
+5.1. Beam pointing using instantaneous CSI
+The performance of the proposed algorithm is compared with the
+following benchmarks:
+• Pair: Each transmitter aligns its beam to the center of its paired
+receiver lens [16–19].
+• Centroid: Each transmitter aligns its beam to the centroid of the
+receiver lenses [15].
+• Maximum pair: Each transmitter directly transmits its beam
+towards the center of the receiver lens with the highest channel
+gain.
+We first examine a SIMO FSOC scenario to demonstrate the effec-
+tiveness of Algorithm 1 which maximizes the received SNR using the
+instantaneous CSI. In this scenario, the Rytov variance 𝜎2
+𝑅and the
+standard deviation of the jitter 𝜎𝑝are set to 0.6 and 0.035, respectively.
+Fig. 3(a) presents the snapshot of the received SNR curve with
+respect to the center coordinates of the beam footprint under the
+receiver configuration shown in Fig. 3(b). As seen in this figure, the
+SNR function is a convex because the convexity condition in Lemma 1
+is satisfied. Thus, the proposed algorithm well finds the global solution
+marked by red star for maximizing the received SNR.
+Fig. 3(b) illustrates the transmitted beam footprint corresponding
+to the optimal beam coordinates obtained in Fig. 3(a). In this figure,
+the yellow circle represents the beam footprint, while the red star
+marker indicates the center of the beam footprint. The blue circles
+and star marker represent the receiver lenses and their centroid, re-
+spectively. As seen in Fig. 3(b), the initial coordinates approach to the
+optimal red point using the proposed iterative algorithm where the
+black circle marker denotes the obtained beam coordinates at each
+iteration. It can be observed that the optimal beam coordinates is
+different with the centroid of the receiver lenses. This is because the
+beam coordinates are significantly affected by atmospheric turbulence
+and jitter, and thus it should be optimized to adapt to the channel
+variations. The convergence performance of the proposed algorithm is
+presented in Fig. 3(c). After two updates of the 𝑥and 𝑦-coordinates
+
+PAGE 7
+Optics Communications 566 (2024) 130693
+7
+H.-S. Cha et al.
+Fig. 3. Examples of the optimal beam coordinates obtained from the proposed
+algorithm under instantaneous channel scenario.
+values, the performance converges, providing an optimal coordinate.
+However, in a harsh system, frequent change of FSO channel may cause
+severe transition in optimal coordinates, leading to difficult real-time
+implementation.
+Fig. 4 illustrates the performance comparison by numerically aver-
+aging the channel samples. It can be observed that the optimal beam
+pointing using the proposed algorithm exhibits the best performance
+among the compared schemes. When 𝜎2
+𝑅= 0.6 and 𝜎𝑝= 0.005, the
+differences between the proposed one and the benchmark schemes are
+2.75, 0.86, and 0.81 [dB], and the performance gap increases as the
+standard deviation of jitter increases. We can observe that the proposed
+scheme is robust to pointing error and it shows the stable performance
+even if the pointing error is significant compared to the other schemes.
+It is also important to note that the ‘Maximum pair’ performs slightly
+better than ‘Pair’, since the channel between the paired receiver and
+transmitter does not provide the best gain, but it introduces an addi-
+tional complexity due to the CSI feedback. However, ‘Maximum pair’
+performs worse than ‘Centroid’ which does not require the CSI, since
+the spread beam covers all the receiver lenses when transmitting the
+beam towards the centroid of the receiver lenses, thereby enhancing
+the combined channel gain.
+To validate the performance of the proposed algorithm for an
+unequal number of transmitter and receiver lenses, we compare the
+proposed algorithm with benchmark schemes with respect to the num-
+ber of transmitter lenses as in Fig. 5. The receiver arrangement is the
+same as in Fig. 3(b), and the standard deviation of the jitter is set
+to 0.035. As the number of transmitter lenses increases, the overall
+performance of the proposed algorithm and benchmark schemes is
+slightly improved. However, the performance improvement is marginal
+for 𝑀≥4 due to the equal power allocation at each transmitter.
+We here point out that 4 transmitter lenses can provide sufficient
+performance in our scenario, since the received SNR would be averaged
+out by the number of transmitter lenses 𝑀as in (10).
+Fig. 6 illustrates the received SNR and optimal transmit beam coor-
+dinates for 4 × 7 Tx-Rx lenses configuration. Each transmitter lens has
+different channel factors, specifically atmospheric turbulence-induced
+fading and jitter, with respect to each receiver lens. Consequently, it
+leads to different optimal transmit beam coordinates for each trans-
+mitter. In a real-time communication system, the complexity would be
+linearly increased with the number of transmitter lenses while more sig-
+naling overheads are also required for obtaining the instantaneous CSI.
+In the next subsection, we discuss a robust beam pointing algorithm
+without the instantaneous CSI.
+5.2. Beam pointing using statistical CSI
+In this subsection, we validate the proposed algorithm for maximiz-
+ing the average SNR. Here, 7 × 7 MIMO FSOC is considered with the
+receiver lens arrangement as in Fig. 3(b) and the Rytov variance is set
+to 𝜎2
+𝑅= 0.3 and 1.2, which represents relatively low and high strength
+of atmospheric turbulence, respectively. Fig. 7 shows the average SNR
+performance with different beam pointing schemes. It can be observed
+that ‘Proposed’ provides better performance than the other schemes.
+When 𝜎2
+𝑅= 0.3 and 𝜎𝑝= 0.005, the gap between ‘Proposed’ and
+‘Centroid’ is 1.44 [dB], but this gap goes to zero as the standard
+deviation of jitter increases. It is also confirmed that the performance of
+‘Proposed’ very close to that of ‘Centroid’ under high turbulence case.
+It implies that the optimal beam pointing for maximizing the average
+SNR converges to the centroid of the receiver lenses.
+To thoroughly investigate the relationship between channel con-
+ditions and the optimal beam coordinates maximizing the average
+SNR, we show the Euclidean distance between the optimal coordinates
+using the proposed algorithm and the centroid of the receiver lenses.
+As seen in Fig. 8, the gap between the optimal coordinates and the
+centroid becomes narrower as the standard deviation of jitter and
+the Rytov variance increase, indicating that the optimal coordinates
+using the proposed algorithm approach to the centroid of the receiver
+lenses, since the high strength of atmospheric turbulence and jitter
+increases the randomness of FSOC channel. In the weak turbulence
+scenario, the Euclidean distance decreases rapidly as the strength of
+jitter increases, since the effect of jitter is more dominant than that of
+atmospheric turbulence. However, in the strong turbulence scenario,
+
+PAGE 10
+Optics Communications 566 (2024) 130693
+10
+H.-S. Cha et al.
+Fig. 8. Euclidean distance between the optimal beam coordinates for maximizing the average SNR and the centroid of receiver lenses.
+References
+[1] M.A. Khalighi, M. Uysal, Survey on free space optical communication: A
+communication theory perspective, IEEE Commun. Surv. Tutorials 16 (4) (2014)
+2231–2258, http://dx.doi.org/10.1109/COMST.2014.2329501.
+[2] Z. Ghassemlooy, W. Popoola, S. Rajbhandari, Optical Wireless Communications:
+System and Channel Modelling with Matlab®, CRC Press, 2019.
+[3] M. Uysal, C. Capsoni, Z. Ghassemlooy, A. Boucouvalas, E. Udvary, Optical
+Wireless Communications: An Emerging Technology, Springer, 2016.
+[4] J.M. Kahn, D.A. Miller, Communications expands its space, Nat. Photonics 11
+(1) (2017) 5–8.
+[5] M.N. Sadiku, S.M. Musa, S.R. Nelatury, Free space optical communications: an
+overview, Eur. Sci. J. 12 (9) (2016) 55–68.
+[6] M. Alzenad, M.Z. Shakir, H. Yanikomeroglu, M.-S. Alouini, FSO-based vertical
+backhaul/fronthaul framework for 5G+ wireless networks, IEEE Commun. Mag.
+56 (1) (2018) 218–224.
+[7] D. Schulz, V. Jungnickel, C. Alexakis, M. Schlosser, J. Hilt, A. Paraskevopoulos,
+L. Grobe, P. Farkas, R. Freund, Robust optical wireless link for the backhaul
+and fronthaul of small radio cells, IEEE/OSA J. Lightw. Technol. 34 (6) (2016)
+1523–1532, http://dx.doi.org/10.1109/JLT.2016.2523801.
+[8] H. Willebrand, B.S. Ghuman, Free Space Optics: Enabling Optical Connectivity
+in Today’s Networks, SAMS, Indianapolis, IN, USA, 2002.
+[9] W. Gappmair, H.E. Nistazakis, Subcarrier PSK performance in terrestrial FSO
+links impaired by gamma-gamma fading, pointing errors, and phase noise,
+IEEE/OSA J. Lightw. Technol. 35 (9) (2017) 1624–1632.
+[10] A.K. Majumdar, Advanced Free Space Optics (FSO): a Systems Approach, vol.
+186, Springer, 2014.
+[11] E. Bayaki, R. Schober, R.K. Mallik, Performance analysis of MIMO free-space
+optical systems in gamma-gamma fading, IEEE Trans. Commun. 57 (11) (2009)
+3415–3424.
+[12] T.V. Pham, T.C. Thang, A.T. Pham, Average achievable rate of spatial diversity
+MIMO-FSO over correlated Gamma–Gamma fading channels, IEEE/OSA J. Opt.
+Commun. Netw. 10 (8) (2018) 662–674.
+[13] D.A.
+Luong,
+A.T.
+Pham,
+Average
+capacity
+of
+MIMO
+free-space
+optical
+gamma-gamma fading channel, in: Proc. IEEE ICC, 2014, pp. 3354–3358.
+[14] E.J. Lee, V.W. Chan, Part 1: Optical communication over the clear turbulent
+atmospheric channel using diversity, IEEE J. Sel. Areas Commun. 22 (9) (2004)
+1896–1906.
+[15] R. Boluda-Ruiz, A. García-Zambrana, B. Castillo-Vázquez, C. Castillo-Vázquez,
+Impact of nonzero boresight pointing error on ergodic capacity of MIMO FSO
+communication systems, Opt. Express 24 (4) (2016) 3513–3534.
+[16] A.A. Farid, S. Hranilovic, Diversity gain and outage probability for MIMO free-
+space optical links with misalignment, IEEE Trans. Commun. 60 (2) (2011)
+479–487.
+[17] M.R. Bhatnagar, Z. Ghassemlooy, Performance analysis of Gamma–Gamma fading
+FSO MIMO links with pointing errors, IEEE/OSA J. Lightw. Technol. 34 (9)
+(2016) 2158–2169.
+[18] M.T. Dabiri, M.J. Saber, S.M.S. Sadough, On the performance of multiplexing
+FSO MIMO links in log-normal fading with pointing errors, IEEE/OSA J. Opt.
+Commun. Netw. 9 (11) (2017) 974–983.
+[19] M.A. Amirabadi, V. Tabataba Vakili, A new optimization problem in FSO
+communication system, IEEE Commun. Lett. 22 (7) (2018) 1442–1445.
+[20] J.-Y. Wang, Y. Ma, R.-R. Lu, J.-B. Wang, M. Lin, J. Cheng, Hovering UAV-based
+FSO communications: Channel modelling, performance analysis, and parameter
+optimization, IEEE J. Sel. Areas Commun. 39 (10) (2021) 2946–2959.
+[21] I.E. Lee, Z. Ghassemlooy, W.P. Ng, M.-A. Khalighi, Joint optimization of a
+partially coherent Gaussian beam for free-space optical communication over
+turbulent channels with pointing errors, Opt. Lett. 38 (3) (2013) 350–352.
+[22] A.A. Farid, S. Hranilovic, Outage capacity optimization for free-space opti-
+cal links with pointing errors, IEEE/OSA J. Lightw. Technol. 25 (7) (2007)
+1702–1710.
+[23] H. Al-Quwaiee, H.-C. Yang, M.-S. Alouini, On the asymptotic ergodic capacity of
+FSO links with generalized pointing error model, in: Proc. IEEE ICC, 2015, pp.
+5072–5077, http://dx.doi.org/10.1109/ICC.2015.7249128.
+[24] A. Al-Habash, L.C. Andrews, R.L. Phillips, Mathematical model for the irradiance
+probability density function of a laser beam propagating through turbulent
+media, Opt. Eng. 40 (8) (2001) 1554–1562.
+[25] J.C. Ricklin, F.M. Davidson, Atmospheric turbulence effects on a partially
+coherent Gaussian beam: implications for free-space laser communication, J. Opt.
+Soc. Amer. A Opt. Image Sci. 19 (9) (2002) 1794–1802.
+[26] J.C. Bezdek, R.J. Hathaway, Some notes on alternating optimization, in: Proc.
+AFSS Int. Conf. Fuzzy Syst., 2002, pp. 288–300.
+[27] A.
+Andresen,
+V.
+Spokoiny,
+Convergence
+of
+an
+alternating
+maximization
+procedure, J. Mach. Learn. Res. 17 (1) (2016) 2229–2281.
+[28] W. Zhao, S. Wang, Resource allocation for device-to-device communication un-
+derlaying cellular networks: An alternating optimization method, IEEE Commun.
+Lett. 19 (8) (2015) 1398–1401.
+[29] W. Huang, Q. Si, M. Jin, Alternating optimization based low complexity hybrid
+precoding in millimeter wave MIMO systems, IEEE Commun. Lett. 24 (3) (2019)
+635–638.
+[30] R.L. Burden, J.D. Faires, A.M. Burden, Numerical Analysis, Cengage Learning,
+2015.
+[31] I.S. Gradshteyn, I.M. Ryzhik, Table of Integrals, Series, and Products, Academic
+Press, 2014.
+[32] A.D. Polyanin, A.V. Manzhirov, Handbook of Mathematics for Engineers and
+Scientists, CRC Press, 2006.

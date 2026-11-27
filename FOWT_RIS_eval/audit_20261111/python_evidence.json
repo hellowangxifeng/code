@@ -1,0 +1,634 @@
+{
+  "design": {
+    "pTx": [
+      -4.999999999999999,
+      7.071067811865475,
+      -5.0034322493224925
+    ],
+    "pRis": [
+      -1.1161785568474143e-05,
+      7.344669749632349e-05,
+      -0.033400873287734216
+    ],
+    "RRis": [
+      [
+        0.999995845657008,
+        5.466280772637637e-05,
+        0.0028819577899204005
+      ],
+      [
+        -3.3881317890172014e-21,
+        0.9998201702740187,
+        -0.018963836986020218
+      ],
+      [
+        -0.0028824761448156704,
+        0.01896375820373693,
+        0.999816016678101
+      ]
+    ],
+    "rxPlaneZ": 4.976597286879047,
+    "nWater": 1.33,
+    "nGlass": 1.5,
+    "nAir": 1,
+    "B": 0.26579168250445007,
+    "maxCmdDeg": 15.414000000000001,
+    "angleStepDeg": 0.021,
+    "currentCenter": [
+      3.1816062024690677,
+      -5.382422426013023
+    ],
+    "improvedCenter": [
+      3.5051950606571487,
+      -5.822779037664865
+    ],
+    "improvedU": [
+      0.4167031408542332,
+      -0.6913406454510069,
+      0.5902597770046695
+    ],
+    "improvedQ": [
+      0.415,
+      -0.68
+    ],
+    "qstar_recomputed": [
+      0.41999999999999993,
+      -0.69
+    ],
+    "qin_weighted": [
+      0.6649884610027414,
+      -0.9404294712685156
+    ]
+  },
+  "raw_path": {
+    "configured": "C:\\Users\\Spidey\\Desktop\\code\\浮式平台六自由度实验数据\\FOWT Platform Testing",
+    "exists": false,
+    "actual_exists": true,
+    "catalog_count": 0
+  },
+  "aperture": {
+    "current": {
+      "code_mw": 4.569627029525418,
+      "direct_mw": 4.582176231855669,
+      "corr_at_array_center_mw": 4.746432959008001,
+      "map_midpoint": [
+        3.1875420213993486,
+        -5.389751042257238
+      ],
+      "aperture_center": [
+        3.1816062024690677,
+        -5.382422426013023
+      ],
+      "dxdy": [
+        0.003957212620187889,
+        0.004885744162809402
+      ]
+    },
+    "improved": {
+      "code_mw": 14.821507367888518,
+      "direct_mw": 15.286066758467477,
+      "corr_at_array_center_mw": 15.073372113648961,
+      "map_midpoint": [
+        3.5085820633986735,
+        -5.824137738320177
+      ],
+      "aperture_center": [
+        3.5051950606571487,
+        -5.822779037664865
+      ],
+      "dxdy": [
+        0.0022580018276832092,
+        0.0027174013106243677
+      ]
+    },
+    "off_center_impulse": {
+      "expected": 1.0,
+      "code": 1.754260347080428e-18
+    }
+  },
+  "sensitivity": {
+    "code": [
+      [
+        4.124178251593813,
+        7.495309818182265,
+        5.8252298428520115,
+        0.9999999999999787,
+        0.0,
+        -0.706810049103801
+      ],
+      [
+        -11.851914784795111,
+        -4.119057278217478,
+        3.512283255482436,
+        0.0,
+        0.9999999999999787,
+        1.1721463864471815
+      ]
+    ],
+    "frozen_command_with_recomputed_incidence": [
+      [
+        -0.5874175726594544,
+        -0.986848692343667,
+        -1.5002711545886172,
+        1.943516848235127,
+        0.13108646030879356,
+        -1.4644594011015142
+      ],
+      [
+        1.5966255261945506,
+        0.5956686543173717,
+        -3.307178730382887,
+        0.24671882967730593,
+        2.014476772416174,
+        2.3593134078403466
+      ]
+    ],
+    "norm_relative_error": 3.485701899679755
+  },
+  "static_collimated_grid": {
+    "max_gradient_vs_snapped_error": 0.05073768886538954
+  },
+  "point_nominal": {
+    "current_point": {
+      "centroid_error_mm": [
+        79.89642176547562,
+        -101.78063269632798
+      ],
+      "radial_centroid_error_mm": 129.39372242497544,
+      "invalid_power": 0.0,
+      "rms_reference_rays_mm": 181.26600393436803
+    },
+    "point": {
+      "centroid_error_mm": [
+        4.535074131879924,
+        -3.9095114852107926
+      ],
+      "radial_centroid_error_mm": 5.98758527577199,
+      "invalid_power": 0.0,
+      "rms_reference_rays_mm": 29.640190904730222
+    }
+  },
+  "units": {
+    "stored_angle_over_true_mrad": 57.29577951308232
+  },
+  "predictor_future_leak": {
+    "first_affected_index": 3,
+    "original": 63.0,
+    "changed_future_last_sample": 3063.0
+  },
+  "local_repair_counterexample": {
+    "returned_valid": false,
+    "returned_q": [
+      [
+        0.990104144661786,
+        0.23420831749554993
+      ]
+    ],
+    "legal_alternative_q": [
+      [
+        0.7342083174955499,
+        0.23420831749554993
+      ]
+    ],
+    "alternative_norm": 0.7706590617541214
+  },
+  "target_disk_counterexample": {
+    "returned_target": [
+      0.9950000000000001,
+      0.15500000000000003
+    ],
+    "norm": 1.0070004965242074,
+    "claimed_coverage": 1.0
+  },
+  "latency_linearised_comparison": [
+    {
+      "delay_ms": 20,
+      "code_J_rms_mm": 12.798028823711688,
+      "recomputed_incidence_J_rms_mm": 2.81723968983074
+    },
+    {
+      "delay_ms": 50,
+      "code_J_rms_mm": 28.282576650852743,
+      "recomputed_incidence_J_rms_mm": 6.429437704365216
+    },
+    {
+      "delay_ms": 100,
+      "code_J_rms_mm": 59.562116535093985,
+      "recomputed_incidence_J_rms_mm": 14.582258027722181
+    }
+  ],
+  "python_compile": {
+    "figure_atlas_matlab\\export_atlas_data.py": "PASS",
+    "figure_atlas_matlab\\tmp_enrich05.py": "PASS",
+    "tools\\analyze_results.py": "PASS",
+    "tools\\build_dataset.py": "PASS",
+    "tools\\control_study.py": "PASS",
+    "tools\\fowt_data.py": "PASS",
+    "tools\\fx_optics.py": "PASS",
+    "tools\\make_figure5.py": "PASS",
+    "tools\\make_figures_all.py": "PASS",
+    "tools\\model_replay.py": "PASS",
+    "tools\\replay.py": "PASS",
+    "tools\\validate.py": "PASS"
+  },
+  "inventory": [
+    {
+      "file": "figure_atlas_matlab\\atlas_panel.m",
+      "lines": 7,
+      "sha256": "b830a39f59496dbb6d69632002019d7701af4baa84efb5f92c6e8f6f5ee5e3a4"
+    },
+    {
+      "file": "figure_atlas_matlab\\atlas_pchip.m",
+      "lines": 12,
+      "sha256": "ac33c952edac6789019cfa3709f469503d7d9a9ebe34bf2f72927d200bb56778"
+    },
+    {
+      "file": "figure_atlas_matlab\\atlas_save.m",
+      "lines": 7,
+      "sha256": "f86ccf5b179821795cef0ae24becfda5c7792171f75786d03d83229ae49cc116"
+    },
+    {
+      "file": "figure_atlas_matlab\\atlas_style.m",
+      "lines": 14,
+      "sha256": "e83fe94d93d80434d3926f6b0a2d17049b8e9c7d530371bce6b329f57b205a26"
+    },
+    {
+      "file": "figure_atlas_matlab\\export_atlas_data.py",
+      "lines": 439,
+      "sha256": "c0d502c3b254aefd80e2abe5e408090236042251d573ca0c35fa3c0f338adced"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig01_flow.m",
+      "lines": 67,
+      "sha256": "77ce8118e8cd0d9d5ab02700d7ac6beffb60732a40f0ea8f4c707bc6f6445303"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig02_slope.m",
+      "lines": 32,
+      "sha256": "307bd43e066939d0f3520d0e105563722a536214d186c1cb52c9f5d8bfe84a30"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig03_slope.m",
+      "lines": 43,
+      "sha256": "27eea758596fe0ac4f7cfed0e86297da0ba8580145df76f64470f459920cde36"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig05_link.m",
+      "lines": 113,
+      "sha256": "d16ae60f5a5050c9b41e17beab97fc5549291a2d5aca171add1eb233b3da5494"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig06_spots.m",
+      "lines": 64,
+      "sha256": "b06ec5c2d042fa8242758e19daf5fa6a3d579fac9bf1e12f99eafbd619fce5dc"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig07_motion.m",
+      "lines": 43,
+      "sha256": "7c43413e761b8fe3438f8781607c21d14c1a280bed619d53eed914f7e1d03d21"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig08_distance.m",
+      "lines": 60,
+      "sha256": "062a3529404a39d8278b5c95dcf4d2a0611fd8d92d83d0af8626ce546d18617e"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig09_turb.m",
+      "lines": 45,
+      "sha256": "7c1582609cc60056575bcc249e0115e532d1750254b57e57f529ad602dc7f8a1"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig10_dynamic.m",
+      "lines": 39,
+      "sha256": "4de52cbfc07126e2b700f2dc949f92609f48d08873df4e98a988d391ead35eff"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig11_conditions.m",
+      "lines": 105,
+      "sha256": "ee076f10d738267eca2de0d47e661d7b6bade811e2a26e1fe790e3f022d32be7"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig14_centroid.m",
+      "lines": 29,
+      "sha256": "77de9bbfca56e911e1c13242d0ba984ba8af0eb399296e10bbded4a466144a62"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig16_incidence.m",
+      "lines": 18,
+      "sha256": "86e3a0b4a9633f05d03b86e4d5dbc719725b4b8f8de18fd5fd04e8f96d568b00"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig17_aperture.m",
+      "lines": 29,
+      "sha256": "f3cb195adf2cd5089bc61dca2003ebf85a122cae33c956ed048d4ce6721356c5"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig18_op.m",
+      "lines": 39,
+      "sha256": "0427569a606b3e992006dbfd1174fc31d74a96cbc30a64b1eb79dcd9e9276ee9"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig19_aber.m",
+      "lines": 39,
+      "sha256": "4ab8741372301ff00d056e3d53a40d4536e212047a621e4be30a51883eb078da"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig20_distance_turb.m",
+      "lines": 39,
+      "sha256": "f631de8cf12fd07f7fa118e432f9195a745d777809f4088868d0cebb8a3841c2"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig21_delay.m",
+      "lines": 39,
+      "sha256": "970b4be3ad3c5da8891be95e1d24d8ff55b4fde66c627bb419aefc500ef13ff2"
+    },
+    {
+      "file": "figure_atlas_matlab\\fig22_update.m",
+      "lines": 23,
+      "sha256": "ef20751fdf0312526f50b942d1b599a1e22c2b85166c5812246717370737ba3e"
+    },
+    {
+      "file": "figure_atlas_matlab\\make_all.m",
+      "lines": 29,
+      "sha256": "afbbf85d915a6ff627dc6edf6d82fb124deafad1b7a658ef5eab5d415aacf0f5"
+    },
+    {
+      "file": "figure_atlas_matlab\\tmp_enrich05.py",
+      "lines": 22,
+      "sha256": "82f1544fd4dfdf98f9ee24a25296fc104d64e5871636c1524c592515833f8ccc"
+    },
+    {
+      "file": "src\\fx_motion_from_experiment.m",
+      "lines": 83,
+      "sha256": "9ac2f478e7c0fd1de6e66451b90d2f44df41db63174613a5e12309cc45cf8fc7"
+    },
+    {
+      "file": "src\\fx_phase_design.m",
+      "lines": 135,
+      "sha256": "734276b5c20393aadc3c1e55ae8969f1ded83db8cac6a3ed6ff8e302f0867710"
+    },
+    {
+      "file": "src\\fx_wave_from_gauge.m",
+      "lines": 35,
+      "sha256": "d00ea207ad75fdde621b04be4caf0a7b95e2f72891b2a0bd2c9f1eb54f291dbc"
+    },
+    {
+      "file": "tools\\analyze_results.py",
+      "lines": 85,
+      "sha256": "66873a4428565451227da3a5c2b13d5acd5a45ac8411c82791cc70513c7f0cd5"
+    },
+    {
+      "file": "tools\\build_dataset.py",
+      "lines": 168,
+      "sha256": "9c574e0ef5367d761f70b5a22ef58759f9f64eb0c8f909a0fa39d555cdf499a3"
+    },
+    {
+      "file": "tools\\control_study.py",
+      "lines": 172,
+      "sha256": "bdc277bece2260ff8cefadd65e5f59e879b09431d5e3f6129137513bfe5bbc90"
+    },
+    {
+      "file": "tools\\export_nominal.m",
+      "lines": 29,
+      "sha256": "18cddf06844bf72b5ec227cdc9fd6bfc5c678c534766e19d96272a49e8558ca8"
+    },
+    {
+      "file": "tools\\fowt_data.py",
+      "lines": 156,
+      "sha256": "d189bfdda43adab53ebc95b9b2622a3d5be44f6438a9dcfaa08bdf10d95facef"
+    },
+    {
+      "file": "tools\\fx_optics.py",
+      "lines": 205,
+      "sha256": "48947e7805163e52ca2b3e1a3145b3782fb651ef73aeb10fa34e31246cb5762a"
+    },
+    {
+      "file": "tools\\make_figure5.py",
+      "lines": 97,
+      "sha256": "9bd2ad083f6671161dbcdc846aa343b4606973777f4411b9527616b6208dbcd8"
+    },
+    {
+      "file": "tools\\make_figures_all.py",
+      "lines": 286,
+      "sha256": "9ae5815ef5d83d7d20f8061dc7867dda13451c7b1cda929789f6c19f51d5b416"
+    },
+    {
+      "file": "tools\\model_replay.py",
+      "lines": 59,
+      "sha256": "48e9014098b4653d586966586db20ac0b94b5940a7bfcd78f4725804851e4182"
+    },
+    {
+      "file": "tools\\probe_aperture.m",
+      "lines": 22,
+      "sha256": "18b410d31b907f77a2c2ce1d9d11c8b95942905dece0455e3b6c1cd1bba52163"
+    },
+    {
+      "file": "tools\\probe_case.m",
+      "lines": 23,
+      "sha256": "80495bf1e97b10ad08b4621ed42fba6e570e7647c9fc247e0947bf4f86780dc1"
+    },
+    {
+      "file": "tools\\probe_centroid.m",
+      "lines": 14,
+      "sha256": "9f2c65b13c0f3fb164f7dc52714bcc79b01d9dcea61b204c95a61b2c13b0e7d9"
+    },
+    {
+      "file": "tools\\probe_cmd.m",
+      "lines": 15,
+      "sha256": "60d6dde59af38a3b0de7a55e71b53438cbd33344c0f43a07677749c5f925cd36"
+    },
+    {
+      "file": "tools\\probe_coh.m",
+      "lines": 10,
+      "sha256": "c29f21288204f91870dde2f8ee711691f104ef4d25c4f114d43d480a0617d88d"
+    },
+    {
+      "file": "tools\\probe_curv.m",
+      "lines": 19,
+      "sha256": "a03561d55e337ddf5d2e95b79d595bb5449b29fa54af0b8ab5d7d1bd1993241f"
+    },
+    {
+      "file": "tools\\probe_curv2.m",
+      "lines": 16,
+      "sha256": "d034cfd9ce62af41b1ff41071b921949dcdca71f5d7360f0ac483cc52ea6d39a"
+    },
+    {
+      "file": "tools\\probe_damp.m",
+      "lines": 13,
+      "sha256": "b12373eff2cef25c00680892285a1572f5cf00f4f024603108c58121e6b371b1"
+    },
+    {
+      "file": "tools\\probe_err.m",
+      "lines": 28,
+      "sha256": "902e640f04b6f4f9f08a78ad96dbc1432b12f42835bf75c7917cfa62f7a87048"
+    },
+    {
+      "file": "tools\\probe_feasible.m",
+      "lines": 30,
+      "sha256": "7a9f6b7d1d50bb2651f2126047e618a2b36720496118058789ef95f1aba05774"
+    },
+    {
+      "file": "tools\\probe_improved.m",
+      "lines": 33,
+      "sha256": "522895af7861225b8a531f525de4fda42b2649dd5f73dc24da4037639ec3252b"
+    },
+    {
+      "file": "tools\\probe_land.m",
+      "lines": 23,
+      "sha256": "6f94228e652890a0a3964b238ef90fff757f382b3b3225ec54e51a91d048eb31"
+    },
+    {
+      "file": "tools\\probe_measured_wave.m",
+      "lines": 24,
+      "sha256": "b2194bc5cbb6a0b1cd49c8d2e9eba5db861b0abb2a04ba0432caf6d985b6a521"
+    },
+    {
+      "file": "tools\\probe_model.m",
+      "lines": 16,
+      "sha256": "f81a0cf9e40ce7f92a089f198374c3034aef1e94ac5ac47771290ae0794ac623"
+    },
+    {
+      "file": "tools\\probe_motion_bridge.m",
+      "lines": 18,
+      "sha256": "8439a504e9cb5df657c36b789a24f269320926f36f11f81dcafd208e821aa7bd"
+    },
+    {
+      "file": "tools\\probe_nat.m",
+      "lines": 11,
+      "sha256": "a77ae3f1f066800891b24e4eab9dbc4a09bb8c7ba2ecb46d0bee3baf27b0ea91"
+    },
+    {
+      "file": "tools\\probe_pareto.m",
+      "lines": 31,
+      "sha256": "73123629f9645c8b5704a63d57feb3c9af2f0c8dfd6fa282303a6ba6d60cae87"
+    },
+    {
+      "file": "tools\\probe_phase_res.m",
+      "lines": 18,
+      "sha256": "3101b984b1d58314682d7ece5a674f77b2bd095ea6cfd8e90fb23856740c288c"
+    },
+    {
+      "file": "tools\\probe_power.m",
+      "lines": 8,
+      "sha256": "09b12657ab71ee6bce5484e9f71d3b88d3998f4c89c6b3e5c4310b4b215488b6"
+    },
+    {
+      "file": "tools\\probe_pw.m",
+      "lines": 37,
+      "sha256": "322dc5aa9ca43a5fc7bd994263ac5eac4d99045c5757b89039e7938069615516"
+    },
+    {
+      "file": "tools\\probe_radial.m",
+      "lines": 15,
+      "sha256": "66d0d054b3bb6268ab24e9fbb07b974d38435733179114d8cfbf72d1bfdd90d1"
+    },
+    {
+      "file": "tools\\probe_sea_rao.m",
+      "lines": 14,
+      "sha256": "057d7a81c5ca104b58fbfc43736286022ffbc6c69b674770fc419d8eeb1633c5"
+    },
+    {
+      "file": "tools\\probe_sea_rao2.m",
+      "lines": 7,
+      "sha256": "b4e3f623fb8da080d66dab4e97a79f593d9e33ae41fa57af1a83348652ee12cf"
+    },
+    {
+      "file": "tools\\probe_sea_results.m",
+      "lines": 12,
+      "sha256": "600fba34cb2689542030043020626edc662e4bc5b0eb73d59575526d29af0625"
+    },
+    {
+      "file": "tools\\probe_sign.m",
+      "lines": 12,
+      "sha256": "619cc7168e3b17e11b658fb2272a78c1db48ac82a8c7db229ba5396d26c03df2"
+    },
+    {
+      "file": "tools\\probe_speed.m",
+      "lines": 6,
+      "sha256": "bda8180103a91c5ba01c98e9c43c128fa1692da9ceb031aa001633f072c9786a"
+    },
+    {
+      "file": "tools\\probe_wave.m",
+      "lines": 18,
+      "sha256": "936a7186bf24daa74a35f23db4549c457a7ecd54608b82999fd08208c6be7ea0"
+    },
+    {
+      "file": "tools\\probe_wave_bridge.m",
+      "lines": 10,
+      "sha256": "d49bd5d88becf31abacf3d65515b663895cce7e4fcfc9d0c26387ab1ff6e96ac"
+    },
+    {
+      "file": "tools\\replay.py",
+      "lines": 218,
+      "sha256": "63676672b4f1fee3f23e21802f399cb16e50c6c7255798513a1b464afa3287e3"
+    },
+    {
+      "file": "tools\\validate.py",
+      "lines": 157,
+      "sha256": "f89ff21bc010f38ca9f1c612d406551ad94bec9e630fdb9a82000fdba136e8a6"
+    },
+    {
+      "file": "浮式平台六自由度实验数据\\FOWT Platform Testing\\MainCode.m",
+      "lines": 91,
+      "sha256": "42b8b95c23adb1d09f37f8ec7c3c7bd536f8054d20f6b29812df8672c8b8aaa2"
+    }
+  ],
+  "counts": {
+    "m": 56,
+    "py": 12,
+    "total_lines": 3875
+  },
+  "atlas": {
+    "focus_gain": 1.4841992613041344,
+    "focus_P5_mw": 21.99805935141923,
+    "wind_U": [
+      3.0,
+      5.0,
+      8.0,
+      10.0,
+      12.0
+    ],
+    "wind_tilt": [
+      1.8887878195116388,
+      3.4499859852861903,
+      5.535529427253637,
+      6.6392467148470615,
+      7.537877348559838
+    ],
+    "ap_focus_over_linear": [
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041346,
+      1.4841992613041346,
+      1.4841992613041344,
+      1.4841992613041342,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041342,
+      1.4841992613041342,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344,
+      1.4841992613041344
+    ],
+    "pcondition_factor": 0.7,
+    "pcondition_dbm": 28.45098040014257
+  }
+}

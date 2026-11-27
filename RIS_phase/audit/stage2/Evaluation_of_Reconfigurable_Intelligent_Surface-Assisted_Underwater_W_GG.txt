@@ -1,0 +1,449 @@
+PAGE 2
+4258
+JOURNAL OF LIGHTWAVE TECHNOLOGY, VOL. 40, NO. 13, JULY 1, 2022
+full-duplex relay with no ampliﬁcation, thus the area of RIS
+(i.e., number of RIS elements) should be large to outperform
+conventional relays [15]. The differences and similarities be-
+tween the RIS with amplify-forward and decode-forward relays
+have been discussed in [16], [17], whereas the RIS sizing to
+outperform a relayed system in terms of data rate and complexity
+has been determined in [18].
+Motivating with the advantages of RIS for the RF and FSO
+links, in this paper, we bring the concept of RIS for the ﬁrst
+timetotheunderwaterwirelessopticalcommunication(UWOC)
+link. The RIS-assisted channel model is different from the con-
+ventional channel model [19]. The underwater optical channel is
+vulnerable to turbulence and pointing errors, these effects causes
+random errors to the system. The underwater turbulence can be
+characterizedaccordingtotheturbulencestrength(i.e.,weakand
+strong) [20], [21]. In addition to the turbulence, pointing errors
+are common in UWOC links [22], and appending pointing errors
+and occlusion from obstacles to the system model can facilitate
+subsequent implementation.
+A. Problem Statement
+Signal loss in underwater environment is common due
+to the occlusion or blockage by aquatic plants (e.g., hy-
+drophytes, macrophytes), underwater vehicles (e.g., sub-
+marines), seamounts, and environmental conditions (e.g., tur-
+bidity, salinity). Consequently, an UWOC system can face signal
+loss, which cause burst errors. In addition to this, random errors
+also occurs due to the effect of turbulence and pointing errors.
+As a result larger amount of information loss in the UWOC
+communication system. A RIS-assisted UWOC system can be
+used to bypass occlusion or blockage during communication.
+The contributions of our work are as follows:
+r A RIS-assisted UWOC channel is characterized by com-
+bining underwater turbulence model, beam attenuation,
+occlusion or blockage due to obstacles and pointing errors
+associated to beam jitter and intelligent channel reconﬁg-
+urable node jitter. The probability density function (PDF)
+andcumulativedistributionfunction(CDF) expressions for
+the N RIS elements based UWOC are derived in terms of
+signal-to-noise ratio (SNR).
+r Analytical expressions of the BER, OP and CC of the RIS-
+assisted UWOC system are derived and plotted according
+to the average SNR.
+r The generalized BER expressions are derived for various
+modulation schemes, namely, binary phase shift keying
+(BPSK), binary frequency shift keying (BFSK) with re-
+spect to coherent and non-coherent detection schemes.
+Similarly, the analytical expressions of CC for the het-
+erodyne detection (HD) and intensity modulation direct
+detection (IMDD) schemes have been evaluated.
+r The numerical BER results are corroborated with the
+Monte-Carlo simulations.
+The remainder of this paper is organized as follows: The
+system and channel models are presented in Section II. Then, the
+system performance in terms of BER, OP and CC are analyzed in
+Section III. The corresponding numerical results and discussion
+are presented in Section IV. Finally, conclusions are drawn in
+Section V.
+II. SYSTEM AND CHANNEL MODELS
+A. System Model
+Consider a UWOC system with no line-of-sight between the
+transmitter and receiver due to the occlusion from the obstacles
+and transceiver mounted underwater vehicles are in motion,
+as illustrated in Fig. 1. Since, the movable transmitter and
+receiver, the array of RIS elements have been distributed at
+different locations of the targeted zones using the underwater
+sinking objects (M RIS nodes), from there the RIS elements
+can point towards the source and destination (similar to movable
+transmitter and receiver as shown in Fig. 3 of [23]). In Fig. 1,
+the line-of-sight link between the source and detector is blocked
+due to a seamount and/or underwater vehicles. Hence, we use the
+RIS-assisted UWOC link to mitigate the effect of occlusion. The
+received RIS data signal at the destination under the inﬂuence of
+turbulence, occlusion and pointing errors is given by [4], [22],
+Y =
+N
+
+i=1
+his + n,
+(1)
+where ‘s’ represents the data transmitted by the source, h =
+hsrhrd is overall channel fading parameter, hsr = hp1ht1 is
+channel fading parameter from source to RIS, hrd = hp2ht2
+is channel fading parameter from RIS to destination, ht is
+a random variable due to underwater turbulence and hp is a
+random variable due to pointing errors and random obstacle due
+toocclusion,andnrepresentsadditivewhiteGaussiannoisewith
+zero mean and variance N0. In order to scatter the required gain
+of the optical beam the size of the RIS is restricted based on the
+carrier wavelength. For the efﬁcient scattering of optical beam in
+a speciﬁed direction with a required gain more number of same
+size RIS elements have to be placed [16], in our analysis we have
+considered N is number of RIS elements. The instantaneous
+SNR of the single branch RIS system is given by [24],
+γ =
+N
+
+i=1
+γi = ¯γ
+N
+
+i=1
+h2
+i = ¯γ
+N
+
+i=1
+
+hsriejψihrdi
+2 ,
+(2)
+where γi is the instantaneous SNR of the ith RIS channel,
+¯γ = Pt
+N0 represents average SNR, Pt denotes average signal
+power of data ‘s′ and h is modeled using double stochastic
+fading with obstacles, pointing error inﬂuenced small scale
+and large scale turbulence ﬂuctuations both are governed by
+independentgammarandomvariable[25],[26],andtheresulting
+random variable h takes the obstacles, pointing error inﬂuenced
+gamma-gamma random variable, ψi is the deterministic phase
+adjustment parameter of ith RIS element, and j ≜√−1. The
+total instantaneous SNR of the M-branch RIS nodes (each
+node consists of N RIS elements) employing the maximal ratio
+combining at the receiver is given as [4],
+γ =
+M
+
+k=1
+N
+
+i=1
+γk,iΥ2
+k
+(3)
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:29:52 UTC from IEEE Xplore.  Restrictions apply. 
+
+PAGE 4
+4260
+JOURNAL OF LIGHTWAVE TECHNOLOGY, VOL. 40, NO. 13, JULY 1, 2022
+is link range from RIS to destination, σ2
+θ and σ2
+β are variances
+of pointing error angle and deﬂection error angles, respectively.
+The overall fading coefﬁcient h = hthahp and corresponding
+combined channel PDF can be obtained using,
+fh(h) =
+ ∞
+h
+A0ha
+fht (ht)
+1
+htha
+fhp
+
+h
+htha
+
+dht.
+(8)
+Substituting Eqs. (4) and (7) in (8) and then integrating, obtained
+PDF is given as,
+fh(h) = (1 −N )
+Γ(α)
+Γ(α −1, h)
++ N ζ2
+Γ(α)
+
+α
+A0ha
+ζ2
+hζ2−1Γ
+
+α −ζ2,
+hα
+A0ha
+
+(9)
+where Γ(s, x) ≜
+ ∞
+x ts−1e−tdt is upper incomplete Gamma
+function. The PDF in terms of SNR can be obtained using
+Appendix A (for the relation γ = ¯γh2), is given as,
+fγ (γ) = (1 −N )
+2Γ(α)√¯γ γ−1
+2 Γ
+
+α −1, γ
+1
+2
+√¯γ
+
++ N ζ2
+2Γ(α)
+×
+
+α
+A0ha
+√¯γ
+ζ2
+γ
+ζ2
+2 −1Γ
+
+α −ζ2,
+α
+A0ha
+√¯γ γ
+1
+2
+
+(10)
+and corresponding CDF is given in (11).
+Fγ (γ)(D) = 2α(1 −N )
+8Γ(α)√π¯γ γ
+1
+2 G4,1
+3,5
+ 1
+4¯γ γ
+
+1
+2, 1
+2, 1
+α−1
+2 , α
+2 , 0, 1
+2, −1
+2
+
++ 2(α−ζ2)N ζ2
+4√πΓ(α)
+
+α
+A0ha
+√¯γ
+ζ2
+γ
+ζ2
+2 G4,1
+3,5
+
+α
+A0ha
+√¯γ
+2
+γ
+
+1 −ζ2
+2 , 1
+2, 1
+α−ζ2
+2
+, α−ζ2+1
+2
+, 0, 1
+2, −ζ2
+2
+
+.
+(11)
+2) RIS-Assisted UWOC Channel: The UWOC channel is
+realized using the underwater turbulence and pointing errors.
+Turbulence can scintillate optical beam based on the medium
+characteristics, which are different from free-space to underwa-
+ter mediums. The turbulence inﬂuencing underwater parameters
+for ocean, river and river meet ocean scenarios given in [29]. The
+Gamma-Gamma density function is given as [21], [29],
+fht(ht) = 2 (αβ)
+(α+β)
+2
+Γ(α)Γ(β) h
+(α+β)
+2
+−1
+t
+Kα−β
+
+2
+
+αβht
+
+, ht ≥0
+(12)
+where Kα−β(·) is the modiﬁed Bessel function of the second
+kind and (α −β)th order,
+α =
+⎡
+⎢⎣exp
+⎛
+⎜
+⎝
+0.17σ2
+l1
+
+1 + 1.67σ12/5
+l1
+7/6
+⎞
+⎟
+⎠−1
+⎤
+⎥⎦
+−1
+,
+and
+β =
+⎡
+⎢⎣exp
+⎛
+⎜
+⎝
+0.225σ2
+l2
+
+1 + 0.259σ12/5
+l2
+5/6
+⎞
+⎟
+⎠−1
+⎤
+⎥⎦
+−1
+are the turbulence parameter of plane wave propagation from
+source to RIS and RIS to destination, respectively [21], σ2
+li =
+1.23C2
+n,ik7/6L11/6
+i
+, here i = 1, 2; C2
+n,1 and L1 are refractive
+index structure parameter and link range from source to RIS
+and C2
+n,2 and L2 are refractive index structure parameter and
+link range from RIS to destination. The combined underwater
+turbulence, beam attenuation, pointing errors and occlusion due
+to obstacles associated channel model is given in (13).
+fh(h) = 2(1 −N ) (αβ)( α+β
+2 )
+Γ(α)Γ(β)
+h
+α+β
+2 G3,0
+1,3
+
+αβh
+
+2 −(α+β)
+2
+1 −(α+β)
+2
+, α−β
+2 , β−α
+2
+
++
+αβN ζ2
+A0haΓ(α)Γ(β)G3,0
+1,3
+
+αβ
+A0ha
+h
+
+ζ2
+ζ2 −1, α −1, β −1
+
+.
+(13)
+The resultant SNR of N RIS elements assisted UWOC is γ =
+¯γ N
+i=1 h2
+i , corresponding PDF and CDF expressions obtained
+in two ways, considering the random variables h1, h2, . . . , hN
+are independent and identically distributed (i.i.d) and indepen-
+dent and non-identically distributed (i.ni.d). The PDF and CDF
+expressions using i.i.d and i.ni.d distributed scenarios are given
+below.
+2) i.i.d channel: The resultant SNR of the i.i.d channel is
+γ = ¯γNh2, and corresponding PDF and CDF expressions in
+terms of SNR obtained using Appendix A is given in (14),
+fγ (γ)(iid,RIS) =
+(αβ)( α+β
+2 ) (1 −N )
+√¯γΓ(α)Γ(β) (N¯γ)
+α+β
+4
+γ
+α+β−2
+4
+× G3,0
+1,3
+
+αβ
+
+(N¯γ)
+γ
+1
+2
+
+2 −(α+β)
+2
+1 −(α+β)
+2
+, α−β
+2 , β−α
+2
+
++
+αβN ζ2
+2A0haΓ(α)Γ(β)√N¯γ γ−1
+2
+× G3,0
+1,3
+
+αβ
+A0ha
+√N¯γ γ
+1
+2
+
+ζ2
+ζ2 −1, α−1, β−1
+
+(14)
+and corresponding CDF is given in (15),
+Fγ (γ)(iid,RIS) =
+(αβ)( α+β
+2 ) (1 −N )
+4π√¯γΓ(α)Γ(β) (N¯γ)
+α+β
+4
+γ
+α+β+2
+4
+× G6,1
+3,7
+
+αβ
+4√N¯γ
+2
+γ
+
+Δ1
+Δ2
+
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:29:52 UTC from IEEE Xplore.  Restrictions apply. 

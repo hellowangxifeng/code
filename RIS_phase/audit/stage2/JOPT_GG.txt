@@ -1,0 +1,681 @@
+PAGE 2
+IOP PUBLISHING
+JOURNAL OF OPTICS
+J. Opt. 14 (2012) 125710 (7pp)
+doi:10.1088/2040-8978/14/12/125710
+Channel correlation in aperture receiver
+diversity systems for free-space optical
+communication
+Zhixiao Chen1, Song Yu1, Tianyi Wang1, Guohua Wu2, Shaoling Wang2
+and Wanyi Gu1
+1 State Key Laboratory of Information Photonics and Optical Communications, Beijing University of
+Posts and Telecommunications, Beijing 100876, People’s Republic of China
+2 School of Electronic Engineering, Beijing University of Posts and Telecommunications,
+Beijing 100876, People’s Republic of China
+E-mail: yusong@bupt.edu.cn
+Received 19 May 2012, accepted for publication 22 October 2012
+Published 13 November 2012
+Online at stacks.iop.org/JOpt/14/125710
+Abstract
+In receiver diversity systems, signal replicas will suffer from channel correlations if there are
+insufﬁcient spacings for component receivers. Knowledge of the channel correlation is
+important for system performance assessment and improvement. In this paper, we give a
+theoretical study of the channel correlation in receiver diversity systems. Based on the
+plane-wave model and the extended Rytov theory for the ABCD ray-matrix formulation,
+expressions for the channel correlation are derived under general atmospheric conditions. The
+effects of antenna spacing, turbulence strength, receiver aperture size, and wavelength are
+examined in detail and the corresponding physical mechanisms for the results are discussed.
+An approximation for estimating the channel correlation length under strong turbulence
+conditions is obtained.
+Keywords: free-space optical communication, atmospheric turbulence, spatial diversity,
+channel correlation
+(Some ﬁgures may appear in colour only in the online journal)
+1. Introduction
+Free-space
+optical
+(FSO)
+communication
+has
+become
+increasingly
+popular
+in
+recent
+years
+for
+its
+potential
+high-data-rate capacity, low cost, and particularly wide
+bandwidth on unregulated spectra. However, the laser beams
+are susceptible to irradiance ﬂuctuations induced by the
+atmospheric turbulence. This irradiance ﬂuctuation, known as
+optical scintillation [1–3], can give rise to power losses and
+error probability. It is the major performance impairment in
+FSO systems.
+Spatial diversity is an effective technique to mitigate
+scintillation [4–6]. By the use of multiple transmitters (trans-
+mitter diversity) or multiple receivers (receiver diversity) or
+a combination of both, subchannels are formed to transmit
+signal replicas. Based on the fact that multiple uncorrelated
+subchannels have a lower probability of experiencing deep
+fades simultaneously, scintillation can be reduced substan-
+tially. By assuming that subchannels are independent of each
+other, vast works [7–9] (and references therein) have been
+devoted to studying the performance of systems with different
+detection, modulation and signal combining schemes.
+In practice, to ensure the validity of the independence
+assumption in the works above, any two adjacent antennas
+(transmitters or receivers) must be sufﬁciently far apart.
+Otherwise, channel correlations will arise among subchannels
+and degrade the system performance [10–12]. To deter-
+mine the spacings for component antennas, some experi-
+ments [13–15] undertaking a similar task have been reported,
+but due to the hardware limitation, only isolated points in
+design space could be evaluated and thus physical insight into
+the channel correlation cannot be comprehensively revealed
+from the results. In order to conduct design studies that probe
+a large volume of the relevant design space, Anguita et al
+1
+2040-8978/12/125710+07$33.00
+c⃝2012 IOP Publishing Ltd Printed in the UK & the USA
+
+PAGE 3
+J. Opt. 14 (2012) 125710
+Z Chen et al
++
+Figure 1. Receiver diversity reception.
+took a numerical simulation method to quantify the channel
+correlation in a transmitter diversity system [16]. In this work,
+the dependence of the channel correlation on link parameters
+is illustrated in detail including the effects of turbulence
+strength, beam separation, receiver aperture and propagation
+distance. The results were also veriﬁed by their subsequent
+experimental work [17]. However, due to the fact that the
+numerical simulation method focuses on speciﬁc examples,
+it is hard to extend the results to general cases.
+In order to get a comprehensive insight into the channel
+correlation, the better way is to study it theoretically. Although
+a well-known theoretical model has been developed based on
+the Rytov theory [18], it is only valid for point receivers under
+weak turbulence conditions. This model may be quite limited
+in practical applications since in most cases of FSO links
+moderate-to-strong turbulence conditions must be considered
+as well as the receiver aperture effects. To the best of our
+knowledge, a well-established theoretical model including
+these factors is still not available for the aperture diversity
+technique.
+In this paper, we present a theoretical study of channel
+correlation in receiver diversity systems under general
+turbulence conditions, including the aperture effects and other
+link parameters. In section 2, we derive the expressions for
+the channel correlation coefﬁcient for a pair of component
+receivers based on the plane-wave model and the extended
+Rytov theory for ABCD ray-matrix formulation. In section 3,
+we illustrate the properties of the channel correlation in detail
+including the effects of receiver separation, aperture sizes,
+turbulence strength and wavelength. Section 4 is reserved
+for our conclusion. The derivation details are presented in
+appendix A.
+2. Derivation of the channel correlation functions
+Consider a receiver diversity system as shown in ﬁgure 1. The
+channel correlation coefﬁcient between any two component
+receivers, denoted as receiver 1 and receiver 2, is deﬁned
+by [19]
+γ12(d12) = ζ12(d12)
+q
+σ 2
+1 σ 2
+2
+,
+(1)
+with d12 being the separation distance of the two receivers.
+In (1), ζ12(d12) and σ 2
+j (j = 1, 2) are the spatial covariance
+Figure 2. Equivalent ABCD ray-matrix optical systems of the two
+receivers.
+function of irradiance and the scintillation index of receiver j,
+respectively, and are given by [18]
+ζ12(d12) = ⟨I1I2⟩
+⟨I1⟩⟨I2⟩−1,
+(2)
+σ 2
+j ≡ζjj(0) =
+⟨I2
+j ⟩
+⟨Ij⟩2 −1,
+(3)
+where ⟨·⟩stands for the average over different realizations of
+turbulence disorder and Ij is the intensity collected by the
+jth receiver. Equations (2) and (3) indicate that the spatial
+covariance function is a more general statistic that includes
+the scintillation index as a special case.
+In deriving (2), the monochromatic plane-wave model
+is employed based on the extended Rytov theory for the
+ABCD ray-matrix formulation [18]. Note that modulated
+signals have certain spectral bandwidths 1λ, and for gigabit
+rate communication FSO links, 1λ ∼0.1 nm. Although the
+difference in wavelength will result in an additional decrease
+of channel correlation, the inﬂuence of such small wavelength
+difference (1λ ∼0.1 nm) on the channel correlation is
+negligible [20, 21]. Thus the monochromatic assumption
+represents a good approximation to signal transmission.
+The two channels formed by the two receivers are
+modeled with two ABCD ray-matrix optical systems, as
+shown in ﬁgure 2. The z-axis is the propagation direction. The
+wave from the input plane at z = 0 propagates through the
+turbulence to the pupil plane located at z = L, then is captured
+by the lenses with diameters D and focused onto the focal
+plane (output plane) at a short distance Lf behind the lenses,
+where L + Lf = Ls. The optical ﬁeld at the output plane of the
+jth receiver can be described by [18]
+Uj(rj, Ls) = A exp[ψ1,j(rj, Ls)],
+(4)
+where
+the
+time
+variation
+exp(−iωt)
+is
+assumed
+and
+suppressed here. In (4), A denotes the amplitude of the ﬁeld,
+rj is the transverse vector at the output plane with rj = 0
+denoting the on-axis point (on the optical axis), and ψ1,j is
+referred to as the ﬁrst-order complex phase perturbation due to
+the turbulence. Based on the Taylor frozen-in hypothesis [22],
+2
+
+PAGE 4
+J. Opt. 14 (2012) 125710
+Z Chen et al
+ψ1,j is given by [18]
+ψ1,j(rj, Ls) =
+Z Ls
+0
+dz
+Z Z ∞
+−∞
+h(s, rj; z, Ls)n1(s −dj, z) d2s.
+(5)
+In (5), h(s, rj; z, Ls) is known as the ‘impulse response
+function’ of the ABCD optical system for a plane wave and
+will be given later by (11), (s, z) denotes the coordinates of an
+intercept point between the input and output plane, n1 stands
+for the turbulence-induced ﬂuctuation in the refractive index,
+and dj is the transverse coordinate of the optical axis of the jth
+channel. Equation (5) indicates that the optical wave in each
+channel experiences different samples of ﬂuctuations due to
+the different locations of the optical axes.
+According to the extended Rytov theory for ABCD
+optical systems, the irradiance covariance including aperture
+effects can be approximated by the on-axis irradiance
+covariance of the two channels which can be expressed as [18]
+ζ12(d12) = exp[2RE{E2(0, 0; Ls) + E3(0, 0; Ls)}] −1, (6)
+where RE{x} denotes the real part of x, d12 = |d1 −d2|
+represents the separation distance of the two channels, and the
+two second-order statistical moments are deﬁned by
+E2(r1, r2; Ls) = ⟨ψ1,1(r1, Ls)ψ∗
+1,2(r2, Ls)⟩,
+(7)
+E3(r1, r2; Ls) = ⟨ψ1,1(r1, Ls)ψ1,2(r2, Ls)⟩,
+(8)
+respectively.
+To obtain E2(r1, r2; Ls) and E3(r1, r2; Ls), we ﬁrst
+express ψ1,j(rj, Ls) as a sum of integrals over the portions of
+the path connecting the lens. By noting that the atmospheric
+turbulence is only conﬁned between the input plane and the
+pupil plane, ψ1,j(rj, Ls) can be reduced to the form
+ψ1,j(rj, Ls) =
+Z L
+0
+dz
+Z Z ∞
+−∞
+h(s, rj; z, L)n1(s −dj, z) d2s,(9)
+=
+Z L
+0
+dz
+Z Z ∞
+−∞
+h(s + dj, rj; z, L)n1(s, z) d2s,
+(10)
+where a simple coordinate transformation on s is introduced
+from (9) to (10). According to the expression of h(s, rj; z, L)
+presented in [18], one can formally obtain that
+h(s + dj, rj; z, L) =
+k2
+j
+2πγ B exp
+ 
+ik|s + dj −γ rj|2
+2γ B
+!
+, (11)
+where the two elements γ and B are given by
+γ = −ikD2
+16Lf
+,
+(12)
+B = Lf
+
+1 + 16i(L −z)
+kD2
+
+,
+(13)
+with i2 = −1. By substituting (10) into (7) and (8), and with
+the help of (11), one can derive that (see appendix A):
+E2(r1, r2; Ls) = 4π2k2L
+Z 1
+0
+Z ∞
+0
+κ8n,eff(κ)
+× exp
+
+−κ2D2
+16
+
+J0(κ|γ r1 −γ ∗r2
+−(d1 −d2)|) dκ dξ,
+(14)
+E3(r1, r2; Ls) = −4π2k2L
+Z 1
+0
+Z ∞
+0
+κ8n,eff(κ)
+× exp
+
+−κ2D2
+16
+−iLξ
+k
+
+J0(κ|γ r1 −γ r2
+−(d1 −d2)|) dκ dξ,
+(15)
+where ξ = 1 −z/L and J0(·) is a Bessel function of the
+ﬁrst kind and zero order. In (14) and (14), the effective
+atmospheric spectrum 8n,eff(κ) is used so that the covariance
+function is valid under all turbulence conditions. The effective
+atmospheric spectrum 8n,eff(κ) is given by [18]
+8n,eff(κ) = 0.033C2
+nκ−11/3[GX(κ, l0, L0) + GY(κ, l0)], (16)
+where C2
+n is the refractive-index structure constant, l0 is
+the inner scale, L0 is the outer scale, and GX(κ, l0, L0) and
+GY(κ, l0) are the large- and small-scale ﬁlter functions given
+by [18]
+GX(κ, l0, L0) = exp
+ 
+−κ2
+κ2
+l
+!
+×
+"
+1 + 1.802 κ
+κl
+−0.254
+ κ
+κl
+7/6#
+×
+"
+1 −exp
+ 
+−κ2
+κ2
+0
+!#
+exp
+
+−κ2
+κ2
+X
+
+,
+(17)
+GY(κ, l0) =
+κ11/3
+(κ2 + κ2
+Y)11/6 ,
+(18)
+respectively, with κl = 3.3/l0, κ0 = 8π/L0 and
+κX =
+
+
+
+(0.38 + 0.35L/kρ2
+0)−1,
+ρ0 = (1.46C2
+nk2L)−3/5,
+l0 ≪ρ0 ≪L0;
+(0.38 + 0.17L/kρ2
+0)−1,
+ρ0 = (1.64C2
+nk2Ll−1/3
+0
+)−1/2,
+ρ0 ≪l0.
+(19)
+κY =
+s
+3k
+L
+ σR
+σPL
+12/5
+(1 + 0.69σ 12/5
+PL ),
+(20)
+σ 2
+PL = 3.86σ 2
+R
+
+(1 + 1/Q2
+l )11/12
+
+sin
+11
+6 tan−1Ql
+
++
+1.51
+(1 + Q2
+l )1/4 sin
+4
+3tan−1Ql
+
+−
+0.27
+(1 + Q2
+l )7/24 sin
+5
+4tan−1Ql
+#
+−3.50
+Q5/6
+l
+)
+,
+(21)
+Ql = 10.89L
+kl2
+0
+,
+(22)
+σ 2
+R = 1.23C2
+nk7/6L11/6.
+(23)
+3
+
+PAGE 5
+J. Opt. 14 (2012) 125710
+Z Chen et al
+Figure 3. The channel correlation coefﬁcient γ12 versus separation
+distance d12 for different turbulence conditions and aperture
+diameters. The other parameters are: λ = 1060 nm, L = 2 km, and
+from weak to strong, C2
+n = 2 × 10−15 m−2/3, 2 × 10−14 m−2/3,
+2 × 10−13 m−2/3, and 4 × 10−13 m−2/3, respectively.
+The quantities κX
+and κY
+represent the low-pass and
+high-pass spatial frequency cutoffs, respectively, that elim-
+inate midrange scale size effects under moderate-to-strong
+ﬂuctuations; ρ0 is the spatial coherence radius; σ 2
+PL is
+the plane-wave scintillation index in the regime of weak
+turbulence; and σ 2
+R is the Rytov variance that is often used
+to describe the turbulence strength. In general, the weak,
+moderate, and strong turbulence conditions correspond to
+σ 2
+R < 1, σ 2
+R ≈1, and σ 2
+R ≫1, respectively. By substituting
+(14) and (14) into (6), and making r1 = r2 = 0 for the on-axis
+values, we can obtain
+ζ12(d12) = exp
+
+8π2k2L1
+Z 1
+0
+Z ∞
+0
+κ8n,eff(κ)J0(κd12)
+× exp
+−D2κ2
+16
+
+×
+
+1 −cos
+Lκ2ξ
+k
+
+dκ dξ
+
+−1.
+(24)
+Then we can obtain the scintillation index σ 2
+j from (3) and the
+correlation coefﬁcient γ12(d12) from (1).
+It is noteworthy that in (16), the small-scale ﬁlter function
+GY(κ, l0) is associated with the diffraction effects generated
+by turbulence cells smaller than the spatial coherence radius
+ρ0, while the large-scale ﬁlter function GX(κ, l0, L0) accounts
+for the deﬂection effects of turbulence cells larger than the
+scattering disk L/kρ0 [18]. From (24), one can deduce that
+if d12̸ = 0, the attenuation of the Bessel function J0(κd12)
+at high frequency will make the small-scale ﬁlter function
+GY(κ, l0) contribute little to ζ12(d12). That is to say, the
+channel correlation arises mainly from the deﬂection effects.
+3. Analysis of channel correlation
+In this section, we use speciﬁc examples to analyze the
+channel correlation given by (1) and (24). Equation (24) is
+evaluated by using multidimensional numerical integration
+with the algorithm of Vegas [23, 24]. The discussion is limited
+in the context of the horizontal path in which C2
+n is assumed to
+be independent of the propagation distance. Also, without loss
+of generality, we set L0 = ∞and l0 = 0 in all the following
+examples. In this case, the spatial coherence radius is given
+by [18]
+ρ0 = (1.46C2
+nk2L)−3/5,
+l0 ≪ρ0 ≪L0,
+(25)
+and thus the effective atmospheric spectrum in (16) reduces to
+8n,eff(κ) = 0.033C2
+nκ−11/3
+×
+"
+exp
+ 
+−κ2
+κ2
+X,0
+!
++
+κ11/3
+(κ2 + κ2
+Y,0)11/6
+#
+,(26)
+with
+κ2
+X,0 = k
+L
+2.61
+1 + 1.11σ 2
+R
+,
+(27)
+κ2
+Y,0 = 3k
+L (1 + 0.69σ 12/5
+R
+).
+(28)
+Figure 3 shows typical curves for the channel correlation
+coefﬁcient γ12 as a function of separation distance for
+different turbulence conditions and aperture sizes. One can
+observe that for a ﬁxed turbulence strength σ 2
+R and a
+ﬁxed aperture diameter D, the channel correlation decreases
+monotonously with increasing separation distance d12, and
+goes across a zero point where the channel correlation length
+ρc is deﬁned, i.e. γ12(ρc) = 0. After passing the zero point,
+the curve approaches zero with a long negative tail. This
+behavior coincides with the general concept that when the two
+channels are overlapped, they must be perfectly correlated.
+But when the two channels are separated inﬁnitely far apart,
+they must be independent of each other. Note that the negative
+tail denotes separation distances in which, on average, one
+receiver is in a bright region of the ﬁeld and the other is
+in a dark region [18]. In general, two separated receivers
+are treated as independent of each other when the separation
+distance d12 is larger than ρc, though it may represent negative
+correlation. It is also shown that the channel correlation is
+affected by turbulence strength and aperture size, which will
+be illustrated in ﬁgures 4 and 5, respectively.
+Figure 4 illustrates the dependence of the channel
+correlation on turbulence strength. Shown is γ12 versus
+the refractive-index structure constant C2
+n for three different
+separation distances. One can observe that for each case,
+channel correlation arises only when the channel correlation
+length exceeds the separation distance due to the increase of
+C2
+n. As C2
+n continues to increase, γ12 increases accordingly.
+For a small separation distance, γ12 can even reach a very
+high level (as in the case of d12 = 15 cm) that can degrade the
+system performance substantially. Channel correlation can be
+reduced effectively by using a larger separation distance, as
+shown in the cases of d12 = 20 and 25 cm.
+Figure 5 illustrates the dependence of the correlation
+coefﬁcient γ12 on receiver aperture sizes. The turbulence
+strength is ﬁxed at σ 2
+R = 22.09 with d12 = 10 cm, 15 cm, and
+20 cm, respectively. It can be observed that, for each case,
+γ12 increases monotonously with the aperture sizes. Note that
+4
+
+PAGE 7
+J. Opt. 14 (2012) 125710
+Z Chen et al
+Figure 7. The correlation length ρc as a function of turbulence
+strength σ 2
+R. The other parameters are L = 2 km, λ = 1060 nm.
+Figure 8 shows ρc as a function of wavelength λ in
+three cases corresponding to weak, moderate and strong
+turbulence, respectively. The results show that in each case
+the correlation length increases slightly with increasing
+wavelength, indicating that the wavelength effect on the
+channel correlation is negligible under general turbulence
+strength. This is because the channel correlation arises mainly
+from the deﬂection effects whereas the diffraction effects are
+negligible.
+4. Conclusion
+In this paper we give a theoretical study of the channel
+correlation in receiver diversity systems for FSO commu-
+nication. Based on the plane-wave model, expressions for
+the correlation coefﬁcient are derived by using the extended
+Rytov theory for ABCD ray-matrix formulation. By using
+these expressions, characteristics of the channel correlation
+are examined in detail. An estimate for the channel correlation
+length under strong turbulence conditions is obtained. From
+the applications point of view, our formulation provides a
+theoretical way for evaluating the channel correlation under
+general link conditions, which is important for the prediction
+of system performance.
+Acknowledgments
+This work was supported by the Key Project of Chinese
+National Programs for Fundamental Research and Devel-
+opment (No. 2012CB315605), National Science Foundation
+(61271191, 61072054, and 61008049), Program for New
+Century Excellent Talents in University (NCET-10-0243), and
+Fundamental Research Funds for the Central Universities.
+Appendix. Derivation of equations (14) and (14)
+In this appendix, we derive (14) and (14). The derivation
+follows the outline of the calculation of the second-order
+statistical moments presented in chapter 5 of [18]. To begin
+Figure 8. The correlation length ρc versus wavelength λ. Three
+cases of weak, moderate, and strong turbulence are considered, for
+which we set L = 1 km and C2
+n = 2 × 10−15 m−2/3, L = 1.2 km and
+C2
+n = 5 × 10−14 m−2/3, and L = 1.5 km and C2
+n = 5 × 10−13 m−2/3,
+respectively. In all cases, D = 5 cm.
+with, we rewrite (10) as
+ψ1,j(rj, Ls) ≡ψ1,j(Rj, Ls)
+=
+Z L
+0
+dz
+Z Z ∞
+−∞
+h(s, Rj; z, L)n1(s, z) d2s, (A.1)
+h(s + dj, r; z, L) ≡h(s, Rj; z, L)
+=
+k2
+2πγ B(z; L) exp
+ik|s −γ Rj|2
+2γ B(z; L)
+
+,
+(A.2)
+where Rj = rj −dj/γ is introduced and B(z; L) is given
+in (13). Further, we write n1(s, z) in the form of a
+two-dimensional Riemann–Stieltjes integral and h(s, Rj; z, L)
+in the two-dimensional Fourier transform, respectively,
+n1(s, z) =
+Z Z ∞
+−∞
+exp(iK · s) dv(K, z),
+(A.3)
+H(K, Rj; z, L) = ik exp
+
+iγ K · Rj −iκ2
+2k γ B(z; L)
+
+,(A.4)
+where K represents the two-dimensional wavevector and
+|K| = κ. By substituting (A.3) and (A.4) into (A.1), we
+deduce that
+ψ1,j(Rj, Ls) =
+Z L
+0
+dz
+Z Z ∞
+−∞
+dv(K, z)H(K, Rj; z, L)
+= ik
+Z L
+0
+dz
+Z Z ∞
+−∞
+dv(K, z)
+× exp
+
+iγ K · Rj −iκ2
+2k γ B(z; L)
+
+.
+(A.5)
+Next, to ensure statistical homogeneity of the refractive index,
+we have
+⟨v(K, z)v∗(K, z′)⟩= Fn(K, |z −z′|)δ(K −K′)d2K d2K′,
+(A.6)
+where δ(K) stands for the Dirac delta function and Fn(K, |z−
+z′|) is the two-dimensional spectral density of the index of
+refraction. Substituting (A.5) into (14), and using (A.6), we
+6

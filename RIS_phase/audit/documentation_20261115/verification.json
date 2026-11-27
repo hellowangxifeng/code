@@ -1,0 +1,677 @@
+{
+  "status": "passed",
+  "sourceCounts": {
+    ".py": 6,
+    ".m": 123
+  },
+  "sourceFiles": 129,
+  "sourceLines": 5130,
+  "formulaCount": 121,
+  "mathBlocks": 122,
+  "docBytes": 84817,
+  "physicsTests": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0
+  },
+  "documentSHA256": "350ba82deb314b87eef872438f5140bf48e4268a238dbf9105f0b54a57c56bfb",
+  "sources": [
+    {
+      "path": "audit/audit_sources.py",
+      "lines": 72,
+      "sha256": "a1f5e5eca266cf38b500e47d8af4674dd6e533d28fd6a96a69d24a60f8879e4c"
+    },
+    {
+      "path": "audit/check_changes.py",
+      "lines": 26,
+      "sha256": "9d3a93c40e04d98cdb922317a1afaeaf76e3627fab6b6d37a0e3befa8de3f7bd"
+    },
+    {
+      "path": "audit/check_phase_programs.py",
+      "lines": 37,
+      "sha256": "a57749ecf9f4531c40f787bcf5e6407781c8dd1c8da43f04d4bac81a2779a048"
+    },
+    {
+      "path": "audit/fig1_revision/verify_fig1_revision.m",
+      "lines": 70,
+      "sha256": "7ed80a45967494677641a8729302ad225df921ba2e29b90baa0b9c6edf8d0251"
+    },
+    {
+      "path": "audit/fixed_receiver/audit_artifacts.py",
+      "lines": 78,
+      "sha256": "18b01ad3472b5cf1f0078ef0f6dda65179a0741703430cc293d1b9a5d8f928a1"
+    },
+    {
+      "path": "audit/formula_review_20261112/verify_field_consistency.m",
+      "lines": 55,
+      "sha256": "77e189adbe59731e20dbbb665826494faa5140686c4f6083aa58a0fd9303ad8b"
+    },
+    {
+      "path": "audit/stage2/audit_artifacts.py",
+      "lines": 75,
+      "sha256": "0878ab835c42882570c449df35370dfd3620601b0c35362939eb84eee157250b"
+    },
+    {
+      "path": "audit/stage2/verify_direct_incidence.m",
+      "lines": 19,
+      "sha256": "78b17887e1bdf6ed9aec239b3a7f2ab5b5d655fccf9ec0bd393d4365350abae2"
+    },
+    {
+      "path": "audit/stage2/verify_joint_fading.m",
+      "lines": 32,
+      "sha256": "97b37eab22813c3e64b391a5307da05e596d0909601a85a59be8ff2bb6aca6d8"
+    },
+    {
+      "path": "Fig1PhysicsTest.m",
+      "lines": 46,
+      "sha256": "55997b83684c08f2bfdea00570f038de7ecc1dc55a55738ceac4e144e2aa7bd8"
+    },
+    {
+      "path": "plots/rp_fig12_finalize.py",
+      "lines": 58,
+      "sha256": "f823582c54ef75758a0f0ed55ee466013114eb36a2d2ca3961a79240028e2cb5"
+    },
+    {
+      "path": "plots/rp_fig12_plot.m",
+      "lines": 102,
+      "sha256": "71f0d7e29a8c157b4d6f6445d811a165fc71c422b7007640f1c85988197c803d"
+    },
+    {
+      "path": "plots/rp_fig12_report.m",
+      "lines": 90,
+      "sha256": "090b0e0295483cc23730f0b69ec19700e179380bb24574123a730d7b0cc6448b"
+    },
+    {
+      "path": "plots/rp_fig1_mc_map.m",
+      "lines": 50,
+      "sha256": "841dd16b093036bf06f6820e965965eccacc822dd4e540d7863708143c1f8a7d"
+    },
+    {
+      "path": "plots/rp_fixed_receiver_legend.m",
+      "lines": 45,
+      "sha256": "0d6e6089b9439ac770859c0b77e13cea75d7aac464a5b34452c3af399361ae2c"
+    },
+    {
+      "path": "plots/rp_fixed_receiver_report.m",
+      "lines": 49,
+      "sha256": "4c6bda117d7b2c01d2b1e2c19fcd6151e3f1962d0e954d1599e02b011b1db376"
+    },
+    {
+      "path": "plots/rp_plot.m",
+      "lines": 8,
+      "sha256": "21d7b9090a83af8d7a3b81ce438a6ec76691fc9b34b10bf89301e815b8e665fc"
+    },
+    {
+      "path": "plots/rp_report.m",
+      "lines": 9,
+      "sha256": "63bf6c9b549f4abf9443b875c359125e89771568908ee79f1dde006bf2cb197d"
+    },
+    {
+      "path": "plots/rp_s2_axes.m",
+      "lines": 29,
+      "sha256": "3886778c0d359706f3123035575281720c3ac89973bb3a3271b7342f769cec3a"
+    },
+    {
+      "path": "plots/rp_s2_finish.m",
+      "lines": 21,
+      "sha256": "c2862240e38c88c1af2e447fce2f1862b8697fd4504a847a39e89dd0f53465bf"
+    },
+    {
+      "path": "plots/rp_s2_legend.m",
+      "lines": 65,
+      "sha256": "69fcb87fad2dc85378909004c810144bef14d779cca2f0028d501708f47a5e1c"
+    },
+    {
+      "path": "plots/rp_s2_plot_box.m",
+      "lines": 18,
+      "sha256": "e39081dfe9a763b41ea1f25e2baec175522ce4efe5cf1eb338e6ee8d984790c5"
+    },
+    {
+      "path": "plots/rp_s2_style.m",
+      "lines": 5,
+      "sha256": "54b14a1fca2b3ae618c598d2beea71b61f4f69015c35e633c5d866dc42a7e161"
+    },
+    {
+      "path": "plots/rp_stage2_graphics_audit.m",
+      "lines": 76,
+      "sha256": "318dbcf212f99ba29e6a9bbe2049212ad11ce706fa138d23fe3e193da659281d"
+    },
+    {
+      "path": "plots/rp_stage2_plot.m",
+      "lines": 51,
+      "sha256": "d798362e7be5c512540a82ea727177eafd220eba1b8f6b146dc617fd0bbe1348"
+    },
+    {
+      "path": "plots/rp_stage2_plot_angles.m",
+      "lines": 23,
+      "sha256": "ee750fea997622c8a82ce8506b95bbfb66137ddb0e29cdfd4d1087b7fec0db00"
+    },
+    {
+      "path": "plots/rp_stage2_plot_irradiance.m",
+      "lines": 78,
+      "sha256": "fe7f2b47e9bf6b28c9a4bfc7a7c2192414a2076290c00af3c10716983b83d29f"
+    },
+    {
+      "path": "plots/rp_stage2_plot_link_metric.m",
+      "lines": 49,
+      "sha256": "a1a8553e9ed673ad69884537e514f88b7b16c557eeb71747464176ed87a3771d"
+    },
+    {
+      "path": "plots/rp_stage2_plot_links.m",
+      "lines": 7,
+      "sha256": "dbf34b92c797bddd6a8ed3c0479219e1185e5891bf106cdce6b94433bd8a26fc"
+    },
+    {
+      "path": "plots/rp_stage2_plot_radial.m",
+      "lines": 31,
+      "sha256": "91f09d3bf75ecb6dfb1248f4b5c9554b48d3560ba883e70a7b1d0169196e187c"
+    },
+    {
+      "path": "plots/rp_stage2_plot_sensitivity.m",
+      "lines": 30,
+      "sha256": "933a0967084ca331ba14ce524d1d99c47a069a32a81207dfb59c87ca5f415e95"
+    },
+    {
+      "path": "plots/rp_stage2_plot_turbulence.m",
+      "lines": 26,
+      "sha256": "e21f7aa3dacec39e1d724cc2b2dae36939ed655d913b400eab152da0ad45b8cf"
+    },
+    {
+      "path": "plots/rp_stage2_report.m",
+      "lines": 74,
+      "sha256": "071551b61e036869a55ada2bcd795ca623e7ad4f0988affe5dc82eb8bd15066b"
+    },
+    {
+      "path": "RisFieldConsistencyTest.m",
+      "lines": 115,
+      "sha256": "72f837f302e38f42ee1863a3c8bbc3ffcc5a80eeaac926197f06924c7f8385d0"
+    },
+    {
+      "path": "RisLinkPhysicsTest.m",
+      "lines": 88,
+      "sha256": "3ceab0759182437810fb50de03d6a8f89b0e78ee9aa181ad91fab39df66470b4"
+    },
+    {
+      "path": "rp_aperture_channel.m",
+      "lines": 51,
+      "sha256": "1dc3031188658cdbc04341073f50859fe02ad5e72c814b9028b9fd85cea30c90"
+    },
+    {
+      "path": "rp_bsf_ballistic.m",
+      "lines": 46,
+      "sha256": "eae1b827b6b32a40cb719fa7af3a9e42341b6bb29a22dc491d48e50c84586a35"
+    },
+    {
+      "path": "rp_carrier_landing.m",
+      "lines": 23,
+      "sha256": "84e09bfd774ab9def6bc0e6b534e004930f6b5a834b703432e1e4175f63ae939"
+    },
+    {
+      "path": "rp_check_config.m",
+      "lines": 65,
+      "sha256": "147833c96091cabed391981030b9c3aa5ceff387420ac178f14abdfb359fc6b4"
+    },
+    {
+      "path": "rp_command.m",
+      "lines": 16,
+      "sha256": "2c2f169b31a6dbf197b98fad372981fb54a9ac8c770270c1fe175eb9ec8f2db1"
+    },
+    {
+      "path": "rp_config.m",
+      "lines": 78,
+      "sha256": "53c244d9437e212e6cdf1402615fe8e1226acef44f56caecda4e645d4df27e2c"
+    },
+    {
+      "path": "rp_deposit_power.m",
+      "lines": 38,
+      "sha256": "8ca157f8dbdc7bd7521856e4b81919008fec006fae6b69050726e1a62ea621ce"
+    },
+    {
+      "path": "rp_diffraction_check.m",
+      "lines": 129,
+      "sha256": "2481a4013da65b659d7500002d4a7738f5e39832fab8702e66dcec79e9b1956f"
+    },
+    {
+      "path": "rp_direct_channel.m",
+      "lines": 18,
+      "sha256": "c0ed708189a77b3d18a63c9abc5b8405a23928db5e59314dba855e57a415aecc"
+    },
+    {
+      "path": "rp_direct_density.m",
+      "lines": 18,
+      "sha256": "cd0c1c43842a396900de0c885e007c2d8e50f582f6b222c9ee5f045920239a46"
+    },
+    {
+      "path": "rp_direct_wave.m",
+      "lines": 61,
+      "sha256": "8294bf7ec6becdc128cd58d3bf761dbc8adcab82d40e80bb817bd9163c6f1e7f"
+    },
+    {
+      "path": "rp_fading_response.m",
+      "lines": 64,
+      "sha256": "afa9d2055c9e2d9c79e35db79844a720ce36089fa4163cb1d03744ad1399a9d5"
+    },
+    {
+      "path": "rp_fig12_metrics.m",
+      "lines": 22,
+      "sha256": "312ea21172c96032811763692aa9e5d083c1487811cb1c4c2db20f273fc4422d"
+    },
+    {
+      "path": "rp_fig12_run.m",
+      "lines": 205,
+      "sha256": "12b3e5356e638cec262c5e6545749580d1de3c3be890f37354a10a6f7fc0f42c"
+    },
+    {
+      "path": "rp_fig12_select.m",
+      "lines": 25,
+      "sha256": "926798e5f403fdd979d90f2b01144d8708179167ff8494f9c814740879e45631"
+    },
+    {
+      "path": "rp_finite_phase.m",
+      "lines": 76,
+      "sha256": "c0a2b6a0f03f89e72025da04121f120e5bc4f7ec362550606eeea218b0f48b21"
+    },
+    {
+      "path": "rp_fixed_receiver_case.m",
+      "lines": 31,
+      "sha256": "3987705f8591057ed63e698d01a672cb3e0bf7fb2377e30e96334d412d2977c6"
+    },
+    {
+      "path": "rp_fixed_receiver_collect.m",
+      "lines": 95,
+      "sha256": "8337ee406fa793e6192aeeaecf778c3107ace84e9f96716bf3a490109a97eeb1"
+    },
+    {
+      "path": "rp_fixed_receiver_links.m",
+      "lines": 44,
+      "sha256": "6aca3caaa8801af6a4c26c7552ed7ad57ff9ad3710a19189a6df7f2324b0ee54"
+    },
+    {
+      "path": "rp_fixed_receiver_metrics.m",
+      "lines": 16,
+      "sha256": "594a09fd08378c5bfbce6cc41d47a1a3cb33f28824c1780a53337f391681377e"
+    },
+    {
+      "path": "rp_fixed_receiver_phase.m",
+      "lines": 31,
+      "sha256": "4f95f6a7b1e9b592e9a29b64f8efece7af7c9baf6b112a6e5d5ab55d7e026450"
+    },
+    {
+      "path": "rp_fixed_receiver_refinement.m",
+      "lines": 28,
+      "sha256": "256b0e75ff45651f2a7dba8bbc5fa0847a0c0da1ffd64fca7cb283a2efa0e184"
+    },
+    {
+      "path": "rp_fixed_receiver_signature.m",
+      "lines": 15,
+      "sha256": "32e94b6dc77c12870d251a4ad73bcaf1bb36f6df061311010643bcafc503fba5"
+    },
+    {
+      "path": "rp_fixed_receiver_unmodulated.m",
+      "lines": 74,
+      "sha256": "c3ad4c31fdbfc6084aa730653e6019ecfc9e88658c7364849cbc19d5968df177"
+    },
+    {
+      "path": "rp_fixed_receiver_validate.m",
+      "lines": 70,
+      "sha256": "fa1f1ce926697ca2efccf48664fd8618970bf0a08bbf40e8fb9f011e5b1eb5a9"
+    },
+    {
+      "path": "rp_fixed_refine_unmodulated.m",
+      "lines": 60,
+      "sha256": "955e58266868576c58554eb8e0df03a94a13f4f6b3afcad627795c53e4db375d"
+    },
+    {
+      "path": "rp_fixed_scatter_batch.m",
+      "lines": 7,
+      "sha256": "054f714a2e0e22e68e2d0bfe2fef6cab9a9052ac733297832c79d2fa718fea3b"
+    },
+    {
+      "path": "rp_fixed_scatter_full.m",
+      "lines": 35,
+      "sha256": "36c10eb73b2599df88f8e94f6c3316dc90e850b6280679a783334c6f4f5ef1b1"
+    },
+    {
+      "path": "rp_fixed_scatter_mc.m",
+      "lines": 42,
+      "sha256": "6bdf63b6cbb066967cb556087a74a0bb2a7836a16df1ec5514e6085547267f14"
+    },
+    {
+      "path": "rp_fourier_window.m",
+      "lines": 32,
+      "sha256": "ef0c0ccf5535c1502d667e704fec490b6107cdd5043bbeb18e85eb988f650ccc"
+    },
+    {
+      "path": "rp_fresnel.m",
+      "lines": 13,
+      "sha256": "e0d7d6a2b028670b88d72ea347af40d33ba3f5137edd68f372b73216362bf3fd"
+    },
+    {
+      "path": "rp_gauss_legendre.m",
+      "lines": 11,
+      "sha256": "463b617c1994bc7425e348eedc45d95dfe330851ba781f1e169b6d415d5da92f"
+    },
+    {
+      "path": "rp_geometry.m",
+      "lines": 21,
+      "sha256": "91b7e3e7e6efc1b5e943bd2958543b2dba02beba8fe33c9470c5108844531593"
+    },
+    {
+      "path": "rp_illuminate.m",
+      "lines": 91,
+      "sha256": "713c63a02ba98b9325518e66f3cbbc79c5912f814abe10c9ee6e4e778f800836"
+    },
+    {
+      "path": "rp_incident_field.m",
+      "lines": 31,
+      "sha256": "0610eff7781e31068cd2070f562a86a575172b80c12176fc8c0ebe6a593891ab"
+    },
+    {
+      "path": "rp_layer_path.m",
+      "lines": 32,
+      "sha256": "2a529a669ffcd96ab45bedb2a3a43ab3d919a636eda5bdf9ad9252f659aa7233"
+    },
+    {
+      "path": "rp_link_metrics.m",
+      "lines": 19,
+      "sha256": "5225a12bcd3c1d9adb37b987396b0f92a4c0aa29c4ad75999fd524d375abf166"
+    },
+    {
+      "path": "rp_link_samples.m",
+      "lines": 9,
+      "sha256": "bd8b7dbfe51d382916dce45876670da83a2c463adca3caf05af3a3de6eaa2d32"
+    },
+    {
+      "path": "rp_mc.m",
+      "lines": 56,
+      "sha256": "7ad7ffde7fb8c927647bf595b30a8b10f275ba1d04b17a6bac313587f7e4c80e"
+    },
+    {
+      "path": "rp_mc_water_air.m",
+      "lines": 25,
+      "sha256": "1145eecfc9d5f580b11f97d2406acc0f7d7195746cb8027e01a297720234e5b0"
+    },
+    {
+      "path": "rp_modulated_field.m",
+      "lines": 24,
+      "sha256": "fb9ea8c9832889c7b63f9ea49780ebb3f635f21360e602764473d7ed88e4900c"
+    },
+    {
+      "path": "rp_nonstationary_rect_bound.m",
+      "lines": 15,
+      "sha256": "161879b3e8f194279d36451589204947eaae658f8958d9bd590faefa27d2b039"
+    },
+    {
+      "path": "rp_paraxial.m",
+      "lines": 29,
+      "sha256": "8cab48d3e290b71c505371939acb0f947dd644affcb423f32a24b1eef22ccebd"
+    },
+    {
+      "path": "rp_phase.m",
+      "lines": 62,
+      "sha256": "829521cff5c2fa16f7d9d06766c2a58deff0d70bcd2b74c4031c9a42458d52d6"
+    },
+    {
+      "path": "rp_phase_profile.m",
+      "lines": 49,
+      "sha256": "755d7d545ebb727d9ab9b19436cd5d270a3bb0e8d1a1f15a01a9ee1e74be610c"
+    },
+    {
+      "path": "rp_pixel_intensity.m",
+      "lines": 63,
+      "sha256": "2f352bc5a4819ef8590e6c30fc9b0548cce383cf294b0ead43a8d0530b23acc1"
+    },
+    {
+      "path": "rp_proxy_wave.m",
+      "lines": 29,
+      "sha256": "e572756cfaf6c8e2bcf4bb91db8f497b7b5b4f89e7945e9a30447f926cd6ae46"
+    },
+    {
+      "path": "rp_receiver_window.m",
+      "lines": 59,
+      "sha256": "e8c3a76163d4b59b66681e1251542817ddcb6d8706071a56bb64d48be1a14c13"
+    },
+    {
+      "path": "rp_run.m",
+      "lines": 7,
+      "sha256": "8831eea41ab44c22228c4d1224e94497c15023ffca41d6f8932b1a748f284055"
+    },
+    {
+      "path": "rp_setup.m",
+      "lines": 8,
+      "sha256": "e0dfb15cc3531e76e1c1515426f425aa10f2028beea7a7cf2271f6d6c90b5b24"
+    },
+    {
+      "path": "rp_spot_ellipse.m",
+      "lines": 14,
+      "sha256": "bfd0b38734fb7b9c2171427860e84f0d1083b5c9c8f076f21ed2389cb353059f"
+    },
+    {
+      "path": "rp_spot_stats.m",
+      "lines": 17,
+      "sha256": "023933fcf94ceb4bf012e7e21a7c17e5904f7db3503081a1c08494a5e590f884"
+    },
+    {
+      "path": "rp_stage2_angle_case.m",
+      "lines": 31,
+      "sha256": "d96348d17af8a09d1e5ec238b8b6a7624b4fdc8010c4352cc99619e7206c294c"
+    },
+    {
+      "path": "rp_stage2_angle_distance.m",
+      "lines": 6,
+      "sha256": "ff33502e06994fe7c5ceff5f9b49e47cfcaf2e792a5a20367f0b991c4ff84509"
+    },
+    {
+      "path": "rp_stage2_apply_refinements.m",
+      "lines": 14,
+      "sha256": "ac72e0dcc6acc8e9d2f5819b4e03507a617bafcb94dd0d192d174c5a6e196560"
+    },
+    {
+      "path": "rp_stage2_compact_design.m",
+      "lines": 10,
+      "sha256": "79ce3d18a1734a17d6cc50f2be996a20ddf1a2c0962920185c512a53cac841bd"
+    },
+    {
+      "path": "rp_stage2_config.m",
+      "lines": 44,
+      "sha256": "407ca3030f33503ebfe7fafe055c52a8d99254336926fcbd8902eaed5c42e33b"
+    },
+    {
+      "path": "rp_stage2_distance.m",
+      "lines": 31,
+      "sha256": "062f5f8c8da8c2b98ab1c6f7eccfe68de006cbde6eba91f2715354249a85fbe9"
+    },
+    {
+      "path": "rp_stage2_distance_complete.m",
+      "lines": 5,
+      "sha256": "d48c74ddb3015a9df8aa7f4344ffff5b7a613c03819b90d2bfef0fbfd704823f"
+    },
+    {
+      "path": "rp_stage2_extend.m",
+      "lines": 30,
+      "sha256": "28accfd573b6d16e95b6ad4d47671d71aec599b3693acf6bf3bdc036869a7d97"
+    },
+    {
+      "path": "rp_stage2_finish.m",
+      "lines": 44,
+      "sha256": "a2f56dfc46cf0d0ea5ea48f7e88daad874167fa72c0d578deb7d905a7cecd09d"
+    },
+    {
+      "path": "rp_stage2_merge_angles.m",
+      "lines": 15,
+      "sha256": "b918cdc5fd022750ae22e7bd67c237b4ac810b3ba80db1de0ac2b8431a3c248f"
+    },
+    {
+      "path": "rp_stage2_optical_signature.m",
+      "lines": 16,
+      "sha256": "66694286888de6de3d32d5a55b68fc808c9f4ce0b6b0ceec563cb006be8a3c82"
+    },
+    {
+      "path": "rp_stage2_promote.m",
+      "lines": 11,
+      "sha256": "48fc3456af2506b0bba506c39f4714ecc160ae121e655a8fd7d64e1d22c86eaa"
+    },
+    {
+      "path": "rp_stage2_receiver.m",
+      "lines": 19,
+      "sha256": "6a9b1c56303aa6abb6cd18d864593a231eb5070e4fa79a1bc49c44263478f3ba"
+    },
+    {
+      "path": "rp_stage2_receiver_signature.m",
+      "lines": 24,
+      "sha256": "8879a051d2206da23979603823e622b1143c10b2365691897c0ad461570d62a4"
+    },
+    {
+      "path": "rp_stage2_receiver_worker.m",
+      "lines": 12,
+      "sha256": "0ca25950576b9738a06209941e7aba0b99842290458c96ea2ef0f8e579018b0b"
+    },
+    {
+      "path": "rp_stage2_run.m",
+      "lines": 20,
+      "sha256": "621393ccb6c37f3dc3f80f94ece699489c0a0d69d3f0e195bc9e0367ae626587"
+    },
+    {
+      "path": "rp_stage2_scene.m",
+      "lines": 10,
+      "sha256": "d3165b14736dec81a2a56f3a3d2415b19a3dfb1615c0e9d45d3f6a1aaf811041"
+    },
+    {
+      "path": "rp_stage2_select.m",
+      "lines": 32,
+      "sha256": "8237b130afbb13c6659290cbfb88fbce8fa16e3515ee44c137a0c38685b41e54"
+    },
+    {
+      "path": "rp_stage2_sensitivity.m",
+      "lines": 40,
+      "sha256": "8338707ebb13520a7d6d0ffbc635560ec83faeb2b2d50753e79db884650477cc"
+    },
+    {
+      "path": "rp_stage2_signature.m",
+      "lines": 18,
+      "sha256": "d6ec00cd7e0531e65b7fd64bebd4a8d1a60721015bb4374bfece3c61c5f44d1b"
+    },
+    {
+      "path": "rp_stage2_sort_bank.m",
+      "lines": 9,
+      "sha256": "f08141f495e13dc76a3dc04c0070182abfaa326fcb0d6297972129bea700d940"
+    },
+    {
+      "path": "rp_stage2_turbulence_scan.m",
+      "lines": 36,
+      "sha256": "7e9ade780d4b4c4d380272920687c587f3ecb8c6b469433054c909a360794ec6"
+    },
+    {
+      "path": "rp_stage2_validate.m",
+      "lines": 123,
+      "sha256": "58f4f8deabe69b164894ce551a83e38ea8014ba95949360abeaf3c1f2c013ce9"
+    },
+    {
+      "path": "rp_stage2_validate_adaptive.m",
+      "lines": 41,
+      "sha256": "c335d586e6cb2c29c66dfb3b42bd9b29416975ab2ca502b1a56bad4633443d76"
+    },
+    {
+      "path": "rp_stage2_wave.m",
+      "lines": 31,
+      "sha256": "412cebc865156b0801028122e9fd7648120c4eae199cdacb2eebc3cc12369e80"
+    },
+    {
+      "path": "rp_stage2_width_jitter.m",
+      "lines": 43,
+      "sha256": "f5f8d43b39758cf2d88326d8847a4b14d8ae3d9210aa99081d3f8571bd04addd"
+    },
+    {
+      "path": "rp_stage2_worker_refresh.m",
+      "lines": 5,
+      "sha256": "e085488a095662c9ad6e92037f4246f31e82e96923d2bfe20707e21045abd322"
+    },
+    {
+      "path": "rp_study_check.m",
+      "lines": 36,
+      "sha256": "5c5868c1fe3e5b5225d460e8916930934bbfbd8449e523c8fa4f54d5bc23ea08"
+    },
+    {
+      "path": "rp_study_config.m",
+      "lines": 4,
+      "sha256": "3090bc75ba30dfd522e3e13e0c8a308eab8860cd42793c21ba0b264d7790b625"
+    },
+    {
+      "path": "rp_study_optical_check.m",
+      "lines": 37,
+      "sha256": "de92197a39ab21b1c03f67069662514f3eb5b202150d988a2b5c6fd578da9999"
+    },
+    {
+      "path": "rp_study_progress.m",
+      "lines": 14,
+      "sha256": "b1e7cced004c5f8de4cc6406cc3c4dd1b196ffb56dd38b15a368748172e6ba1c"
+    },
+    {
+      "path": "rp_study_scene.m",
+      "lines": 12,
+      "sha256": "665fe0a29d92d521f4ad0699e56f72aa64a3204f489e483831828436d2d8ef8f"
+    },
+    {
+      "path": "rp_study_validate.m",
+      "lines": 5,
+      "sha256": "378a2f3d45d5764a7b929db91d46ec704ecbdfacdb8f76bd42d157f12d57241a"
+    },
+    {
+      "path": "rp_trace.m",
+      "lines": 31,
+      "sha256": "00da4cfb4d7b2295cd6f17c5c218c0363d162306ea6568c6f5abfb1aaa871866"
+    },
+    {
+      "path": "rp_turbulence.m",
+      "lines": 47,
+      "sha256": "d78c69ad717ffeb751b66a0b7160053cde8825694b4eafee95454734c602f7e6"
+    },
+    {
+      "path": "rp_validate.m",
+      "lines": 8,
+      "sha256": "eff3e7463b8d9129e2fe074d893d77ee6525c09492202fed4ab6b2710c78c5fe"
+    },
+    {
+      "path": "rp_vertical_command.m",
+      "lines": 47,
+      "sha256": "b5686a217f724f8fafe9f2ee25eac77822a583417eba05aa90eff5ca02404271"
+    },
+    {
+      "path": "rp_wave.m",
+      "lines": 233,
+      "sha256": "bf0555f725197e97b2c91a39f679cc957776a947adf9117873cb6a60bedfcf78"
+    },
+    {
+      "path": "rp_zero_phase.m",
+      "lines": 15,
+      "sha256": "a35e3950a4822f42b4fd7f34ba8f409c10cb28cb6244557da06bff3b7c8b6aa8"
+    },
+    {
+      "path": "run_fig12_revision.m",
+      "lines": 5,
+      "sha256": "3490b46accb2361558daa020e2a4568636ab6a0d4ce7577f87a1ca2840b7c168"
+    },
+    {
+      "path": "run_fig1_revision.m",
+      "lines": 6,
+      "sha256": "93cb7cba839f480fa81a4483e032fa01a995835ae3351020049c8a21509d647b"
+    },
+    {
+      "path": "run_ris_phase.m",
+      "lines": 4,
+      "sha256": "800a61a9078ce60be16e2f00689ca8876c0e69473a38939897398edcc5e81487"
+    }
+  ],
+  "docLines": 1613,
+  "sourceUnchanged": true,
+  "physicsTestsCSV": "physics_tests.csv",
+  "formatChecks": [
+    "unique consecutive equation tags 1-121",
+    "balanced display-math delimiters",
+    "balanced math braces",
+    "balanced inline-math delimiters",
+    "balanced code fences",
+    "Typora dollar delimiters",
+    "all 129 sources indexed"
+  ]
+}

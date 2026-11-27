@@ -1,0 +1,16 @@
+{
+  "haloMaxErrorWm2": 0.0,
+  "sumMaxErrorWm2": 1.74860126378462e-15,
+  "scatterPowerErrorW": 2.16840434497101e-18,
+  "status": "passed",
+  "candidate_count": 93,
+  "unchanged_figures": 16,
+  "unchanged_data_tables": 22,
+  "removed_code": [
+    "RIS_phase/rp_rx_complex_field.m"
+  ],
+  "modified_baseline_files": [
+    "RIS_phase/rp_study_report.m",
+    "RIS_phase/MODEL_AND_FORMULAS.md"
+  ]
+}

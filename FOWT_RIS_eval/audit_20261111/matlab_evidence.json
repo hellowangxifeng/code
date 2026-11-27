@@ -1,0 +1,525 @@
+{
+  "matlabVersion": "24.2.0.2712019 (R2024b)",
+  "nominalGeometry": {
+    "rotation": [
+      [
+        0.999995845657008,
+        5.466280772637637E-5,
+        0.0028819577899204005
+      ],
+      [
+        -3.3881317890172014E-21,
+        0.9998201702740187,
+        -0.018963836986020218
+      ],
+      [
+        -0.0028824761448156704,
+        0.018963758203736931,
+        0.999816016678101
+      ]
+    ],
+    "pRis": [
+      -1.1161785568474143E-5,
+      7.344669749632349E-5,
+      -0.033400873287734216
+    ],
+    "rxDesired": [
+      1.7657792330729863E-5,
+      -0.00011619167236387868,
+      4.9765972868790467
+    ],
+    "rxPlaneZ": 4.9765972868790467,
+    "incidenceDeg": 59.018689520770678
+  },
+  "config": {
+    "lambda": 5.32E-7,
+    "sourcePowerW": 1,
+    "nWater": 1.33,
+    "nGlass": 1.5,
+    "nAir": 1,
+    "apertureM": [
+      0.0144,
+      0.0144
+    ],
+    "device": {
+      "electrodeWidthM": 7E-7,
+      "electrodeGapM": 3E-7,
+      "electrodePitchM": 1E-6,
+      "maxAngleDeg": 15.426381422694531,
+      "angleStepDeg": 0.021,
+      "limitShape": "box"
+    }
+  },
+  "curvature1": {
+    "maxHAsymmetry": 0.042616467187870807,
+    "gradientBudgetViolationUnits": 403,
+    "violationPowerFraction": 8.5366445855510547E-5,
+    "maxExcessGradient": 0.00050203857590946921,
+    "reportedControlledPowerFraction": 1
+  },
+  "curvature2": {
+    "maxHAsymmetry": 0.003716937098209889,
+    "gradientBudgetViolationUnits": 0,
+    "violationPowerFraction": 0,
+    "maxExcessGradient": 0,
+    "reportedControlledPowerFraction": 1
+  },
+  "directionScale": {
+    "gradientDifference": 0,
+    "maxPistonPhasorDifference": 1.9999997415433712
+  },
+  "point": {
+    "requestedXY": [
+      3.5051950606571487,
+      -5.8227790376648647
+    ],
+    "actualCentroidXY": [
+      3.5077249958895651,
+      -5.8242856066328681
+    ],
+    "centroidErrorM": 0.0029445411078082477,
+    "exactPointReachablePower": 0.91809819929380865,
+    "reportedControlledPowerFraction": 1
+  },
+  "originalReceiver": {
+    "reachablePowerFraction": 0,
+    "distanceFromProductionSpotM": 6.2523376482592949,
+    "distanceFromImprovedSpotM": 6.7962983486347657
+  },
+  "motionProbePathExists": false,
+  "hydro": {
+    "massMatrixSize": [
+      6,
+      6
+    ],
+    "stiffnessDiagonal": [
+      14479.56,
+      1729.8057992617069,
+      1729.8057992617069,
+      0,
+      0,
+      0
+    ],
+    "radiationDampingSize": [
+      3,
+      122
+    ],
+    "addedMass": [
+      444.26189139088774,
+      29.587607287643497,
+      29.587607287643511
+    ]
+  },
+  "cachedFootprintFields": [
+    "radiusM",
+    "areaM2",
+    "coverageFraction",
+    "thresholdWm2",
+    "thresholdMask",
+    "thresholdAreaM2",
+    "radialRadiusM",
+    "radialCoverageFraction",
+    "centerXY",
+    "centroidXY",
+    "mapPowerW",
+    "searchedReceiverCenters",
+    "receivedPowerW",
+    "receivedPowerEvaluated",
+    "receiverApertureInWindow",
+    "receiverApertureRadiusPixels",
+    "thresholdTouchesWindowEdge",
+    "windowBoundsXY",
+    "thresholdBoundsXY",
+    "detectorRefinements",
+    "pixelSizeM",
+    "radiusPixels",
+    "resolutionValidated"
+  ],
+  "savedImproved": {
+    "target": [
+      0.41670314085423321,
+      -0.69134064545100693,
+      0.59025977700466947
+    ],
+    "center": [
+      3.5051950606571487,
+      -5.8227790376648647
+    ],
+    "mapPowerW": 0.068966795767942735,
+    "maxHAsymmetry": 0.042616467187870807
+  },
+  "fftLowSampleRate": {
+    "inputAmplitude": 0.01,
+    "reconstructedAmplitude": 0.02,
+    "rmsError": 0.0070710678118654719
+  },
+  "staticAnalysis": [
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\atlas_panel.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\atlas_pchip.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\atlas_save.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\atlas_style.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig01_flow.m",
+      "issues": {
+        "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+        "fix": 1,
+        "line": 58,
+        "column": [
+          16,
+          17
+        ]
+      }
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig02_slope.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig03_slope.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig05_link.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig06_spots.m",
+      "issues": [
+        {
+          "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+          "fix": 1,
+          "line": 48,
+          "column": [
+            33,
+            36
+          ]
+        },
+        {
+          "message": "赋给变量的值可能未使用。请考虑改用 ~ 替换该变量。",
+          "fix": 1,
+          "line": 58,
+          "column": [
+            2,
+            3
+          ]
+        },
+        {
+          "message": "赋给变量的值可能未使用。请考虑改用 ~ 替换该变量。",
+          "fix": 1,
+          "line": 58,
+          "column": [
+            5,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig07_motion.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig08_distance.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig09_turb.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig10_dynamic.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig11_conditions.m",
+      "issues": {
+        "message": "赋给变量的值可能未使用。",
+        "fix": 0,
+        "line": 7,
+        "column": [
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig14_centroid.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig16_incidence.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig17_aperture.m",
+      "issues": {
+        "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+        "fix": 1,
+        "line": 1,
+        "column": [
+          25,
+          25
+        ]
+      }
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig18_op.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig19_aber.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig20_distance_turb.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig21_delay.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\fig22_update.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\figure_atlas_matlab\\make_all.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\src\\fx_motion_from_experiment.m",
+      "issues": {
+        "message": "要提高性能，请使用 'isscalar' 而不是长度比较。",
+        "fix": 1,
+        "line": 27,
+        "column": [
+          8,
+          22
+        ]
+      }
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\src\\fx_phase_design.m",
+      "issues": [
+        {
+          "message": "赋给变量的值可能未使用。",
+          "fix": 0,
+          "line": 38,
+          "column": [
+            1,
+            4
+          ]
+        },
+        {
+          "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+          "fix": 1,
+          "line": 113,
+          "column": [
+            46,
+            46
+          ]
+        },
+        {
+          "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+          "fix": 1,
+          "line": 113,
+          "column": [
+            48,
+            48
+          ]
+        },
+        {
+          "message": "赋给变量的值可能未使用。",
+          "fix": 0,
+          "line": 115,
+          "column": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\src\\fx_wave_from_gauge.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\export_nominal.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_aperture.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_case.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_centroid.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_cmd.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_coh.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_curv.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_curv2.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_damp.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_err.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_feasible.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_improved.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_land.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_measured_wave.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_model.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_motion_bridge.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_nat.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_pareto.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_phase_res.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_power.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_pw.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_radial.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_sea_rao.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_sea_rao2.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_sea_results.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_sign.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_speed.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_wave.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\tools\\probe_wave_bridge.m",
+      "issues": []
+    },
+    {
+      "file": "C:\\Users\\Spidey\\Desktop\\code\\FOWT_RIS_eval\\浮式平台六自由度实验数据\\FOWT Platform Testing\\MainCode.m",
+      "issues": [
+        {
+          "message": "如果您要对标量值进行操作，请考虑使用 'str2double' 以提高性能。",
+          "fix": 0,
+          "line": 28,
+          "column": [
+            13,
+            19
+          ]
+        },
+        {
+          "message": "如果您要对标量值进行操作，请考虑使用 'str2double' 以提高性能。",
+          "fix": 0,
+          "line": 29,
+          "column": [
+            13,
+            19
+          ]
+        },
+        {
+          "message": "变量的大小似乎在(脚本内的)每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+          "fix": 0,
+          "line": 31,
+          "column": [
+            5,
+            9
+          ]
+        },
+        {
+          "message": "如果您要对标量值进行操作，请考虑使用 'str2double' 以提高性能。",
+          "fix": 0,
+          "line": 33,
+          "column": [
+            22,
+            28
+          ]
+        },
+        {
+          "message": "变量的大小似乎在(脚本内的)每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+          "fix": 0,
+          "line": 34,
+          "column": [
+            5,
+            17
+          ]
+        }
+      ]
+    }
+  ]
+}

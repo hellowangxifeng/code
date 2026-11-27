@@ -1,0 +1,16 @@
+addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))),'sea_wave'));
+p=get_default_RIS_params(); p.duration=1; p.plot=false;
+o=RIS_float(p);
+fprintf('draft %.6f\n',o.draft);
+disp(o.mass);
+disp('stiffnessMatrix'); disp(o.stiffnessMatrix);
+disp('Ainf [heave pitch roll]'); disp(o.radiationModel.infiniteAddedMass(:));
+disp('radiation fit rel rms'); disp(o.radiationModel.relativeImpedanceRmsError(:));
+m=o.mass.total; A=o.radiationModel.infiniteAddedMass; K=o.stiffnessMatrix;
+fprintf('heave Tn with Ainf %.4f s\n',2*pi/sqrt(K(3,3)/(m+A(1))));
+fprintf('pitch Tn with Ainf %.4f s\n',2*pi/sqrt(K(5,5)/(o.rigidBodyMassMatrix(5,5,1)+A(2))));
+fprintf('roll  Tn with Ainf %.4f s\n',2*pi/sqrt(K(4,4)/(o.rigidBodyMassMatrix(4,4,1)+A(3))));
+disp('responseAmplitudeOperator6 size'); disp(size(o.responseAmplitudeOperator6));
+f=o.hydroFrequencyHz; RAO=o.responseAmplitudeOperator6;
+[~,i3]=max(RAO(3,:)); [~,i4]=max(RAO(4,:)); [~,i5]=max(RAO(5,:));
+fprintf('RAO peak heave f=%.4f Hz (%.3f) ; roll f=%.4f (%.3f); pitch f=%.4f (%.3f)\n',f(i3),RAO(3,i3),f(i4),RAO(4,i4),f(i5),RAO(5,i5));

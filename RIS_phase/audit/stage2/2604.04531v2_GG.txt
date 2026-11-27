@@ -1,0 +1,190 @@
+PAGE 2
+either the FSO link or the RF link, but not simultaneously 
+through both. 
+A. Free space environment: In FSO links, the received 
+signal intensity experiences fluctuations due to atmospheric 
+turbulence, which arises from variations in the refractive 
+index caused by temperature and humidity changes. These 
+fluctuations lead to irradiance fading, typically modeled 
+using the Gamma–Gamma (G-G) distribution, which has 
+been shown to be accurate for both moderate and strong 
+turbulence conditions [3]. To simplify the analysis and 
+emphasize the dominant impact of turbulence, perfect 
+transmitter–receiver alignment is assumed, and pointing 
+errors as well as other secondary impairments are neglected 
+[3]. Under this assumption, the instantaneous SNR of the 
+FSO link can be expressed as:  𝛾𝛾𝐹𝐹𝐹𝐹𝐹𝐹= γതFSO|𝑔𝑔𝑠𝑠𝑠𝑠|2, where γതFSO  
+denotes the average SNR of the link, and 𝑔𝑔𝑠𝑠𝑠𝑠 represents the 
+fading coefficient of the optical irradiance. The CDF of the 
+SNR of the FSO channel is given in [3]: 
+𝐹𝐹𝛾𝛾𝐹𝐹𝐹𝐹𝐹𝐹(𝛾𝛾) =
+2𝛼𝛼+𝛽𝛽−2
+𝜋𝜋𝜋𝜋(𝛼𝛼)𝛤𝛤(𝛽𝛽) 𝐺𝐺1,5
+4,1 ൭𝛼𝛼2𝛽𝛽2𝛾𝛾
+16𝛾𝛾̅𝐹𝐹𝐹𝐹𝐹𝐹
+ቤ
+1
+𝛼𝛼
+2 , 𝛼𝛼+ 1
+2
+, 𝛽𝛽
+2 , 𝛽𝛽+ 1
+2
+, 0൱ 
+(1) 
+𝛼𝛼= ቎𝑒𝑒𝑒𝑒𝑒𝑒 ቌ
+0.49𝜎𝜎𝑟𝑟
+2
+൫1 + 1.11𝜎𝜎𝑟𝑟
+12/5൯
+7/6ቍ−1቏
+−1
+, 𝛽𝛽= ቎𝑒𝑒𝑒𝑒𝑒𝑒 ቌ
+0.51𝜎𝜎𝑟𝑟
+2
+൫1 + 0.69𝜎𝜎𝑟𝑟
+12/5൯
+5/6ቍ−1቏
+−1
+.    
+The key parameters of the G-G model are the scintillation 
+parameters 𝛼𝛼 and 𝛽𝛽, which are determined from the Rytov 
+variance 𝜎𝜎r
+2 = 1.23𝐶𝐶𝑛𝑛
+2𝑘𝑘7/6𝑑𝑑sd
+11/6 . The Rytov variance 
+characterizes the strength of turbulence-induced fluctuations 
+and depends on the turbulence strength parameter 𝐶𝐶𝑛𝑛
+2, the 
+optical wavenumber 𝑘𝑘= 2𝜋𝜋/𝜆𝜆FSO, dsd represents the source-
+to-destination distance link. 
+B- Backup RF Channel Model:  In cases where the quality 
+of the FSO link falls below a predefined SNR threshold, the 
+system switches to the RF link as a backup, as shown in eq. 
+(12) of [3]. In this scenario, the received signal at the 
+destination is composed of the direct transmission from the 
+source as well as the reflected components from the RIS, 
+which can be expressed as 𝑦𝑦r = √𝑃𝑃(ℎsd + 𝐡𝐡sr
+𝐻𝐻Θ𝐡𝐡rd)𝑥𝑥+ 𝑤𝑤. 
+The direct channel ℎ𝑠𝑠𝑠𝑠, the source-RIS channel ℎ𝑠𝑠𝑠𝑠, and the 
+RIS-destination channel ℎ𝑟𝑟𝑟𝑟 are modeled as independent 
+Rayleigh fading processes, where λ𝑠𝑠𝑠𝑠, λ𝑠𝑠𝑠𝑠, and λ𝑟𝑟𝑟𝑟 denote 
+the large-scale fading effects of the corresponding links. The 
+large-scale fading coefficients follow the 3GPP Urban Micro 
+(UMi) path-loss model, which accounts for antenna gains and 
+propagation distance, and are given by [3]: 
+𝜆𝜆𝑙𝑙= 𝐺𝐺𝑡𝑡+ 𝐺𝐺𝑟𝑟−35.1 −36.7𝑙𝑙𝑙𝑙𝑙𝑙10 (𝑑𝑑𝑖𝑖),   𝑙𝑙= {𝑠𝑠𝑠𝑠, 𝑠𝑠𝑠𝑠, 𝑟𝑟𝑟𝑟} 
+(2) 
+ The RIS is represented by a diagonal phase-shift matrix, 
+where each reflecting element controls the amplitude and 
+introduces a controllable phase shift. By synchronizing the 
+phases of the reflected signals with the direct transmission, 
+constructive interference is achieved, thus enhancing the 
+received SNR. Under this ideal condition, the effective SNR 
+depends on the amplitude of the direct channel and the 
+product of the amplitudes of the S-RIS and RIS-D channels. 
+The effective SNR of the RF link can be expressed as [3]: 
+𝛾𝛾RF = 𝛾𝛾̅RF|ℎsd + 𝐡𝐡sr
+𝐻𝐻Θ𝐡𝐡rd|2, 
+(3) 
+The optimal phase of the n-th RIS element is given by: 
+𝜃𝜃𝑛𝑛
+∗= ∠ℎ𝑠𝑠𝑠𝑠−∠ℎ𝑠𝑠𝑟𝑟𝑛𝑛−∠ℎ𝑟𝑟𝑛𝑛𝑑𝑑, = 𝜃𝜃sd −൫𝜃𝜃srn + 𝜃𝜃rnd൯. 
+(4) 
+By jointly optimizing all RIS phase shifts, the maximum 
+achievable SNR is: 
+𝛾𝛾RF = 𝑚𝑚𝑚𝑚𝑚𝑚
+𝜃𝜃1,…,𝜃𝜃𝑁𝑁 𝛾𝛾̅RF|ℎsd + 𝐡𝐡sr
+𝐻𝐻Θ𝐡𝐡rd|2, = 
+𝑚𝑚𝑚𝑚𝑚𝑚
+𝜃𝜃1,…,𝜃𝜃N 𝛾𝛾̅RF ቮ|ℎsd|𝑒𝑒𝑗𝑗𝜃𝜃sd + ෍ 
+𝑁𝑁
+𝑛𝑛=1
+|ℎsrn|. 𝛽𝛽n. |ℎrnd|𝑒𝑒𝑗𝑗൫𝜃𝜃n+𝜃𝜃srn+𝜃𝜃rnd൯ቮ
+2
+, 
+(5) 
+= 𝛾𝛾̅RF อ𝛼𝛼sd + ෍ 
+𝑁𝑁
+𝑛𝑛=1
+𝛼𝛼srn𝛽𝛽n𝛼𝛼rndอ
+2
+, 𝛾𝛾RF = 𝛾𝛾̅RF อ𝛼𝛼sd + ෍ 
+𝑁𝑁
+𝑛𝑛=1
+𝛼𝛼srn𝛼𝛼rndอ
+2
+ 
+  
+This expression provides the cumulative distribution function 
+(CDF) of the RF link SNR under optimal RIS phase 
+alignment [3], [9]:  𝐹𝐹𝛾𝛾𝑅𝑅𝑅𝑅(𝛾𝛾) = 1 −
+𝛤𝛤൬𝑘𝑘𝑜𝑜,
+ඥ𝛾𝛾
+𝑤𝑤𝑜𝑜൰
+𝛤𝛤(𝑘𝑘𝑜𝑜) , where Γ(𝑠𝑠, 𝑥𝑥) is the 
+upper incomplete Gamma function. The parameters are 
+defined as  𝑘𝑘𝑜𝑜=
+൫ඥ𝜆𝜆sd𝜋𝜋+2𝑁𝑁𝑁𝑁𝑁𝑁൯
+2
+4𝜆𝜆sd+4𝑁𝑁𝑁𝑁𝑤𝑤2−𝜆𝜆sd𝜋𝜋, 𝑤𝑤𝑜𝑜= ඥγതRF ൬
+4𝜆𝜆sd+4𝑁𝑁𝑁𝑁𝑤𝑤2−𝜆𝜆sd𝜋𝜋
+2൫ඥ𝜆𝜆sd𝜋𝜋+2𝑁𝑁𝑁𝑁𝑁𝑁൯൰ 
+, 𝑘𝑘=
+𝜋𝜋2
+16−𝜋𝜋2 , and 𝑤𝑤= ቀ4 −
+𝜋𝜋2
+4 ቁඥ𝜆𝜆sr𝜆𝜆rd/𝜋𝜋. The OP of the mixed 
+FSO/ RIS-assisted RF system operating under a hard-
+switching scheme is derived as expressed in eq. (14) of [3]. 
+C. Underwater environment: The O-RIS-assisted UWOC 
+system comprises N reflecting elements, with the transmitted 
+signal x having an average power of 𝑃𝑃𝑡𝑡. The received signal 
+is subject to the combined effects of underwater path loss, 
+turbulence-induced fading, and pointing errors arising from 
+transmitter and O-RIS jitter. Consequently, the received 
+UWOC signal at the DF relay can be expressed as [4]: 
+𝑦𝑦= ෍ℎ𝑙𝑙𝑛𝑛ℎ𝑡𝑡𝑛𝑛ℎ𝑝𝑝𝑛𝑛𝜌𝜌𝑛𝑛𝑒𝑒𝜃𝜃𝑛𝑛𝑥𝑥
+𝑁𝑁
+𝑛𝑛=1
++ 𝑛𝑛0, 
+(6) 
+where ℎ𝑡𝑡𝑛𝑛denotes the turbulence-induced fading, ℎ𝑝𝑝𝑛𝑛
+represents the fading associated with pointing errors, and 
+𝜌𝜌𝑛𝑛∈[0,1] is the reflection coefficient of the n-th O-RIS 
+element. Each fading coefficient is expressed as the product 
+of two independent components, i.e., ℎ𝑡𝑡𝑛𝑛= ℎ𝑡𝑡𝑠𝑠𝑟𝑟𝑛𝑛. ℎ𝑡𝑡𝑟𝑟𝑛𝑛𝑑𝑑, 
+capturing the channel impairments from the source to the O-
+RIS and from the O-RIS to the destination, respectively. 
+Furthermore, for the ideal case of phase optimization in O-
+RIS−assisted UWOC links, it is assumed that the optimal 
+phase shift of the n-th element satisfies 𝜃𝜃𝑛𝑛= −൫𝜃𝜃𝑠𝑠𝑟𝑟𝑛𝑛+ 𝜃𝜃𝑟𝑟𝑛𝑛𝑑𝑑൯, 
+ensuring coherent signal combination at the receiver [3]-[4]. 
+Given the negligible physical size and the fact that all of the 
+O-RIS elements lie on a common plane, the pointing error can 
+be assumed identical for all elements, i.e., ℎ𝑝𝑝𝑛𝑛= ℎ𝑝𝑝. 
+Likewise, due to the uniform link distances and the small 
+spacing between elements, the path loss is also identical 
+across all elements, ℎ𝑙𝑙𝑛𝑛= ℎ𝑙𝑙 [4]. In underwater optical 
+communication, path loss mainly results from absorption and 
+scattering caused by water molecules, suspended particles, 
+phytoplankton, 
+and 
+dissolved 
+organic 
+matter. 
+This 
+phenomenon is commonly modeled using Beer–Lambert’s 
+law [5] as ℎ𝑙𝑙= 𝑒𝑒ൣ−𝑐𝑐൫𝐿𝐿𝑠𝑠𝑟𝑟𝑛𝑛+𝐿𝐿𝑟𝑟𝑛𝑛𝑑𝑑൯൧, where 𝑐𝑐 denotes the 
+extinction coefficient (𝑚𝑚−1), and 𝐿𝐿𝑠𝑠𝑟𝑟𝑛𝑛 and 𝐿𝐿𝑟𝑟𝑛𝑛𝑑𝑑 represent the 
+distances from the source to the O-RIS and from the O-RIS 
+to the destination, respectively.  The cascaded turbulence 
+fading coefficient, ℎ𝑡𝑡𝑛𝑛, follows a Gamma–Gamma (G–G) 
+distribution, which accurately captures the combined 
+turbulence effects of both the source-to-O-RIS and O-RIS-to-
+destination links. Considering an O-RIS with N elements, the 
+sum of independent G–G random variables (RVs) can be 
+approximated by a new G–G RV whose probability density 
+function (PDF) is given in Eq. (8) of [5], and its parameters 
+are defined in Eqs. (8)-(9) of [5]. These parameters are 
+derived from the Rytov variance of each link, assuming that 

@@ -1,0 +1,43 @@
+PASS  dataset has 9 regular-wave records  n=9
+PASS  condition table has 9 rows
+PASS  record 0 uniform 100 Hz and finite
+PASS  record 1 uniform 100 Hz and finite
+PASS  record 2 uniform 100 Hz and finite
+PASS  record 3 uniform 100 Hz and finite
+PASS  record 4 uniform 100 Hz and finite
+PASS  record 5 uniform 100 Hz and finite
+PASS  record 6 uniform 100 Hz and finite
+PASS  record 7 uniform 100 Hz and finite
+PASS  record 8 uniform 100 Hz and finite
+PASS  tilt rms in 0.14-1.10 deg  0.138-1.105 deg
+PASS  decay table has 3 modes
+PASS  heave decay ~2.16 s
+PASS  1600 units
+PASS  production commands all at the corner  command=[-15.414  15.414]
+PASS  power-weighted target covers >=99.9%  q*=[ 0.42 -0.69], coverage=0.9994
+PASS  target angle is 53.9 +/- 0.5 deg  53.88 deg
+PASS  current centroid matches MATLAB  Python [ 3.1834675  -5.38208447], MATLAB [ 3.1816062  -5.38242243]
+PASS  collimated centroid matches MATLAB  Python [ 3.50500408 -5.82149186], MATLAB [ 3.50519506 -5.82277904]
+PASS  production 5 cm nominal 4.5-4.7 mW  4.570 mW
+PASS  collimated 5 cm nominal 14.5-15.3 mW  14.822 mW
+PASS  nominal gain >= 5 dB  5.11 dB
+PASS  replay has 45 rows
+PASS  production mean 4.4-4.7 mW  4.52
+PASS  point-adaptive mean 14.7-15.0 mW  14.90
+PASS  point-adaptive availability 1.0
+PASS  frozen collimated worst availability < 0.7  0.59
+PASS  point-adaptive centroid < 5 mm  2.73 mm
+PASS  total mean gain 5.0-5.4 dB  5.18 dB
+PASS  total p10 gain >= 5.3 dB  5.50 dB
+PASS  first-order predictor halves 100 ms error  ZOH 113.3 mm, linear 59.6 mm
+PASS  linear predictor loss at 100 ms > -1 dB  -0.67 dB
+PASS  0.05 deg noise loss < 0.1 dB  -0.036 dB
+PASS  RIS model pitch > 3 deg under 45 mm/0.8 Hz  3.76 deg
+PASS  model replay static availability < 0.5  0.4222888555722139
+PASS  model replay point > 14 mW  14.714708791588347
+
+ALL CHECKS PASSED
+
+STDERR:
+
+EXIT CODE: 0

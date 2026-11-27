@@ -1,0 +1,166 @@
+PAGE 4
+WU et al.: A2M-KS: ADAPTIVE ATTENTION-BASED MADRL STRATEGY WITH KOCH SNOWFLAKE CLUSTER STRUCTURE
+11635
+4) Pointing Error: In a point-to-point LOS communication
+link, pointing accuracy is a critical factor determining link
+performance and reliability [37]. However, due to limitations
+in control precision, speed constraints, or wind speed, the UAV
+may deviate from the light spot center, resulting in pointing
+errors, as illustrated in Fig. 4. We assume that the beam follows
+a Gaussian distribution during propagation, where the mini-
+mum beam waist radius ω0 determines the beam collimation
+degree and far-ﬁeld divergence angle, thereby affecting the
+receiver’s ability to capture the signal, as described below.
+ω0 =
+λ0
+Ψhalfπn0
+,
+(11)
+where λ0 represents the beam wavelength, and Ψhalf denotes
+the divergence angle half-width.
+Furthermore, the distance dcc between the CUAV and the
+light spot center, relative to the size of the beam waist radius
+ω(z), determines the received optical intensity and power, as
+shown below.
+ω(z) = ω0
+s
+1 +
+ z
+zR
+2
+,
+(12)
+where z represents the total propagation distance, and zR
+denotes the Rayleigh distance. When z ≫zR is considered,
+the far-ﬁeld optical intensity covers a large area with dispersed
+power.
+Therefore, the optical intensity I0 at the light spot cen-
+ter serves as the reference for the intensity distribution, as
+described below.
+I0 =
+2P0
+πω(z)2 ,
+(13)
+where P0 represents the initial power when calculating the
+attenuation due to pointing error. Moreover, since the intensity
+distribution of a Gaussian beam is not uniform but decays
+with dcc according to a Gaussian function, the received optical
+intensity at different distances from the light spot center for
+the CUAV is given as follows [38].
+Ipe = I0 exp
+ 
+−2d2
+cc
+ω(z)2
+!
+.
+(14)
+5) Atmosphere Turbulence: Atmosphere turbulence causes
+intensity ﬂuctuations in the optical signal during transmission
+[39], known as the scintillation effect. The turbulence strength
+is typically represented by the Rytov variance σ2
+R, as shown
+below.
+σ2
+R = 1.23C2
+nk7/6L11/6,
+(15)
+where C2
+n represents the refractive index structure con-
+stant, which is related to turbulence strength. k denotes the
+wavenumber, and L indicates the transmission distance from
+the transmitter to the receiver.
+In this paper, we adopt the log-normal distribution, Rytov
+model, and Gamma-Gamma distribution to describe the optical
+signal intensity ﬂuctuations under weak, moderate, and strong
+Fig. 5. A schematic diagram of the impact of AoA ﬂuctuations.
+turbulence conditions, respectively, corresponding to three dif-
+ferent wind speeds in the subsequent simulation environment,
+as shown below.
+σ2
+I =
+
+
+
+
+
+
+
+
+
+σ2
+R,
+σ2
+R < 1
+f(σR),
+σ2
+R = 1
+1 + 1.20
+σ4/5
+R
+,
+otherwise
+(16)
+where σ2
+I represents the scintillation index, and f(σR) =
+exp
+ 
+0.49σ2
+R
+
+1+1.11σ12/5
+R
+7/6 +
+0.51σ2
+R
+
+1+0.69σ12/5
+R
+5/6
+!
+−1. In summary,
+under the inﬂuence of atmosphere turbulence, the average
+received optical power is given as follows.
+Ptf = P1 · exp(−σ2
+I/2),
+(17)
+where P1 represents the initial power when calculating the
+attenuation due to atmospheric turbulence.
+6) AoA (Angle-of-Arrival) Fluctuations:
+Due to atmo-
+spheric turbulence and pointing errors, the incident angle of
+the received optical beam ﬂuctuates [40], causing the beam’s
+incident angle to deviate from the ideal direction by an angle
+θa, as illustrated in Fig. 5. If the received AoA exceeds the
+range of the ﬁeld of view (FoV), it results in link interruption.
+For a single link, the AoA is deﬁned as follows.
+θa =
+q
+θ2rx + θ2ry,
+(18)
+where θrx and θry represent the horizontal and vertical align-
+ment deviations of the receiver in a single link, as shown
+below.
+
+
+
+
+
+
+
+θrx = arctan
+dx
+f
+
+θry = arctan
+dy
+f
+
+,
+(19)
+where f represents the focal length. dx and dy denote the
+horizontal and vertical distances, respectively, between the
+receiver and the light spot center. If θa > θF oV , the link
+state h(AoA) = 0, resulting in link interruption. Otherwise,
+h(AoA) = 1, and the link remains operational.
+Authorized licensed use limited to: University of Electronic Science and Tech of China. Downloaded on October 01,2026 at 02:24:03 UTC from IEEE Xplore.  Restrictions apply. 
