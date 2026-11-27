@@ -9,6 +9,9 @@
 *.npy
 *.csv
 *.pdf
+# 论文编译所需的插图 PDF 例外（其余论文/参考文献 PDF 仍排除）
+!毕设论文/pic/*.pdf
+!毕设论文/pic/**/*.pdf
 *.gz
 *.zip
 *.7z
