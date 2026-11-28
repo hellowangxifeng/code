@@ -1,19 +1,21 @@
-\chapter{有限宽度光斑整形的RIS相位设计与链路性能增强}
+\chapter{动态海面下RIS辅助水空链路的性能增强}
 \label{chap:phase}
 
-第四章给出了液晶层上的入射复光场和散射光子包。本章研究如何为 1600 个液晶单元分配可实现的相位，使接收平面上的光斑在方向、尺寸和形状上满足通信需求，并评估不同相位方案在接收端随机扰动和湍流衰落下的性能。
+第三章给出了 RIS 的运动模型和相位设计方法，第四章给出了任意相位下接收端的复光场。本章把二者放到同一个动态海况中，研究 RIS 对水空直接链路性能的增强。对每个风速冻结一个海面时刻：同一组海浪谐波同时给出 RIS 的位置与姿态和直达光穿过的粗糙海面，五条链路——无 RIS 直达链路、Steering-only、Flat top、Robust ABER/OP 和 Max mean power——在这一冻结海面下共用同一个接收机，接收机在相同位置以相同的统计规律抖动。
 
-相位设计面临两方面的约束。器件方面，每个单元的相位梯度受偏转角上限和 $0.021^\circ$ 量化网格限制，单元之间存在 10\,mm 的不透光间隙。通信方面，接收孔径存在位置抖动和角度误差：把全部功率聚焦为一个小点可以获得最高的峰值光强，但孔径稍有偏移就会丢失大部分功率；光斑过宽则平均接收功率不足。本章以有限宽度光斑为设计对象，设置明确的最小光斑宽度约束，在平均接收功率、平均误码率和中断概率三类目标下分别选择相位，比较其光斑形态和通信性能。
-
-本章首先介绍静态链路场景与相位约束；然后建立基于能量分位数的光斑输运设计方法，给出从目标落点到可加载相位的反解过程；接着建立 RIS 到接收平面的波动传播模型和接收性能模型；最后给出多组数值结果，分析 RIS 相位方案在不同接收距离、抖动条件、湍流强度和入射角下的性能。
+本章首先给出链路场景与参数，以及无 RIS 直达链路的粗糙海面 MC 模型；然后建立计及位置抖动、角度误差、倾斜有限孔径、有限视场和海洋—大气联合湍流的接收性能模型，给出各方案的选择规则和最优方法的判定准则；接着给出接收平面光强、主条件下的 ABER 与 OP、四种湍流组合以及 4 个接收距离与 3 个风速组合下的结果；最后在静水水平 RIS 条件下分析光斑宽度、接收端扰动和入射角对性能的影响机理。
 
 \section{链路场景与参数设置}
 \label{sec:c5_scene}
 
-本章研究静态水平 RIS（$R=I_3$）下的链路性能，以此分离相位设计本身的作用。水下发射机与 RIS 下表面中心之间的斜程为 10\,m，光轴在水中的入射角为 $40^\circ$，入射面方位角为 $\arctan(-\sqrt2)\approx-54.7^\circ$，即入射面与面板的两个电极轴均不对齐，两轴梯度同时参与偏转。接收平面位于 RIS 上表面上方 $z=5$、7.5 和 10\,m 处。水体为清澈大洋水，主要参数见表\ref{tab:c5_param}。
+对风速 $U\in\{3,9,12\}\,\mathrm{m/s}$，按第三章的运动模型计算 RIS 的六自由度运动，冻结 $t^\ast=15\,\mathrm s$ 时刻的面板位姿 $(R,\mathbf p_b)$ 和海面 $\zeta(X,Y,t^\ast)$。发射机位于静水面板下表面中心斜下方 10\,m 处，静水入射角 $40^\circ$，光轴按式(\ref{eq:c4_track})跟踪冻结时刻的面板中心。接收平面位于静水液晶层中心上方 $z\in\{10,20,30,50\}\,\mathrm m$ 处（式(\ref{eq:c2_zr})），共 12 个“风速—高度”条件，主条件为 $z=30\,\mathrm m$、$U=9\,\mathrm{m/s}$。
+
+接收机的布置遵循 RIS 的器件能力：由于液晶单元的最大偏转角为 $15.414^\circ$，RIS 只能把光送到一个有限的方向锥内。对每个条件，按冻结位姿下各单元的入射切向量由式(\ref{eq:c5_carrier})确定全部单元的公共可达方向，取 $\eta_c=0.03$，接收机中心 $\mathbf x_{\mathrm{RX}}$ 取为液晶层中心沿该方向出射的光线与接收平面的交点，视轴按式(\ref{eq:c2_boresight})指向 RIS 上表面中心。五条链路共用这一接收机，并共用同一组 8192 个位置抖动与角度误差样本，因此各方案之间是成对比较。
+
+四个 RIS 方案的相位都在冻结位姿下按第三章设计，对应理想预测下的预测调相：Steering-only 以全局相位斜坡把光束中心对准接收机；Flat top 和 Robust 以逐单元方向和目标宽度控制光斑的会聚与形状，目标宽度取 4、6、8、10、13、16、20、25、30\,cm 共 9 档；Max mean power 在平顶族和鲁棒族的可行相位中取平均接收功率最大者。每个条件共 19 个 RIS 相位，全部条件共 228 个，每个相位的接收光强都按第四章的复光场模型计算，并由独立 MC 验证（第\ref{sec:c4_validation}节）。无 RIS 直达链路按第\ref{sec:c5_direct}节的 MC 计算。主要参数见表\ref{tab:c5_param}。
 
 \begin{table}[htbp]
-\caption{链路仿真参数}
+\caption{动态海面链路仿真参数}
 \label{tab:c5_param}
 \centering
 \begin{tabular}{ll}
@@ -22,288 +24,34 @@
 \midrule
 波长、参考发射功率、发散参数 & 532\,nm，1\,W，$\vartheta=0.01\,\mathrm{rad}$ \\
 折射率 & $n_w=1.33$，$n_g=1.50$，$n_a=1$ \\
-水体参数 & $a=0.114$，$b=0.037$，$c=0.151\,\mathrm{m^{-1}}$，$g=0.924$ \\
-水下斜程与入射角 & 10\,m，$40^\circ$ \\
-接收距离 & 5，7.5，10\,m \\
-接收孔径半径 & 5\,cm（主研究），3\,cm（逐抖动研究） \\
+水体参数 & 清澈大洋水，$a=0.114$，$b=0.037$，$c=0.151\,\mathrm{m^{-1}}$，$g=0.924$ \\
+水下斜程与静水入射角 & 10\,m，$40^\circ$，发射机跟踪 RIS \\
+海况 & Neumann 方向谱，$U=3,9,12\,\mathrm{m/s}$，风向 $50^\circ$，冻结 $t^\ast=15\,\mathrm s$ \\
+接收距离 & $z=10,20,30,50\,\mathrm m$（主条件 30\,m） \\
+接收孔径半径、视场半角 & 5\,cm，130\,mrad \\
 位置抖动标准差（每轴） & $\sigma_p=80\,\mathrm{mm}$ \\
 角度误差标准差与偏差 & $\sigma_\theta=25\,\mathrm{mrad}$，$\boldsymbol\mu_\theta=(25,0)\,\mathrm{mrad}$ \\
-视场半角 & 240\,mrad（主研究），130\,mrad（固定接收机），90\,mrad（敏感性基准） \\
 响应度、热噪声、中断门限 & 0.5\,A/W，50\,$\mu$A，$\gamma_{\mathrm{th}}=10$ \\
-海洋湍流 & EGG，弱/强两组参数 \\
+海洋湍流 & EGG，弱/强两组参数（表\ref{tab:c5_egg}） \\
 大气湍流 & Gamma-Gamma，弱 $(\alpha,\beta)=(17,16)$，强 $(4.2,1.4)$ \\
-水下MC光子数 & $3\times10^5$ \\
-接收扰动样本数 & 8192（设计），32768（独立验证） \\
-接收面传播网格 & $128\times128$（设计），$192\times192$（加密复核） \\
+RIS 相位 & 每条件 1 个 Steering-only，平顶、鲁棒族各 9 个宽度 \\
+光子数 & 复光场散射晕 $3\times10^5$，RIS 链路 MC 验证 $10^6$，直达 MC $2\times10^6$ \\
+接收扰动样本数 & 8192（五条链路共用） \\
+发射功率范围 & $-10$--90\,dBm，步长 0.5\,dB \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 由式(\ref{eq:c2_pth})，中断功率门限为 $P_{\mathrm{th}}=50\,\mu\mathrm A\times\sqrt{10}/0.5\,\mathrm{A/W}\approx3.16\times10^{-4}\,\mathrm W$。除特别说明外，湍流取弱海洋 EGG 与弱大气 Gamma-Gamma 的组合。
 
-\section{相位方案的器件约束}
-\label{sec:c5_constraint}
+\section{无RIS直达链路的粗糙海面蒙特卡洛模型}
+\label{sec:c5_direct}
 
-\subsection{相位屏的横向动量关系}
+直达链路从同一发射机位姿发射 $2\times10^6$ 个光子包，源分布与第四章式(\ref{eq:c4_source})相同。水中传输按第二章的 MC 步骤进行：自由程按式(\ref{eq:c2_freepath})抽样，每次碰撞权重乘以 $b/c$，方向按 HG 相函数更新，低权重时采用俄罗斯轮盘赌；光子包退回光源平面、总光程超过上限或散射次数超过上限时终止。
 
-由第三章式(\ref{eq:c3_phase})，第 $m$ 个单元在液晶层上加载的相位梯度为 $\nabla\phi_m/k_0=\mathbf b_m+H_m(\boldsymbol\xi-\mathbf r_m)$。按广义 Snell 定律，出射切向量为
-\begin{equation}
-\mathbf q_{\mathrm{out}}(\boldsymbol\xi)=\mathbf q_{\mathrm{in}}(\boldsymbol\xi)+\frac{\nabla\phi_m(\boldsymbol\xi)}{k_0}.
-\label{eq:c5_momentum}
-\end{equation}
-控制指令是相位梯度对应的标定角，实际出射方向由 $\mathbf q_{\mathrm{out}}$ 决定。给定液晶层上的点 $\boldsymbol\xi$ 和出射切向量 $\mathbf q$，光线穿过上层玻璃到达上表面，再进入空气到达接收平面：
-\begin{equation}
-\mathbf r'_t=\left(\boldsymbol\xi+h_o\frac{\mathbf q}{\kappa_g},\ t_g\right),\quad
-\hat{\mathbf d}_a=R\frac{(q_x,q_y,\kappa_a)^{\mathrm T}}{n_a},\quad
-\tau_R=\frac{Z_R-r_{t,Z}}{d_{a,Z}},\quad
-\mathbf r_R=\mathbf r_t+\tau_R\hat{\mathbf d}_a,
-\label{eq:c5_landing}
-\end{equation}
-其中 $\mathbf r_t=\mathbf p_b+R\mathbf r'_t$。式(\ref{eq:c5_landing})要求玻璃和空气中的模式均可传播、$d_{a,Z}>0$ 且上表面出射点位于面板内。记这一映射为 $\mathbf r_R=\operatorname{Landing}(\boldsymbol\xi,\mathbf q)$。
+光子包第一次向上穿过冻结海面 $Z=\zeta(X,Y,t^\ast)$ 时，先由海面起伏的包络界确定搜索区间，再沿路径步进并二分求交点，容差为 2\,$\mu$m。在交点处按式(\ref{eq:c2_vector_snell})作矢量折射并乘以 Fresnel 透射率；$|\mathbf q|\ge n_a$ 时发生全反射，光子包终止；透射光线若在离开波浪层之前再次进入水中（被波峰遮挡），同样终止。反射、全反射、遮挡、吸收、退回和截断的功率分别记账，能量账本的残差用于检查程序的正确性。透射光子包直线传播到接收平面，用与 RIS 链路相同的接收机和样本，按式(\ref{eq:c4_mc_gain})计算捕获增益，视场逐条光线判断。
 
-\subsection{公共可达载波}
-
-不同单元的入射切向量 $\mathbf q_{\mathrm{in},m}$ 不同，每个单元可实现的出射切向量为以 $\mathbf q_{\mathrm{in},m}$ 为中心、半边长 $B_q=n_a\sin(K\Delta\theta)$ 的正方形。若要让所有单元的光会聚到同一区域，光斑中心方向必须落在这些正方形的公共部分内。在每个轴上，排除极小尾部功率后，用加权分位数确定公共区间：
-\begin{equation}
-l_d=Q_{1-\epsilon}\big(q_{\mathrm{in},m,d}-B_q\big),\qquad
-h_d=Q_{\epsilon}\big(q_{\mathrm{in},m,d}+B_q\big),\qquad
-q_{0d}=\operatorname{clip}(0,l_d,h_d),
-\label{eq:c5_carrier}
-\end{equation}
-其中 $Q_p(\cdot)$ 表示以单元弹道功率为权重的 $p$ 分位数，$\epsilon=2.5\times10^{-6}$ 对应最多 $10^{-5}$ 的尾部功率。$\operatorname{clip}(0,l_d,h_d)$ 表示在可达范围内取最接近零的值，即在器件能力范围内使光斑中心尽量接近竖直方向。为了给单元间的落点分散留出梯度余量，再取 $q_{0d}\leftarrow q_{0d}+\eta_c\operatorname{sign}(q_{0d})$，其中 $\eta_c\in\{0,0.012,0.03\}$ 为无量纲的方向余量。由液晶层原点以 $\mathbf q_0$ 出射，按式(\ref{eq:c5_landing})得到光斑中心 $\mathbf x_c$。
-
-\section{基于能量分位数的有限宽度光斑输运设计}
-\label{sec:c5_transport}
-
-\subsection{入射能量的白化与径向分位数}
-
-光斑整形的基本思路是为每个单元指定一个目标落点，使各单元的功率在接收平面上按目标分布排列。由于入射光斑在液晶层上呈椭圆形（斜入射的像散），先对其进行白化。记归一化单元权重 $\omega_m=P_m^{(b)}/\sum_jP_j^{(b)}$，入射能量的均值和协方差为
-\begin{equation}
-\boldsymbol\mu=\sum_m\omega_m\mathbf r_m,\qquad
-\Sigma=\sum_m\omega_m(\mathbf r_m-\boldsymbol\mu)(\mathbf r_m-\boldsymbol\mu)^{\mathrm T},\qquad
-\mathbf v_m=\Sigma^{-1/2}(\mathbf r_m-\boldsymbol\mu).
-\label{eq:c5_whiten}
-\end{equation}
-白化后的坐标 $\mathbf v_m$ 消除了入射光斑的椭圆各向异性。按 $|\mathbf v_m|$ 升序排列，为每个单元赋予能量分位数中点和方位角：
-\begin{equation}
-u_m=\sum_{|\mathbf v_j|<|\mathbf v_m|}\omega_j+\frac{\omega_m}{2},\qquad
-\vartheta_m=\operatorname{atan2}(v_{m,y},v_{m,x}).
-\label{eq:c5_quantile}
-\end{equation}
-$u_m$ 表示以入射光斑中心为圆心、包含该单元在内的能量份额，取值在 $(0,1)$ 内。这样定义的映射保持了单元之间的相对位置：入射能量越靠近中心的单元，其目标落点越靠近光斑中心。
-
-\subsection{三类目标径向分布}
-
-设目标宽度为 $w_t$，单元的目标落点为
-\begin{equation}
-\mathbf x_m^\star=\mathbf x_c+r(u_m)\,(\cos\vartheta_m,\ \sin\vartheta_m),
-\label{eq:c5_target}
-\end{equation}
-其中径向函数 $r(u)$ 是目标径向分布累积分布函数的反函数。本文比较三类目标分布。
-
-（1）均匀平顶圆盘。面积累积分布为 $F(r)=r^2/w_t^2$，故
-\begin{equation}
-r_{\mathrm{flat}}(u)=w_t\sqrt u,\qquad
-I_{\mathrm{flat}}^{\mathrm{ideal}}(r)=\frac{P}{\pi w_t^2}\mathbf 1_{r\le w_t}.
-\label{eq:c5_flat}
-\end{equation}
-平顶光斑在半径 $w_t$ 内光强均匀，孔径在平顶区域内移动时接收功率不变，但越过边缘后功率骤降。
-
-（2）圆高斯参考。理想光强 $I\propto e^{-2r^2/w_t^2}$，径向累积分布为 $1-e^{-2r^2/w_t^2}$，故
-\begin{equation}
-r_{\mathrm G}(u)=w_t\sqrt{-\frac12\ln(1-u)}.
-\label{eq:c5_gauss}
-\end{equation}
-高斯候选还将偏移量乘以 $S_G=\Sigma^{1/2}/\sqrt{\operatorname{tr}\Sigma/2}$，保留入射光斑的像散形状，作为“不主动圆化”的参照。
-
-（3）鲁棒光斑族。采用径向 Weibull 型累积分布 $F(r)=1-e^{-(r/s_R)^p}$：
-\begin{equation}
-s_R=\frac{w_t}{\sqrt{2\Gamma(1+2/p)}},\qquad
-r_{\mathrm R}(u)=s_R\left[-\ln(1-u)\right]^{1/p},\qquad p=1.6.
-\label{eq:c5_robust}
-\end{equation}
-对应的径向概率密度和理想面功率密度为
-\begin{equation}
-f_r(r)=\frac{p}{s_R}\Big(\frac{r}{s_R}\Big)^{p-1}e^{-(r/s_R)^p},\qquad
-\frac{I_{\mathrm R}^{\mathrm{ideal}}(r)}{P}=\frac{f_r(r)}{2\pi r}=\frac{p}{2\pi s_R^p}r^{p-2}e^{-(r/s_R)^p}.
-\label{eq:c5_robust_density}
-\end{equation}
-$p<2$ 时，面功率密度含有 $r^{p-2}$ 因子，中心光强高于同宽度的高斯分布，外围尾部衰减慢于高斯分布。中心的高光强保证孔径对准时的接收功率，缓慢衰减的尾部保证孔径大幅偏离时仍能收集到一定功率，这种“尖峰加宽尾”的形态在抖动条件下降低了零功率附近的概率质量，有利于降低误码率和中断概率。
-
-式(\ref{eq:c5_robust})的尺度归一使三类分布具有相同的理想二阶矩宽度：$\mathbb E[r^2]=s_R^2\Gamma(1+2/p)=w_t^2/2$，即 $\sqrt{2\mathbb E[r^2]}=w_t$。圆高斯和均匀圆盘同样满足这一定义。由于有限单元数、单元间隙、角度量化、梯度饱和、衍射与干涉的影响，实际光斑偏离理想分布，最终宽度以实际传播得到的光强计算。
-
-\subsection{目标落点到可加载相位的反解}
-
-对每个单元的参考点 $\mathbf r_m$ 与目标落点 $\mathbf x_m^\star$，用第二章的分层 Fermat 路径（玻璃上层厚 $h_o$、空气层高度由接收平面确定）求出理想出射切向量 $\mathbf q_m^\star$，再经限幅量化得到可加载的梯度：
-\begin{equation}
-\mathbf b_m=\mathcal Q\big(\mathbf q_m^\star-\mathbf q_{\mathrm{in},m}\big),\qquad
-\tilde{\mathbf q}_m=\mathbf q_{\mathrm{in},m}+\mathbf b_m,\qquad
-\tilde{\mathbf x}_m=\operatorname{Landing}(\mathbf r_m,\tilde{\mathbf q}_m),
-\label{eq:c5_inverse}
-\end{equation}
-其中 $\mathcal Q$ 为第三章式(\ref{eq:c3_quant})的逐轴限幅量化映射。随后以量化后的实际落点 $\tilde{\mathbf x}_m$ 重建出射光程 $L_m$，并确定单元常相位：
-\begin{equation}
-\phi_{0m}=\operatorname{mod}\!\left[-\Phi_{h_i}(\mathbf r_m)-k_0L_m,\ 2\pi\right],\qquad H_m=0.
-\label{eq:c5_piston}
-\end{equation}
-式(\ref{eq:c5_piston})使每个单元的参考光线到达其实际落点时的总相位为零，即在各单元自身的目标点上完成相位校准。各单元的目标点互不相同，因此常相位的作用是控制相邻单元光场在交叠区域的干涉，而不是把所有单元会聚到同一点。
-
-\subsection{基准方案}
-
-为了评估相位设计的作用，设置以下基准方案。
-
-（1）Steering-only（仅偏转）。每个单元独立选择离散梯度，使世界坐标系中的出射方向尽量接近 $+Z$。令 $\mathbf v=R^{\mathrm T}\mathbf e_Z$，目标为
-\begin{equation}
-\max_{b_x,b_y\in\mathcal B}\frac{v_xq_x+v_yq_y+v_z\sqrt{n_a^2-q_x^2-q_y^2}}{n_a},\qquad
-\mathbf q=\mathbf q_{\mathrm{in}}+\mathbf b,\quad |\mathbf q|<n_a,
-\label{eq:c5_steer}
-\end{equation}
-$\mathcal B=\{n_a\sin(k\Delta\theta):-K\le k\le K\}$。固定 $q_x$ 时，连续最优解为 $q_y^\star=v_y\sqrt{n_a^2-q_x^2}/\sqrt{v_y^2+v_z^2}$。由于目标函数关于 $q_y$ 为凹函数，只需枚举 $x$ 方向的 $2K+1$ 个指令，并检查 $q_y^\star$ 两侧相邻的两个合法网格值，单元求解复杂度由 $O(K^2)$ 降为 $O(K)$。该方案不对光斑尺寸进行设计。在共同固定接收机的比较中，Steering-only 采用全局常梯度：以功率加权参考点到共同接收目标的理想梯度量化为 $\mathbf b$，取 $\phi_m(\boldsymbol\xi)=k_0\mathbf b\cdot\boldsymbol\xi \pmod{2\pi}$。
-
-（2）未调相 RIS（Unmodulated RIS）。所有单元的梯度、曲率和常相位均为零，保留相同的玻璃、界面透射和通光掩模，用于分离相位调制的作用。
-
-（3）无 RIS 直接传播（No RIS）。去除玻璃、液晶层和掩模，光束直接经裸水—空气界面进入空气。光强图采用下表面 MC 光子包直接折射的结果；入射角扫描和湍流扫描中采用连续高斯角密度与水—空气精确面积 Jacobian 计算的弹道光，并逐方向判断传播条件，从而在轴向入射角超过临界角时仍保留亚临界的角度尾部。
-
-\section{RIS到接收平面的波动传播模型}
-\label{sec:c5_wave}
-
-\subsection{倾斜接收几何的二阶光程展开}
-
-设单元参考点为 $\mathbf r_m$，接收点的世界水平坐标为 $\mathbf x$。由分层 Fermat 路径可以精确求出从 $\mathbf r_m$ 到 $\mathbf x$ 的光程 $L_m$ 和切向量 $\mathbf q_m$。记 $T=R_{1:2,1:2}^{\mathrm T}$，$\mathbf z=(R_{13},R_{23})^{\mathrm T}$，接收点的水平微小变化 $\boldsymbol\eta$ 引起局部横向变化 $T\boldsymbol\eta$ 和高度变化 $\mathbf z^{\mathrm T}\boldsymbol\eta$。定义
-\begin{equation}
-E=T-\frac{\mathbf q\mathbf z^{\mathrm T}}{\kappa_a},\qquad
-A=J^{-1},\qquad B=AE,\qquad C=E^{\mathrm T}AE,\qquad
-\mathbf s=T^{\mathrm T}\mathbf q+\kappa_a\mathbf z,
-\label{eq:c5_matrices}
-\end{equation}
-其中 $J$ 为式(\ref{eq:c2_jacobian})的路径 Jacobian，$\mathbf s=\nabla_{XY}L$。光程在孔径点 $\mathbf r_m+\boldsymbol\delta$ 和接收点 $\mathbf x_m+\boldsymbol\eta$ 附近的二阶展开为
-\begin{equation}
-L(\mathbf r_m+\boldsymbol\delta,\mathbf x_m+\boldsymbol\eta)\simeq
-L_m-\mathbf q_m^{\mathrm T}\boldsymbol\delta+\mathbf s_m^{\mathrm T}\boldsymbol\eta
-+\frac12\boldsymbol\delta^{\mathrm T}A_m\boldsymbol\delta-\boldsymbol\delta^{\mathrm T}B_m\boldsymbol\eta+\frac12\boldsymbol\eta^{\mathrm T}C_m\boldsymbol\eta.
-\label{eq:c5_opl}
-\end{equation}
-各矩阵均由精确的中心折射路径计算。为减小大接收窗口中的 Taylor 截断误差，在每个接收点重新求解 $L_m(\mathbf x)$、$\mathbf q_m(\mathbf x)$ 和 $B_m(\mathbf x)$，只冻结孔径坐标的二次项系数 $A_m^\star$。
-
-\subsection{单元标量衍射积分}
-
-在通量振幅规范下，第 $m$ 个单元在接收点 $\mathbf x$ 产生的场为
-\begin{equation}
-U_m(\mathbf x)\simeq\frac{\sqrt{|\det B_m(\mathbf x)|}}{i\lambda_0}
-\int_{D_m}\sqrt{I_{h_i}(\boldsymbol\xi)T_{ga}(\mathbf q_{\mathrm{load}})}\,
-\exp\Big\{i\Big[\Phi_{h_i}(\boldsymbol\xi)+\phi_m(\boldsymbol\xi)
-+k_0\Big(L_m(\mathbf x)-\mathbf q_m(\mathbf x)^{\mathrm T}\boldsymbol\delta+\frac12\boldsymbol\delta^{\mathrm T}A_m^\star\boldsymbol\delta\Big)\Big]\Big\}\,d^2\boldsymbol\xi,
-\label{eq:c5_unitfield}
-\end{equation}
-其中 $\boldsymbol\delta=\boldsymbol\xi-\mathbf r_m$，$T_{ga}$ 为玻璃—空气界面的 Fresnel 透射率，$\mathbf q_{\mathrm{load}}=\mathbf q_{\mathrm{in},m}+H_{\mathrm{in},m}\boldsymbol\delta+\nabla\phi_m/k_0$ 为局部出射切向量。全部弹道场为 $U_b(\mathbf x)=\sum_mU_m(\mathbf x)$。前因子 $\sqrt{|\det B|}/\lambda_0$ 的量纲为 $\mathrm m^{-2}$，乘以孔径面积后保持通量振幅的量纲。对同一介质、正轴、距离为 $z$ 的近轴情形，$B=(n/z)I_2$，前因子退化为第二章式(\ref{eq:c2_fresnel_int})中的 $n/(i\lambda_0z)$。
-
-\subsection{去载波与CZT计算}
-
-记 $H_{\mathrm{in},m}$ 为入射几何曲率，$\boldsymbol\ell=\boldsymbol\xi-\mathbf c_m$ 为相对单元中心的坐标，$\mathbf o_m=\mathbf c_m-\mathbf r_m$。定义总二次相位系数和残余入射相位
-\begin{equation}
-M_m=A_m^\star+H_{\mathrm{in},m}+H_m,\qquad
-\varepsilon_m(\boldsymbol\delta)=\Phi_{h_i}(\mathbf r_m+\boldsymbol\delta)-\Phi_{h_i}(\mathbf r_m)
--k_0\Big(\mathbf q_{\mathrm{in},m}^{\mathrm T}\boldsymbol\delta+\frac12\boldsymbol\delta^{\mathrm T}H_{\mathrm{in},m}\boldsymbol\delta\Big),
-\label{eq:c5_residual}
-\end{equation}
-则式(\ref{eq:c5_unitfield})可写为孔径函数的 Fourier 变换：
-\begin{equation}
-\mathcal F_m(\mathbf f)=\int_{D_m-\mathbf c_m}\mathcal A_m(\boldsymbol\ell)\,
-e^{i[k_0\boldsymbol\ell^{\mathrm T}M_m\boldsymbol\ell/2+\varepsilon_m(\boldsymbol\ell+\mathbf o_m)]}\,
-e^{-i2\pi\mathbf f^{\mathrm T}\boldsymbol\ell}\,d^2\boldsymbol\ell,
-\label{eq:c5_fourier}
-\end{equation}
-\begin{equation}
-\mathbf q_{c,m}=\mathbf q_{\mathrm{in},m}+\mathbf b_m+M_m\mathbf o_m,\qquad
-\mathbf f_m(\mathbf x)=\frac{\mathbf q_m(\mathbf x)-\mathbf q_{c,m}}{\lambda_0},
-\label{eq:c5_freq}
-\end{equation}
-\begin{equation}
-\Psi_m(\mathbf x)=\Phi_{h_i}(\mathbf r_m)+\phi_{0m}+k_0L_m(\mathbf x)
-+k_0\Big[\frac12\mathbf o_m^{\mathrm T}M_m\mathbf o_m+(\mathbf q_{\mathrm{in},m}+\mathbf b_m-\mathbf q_m(\mathbf x))^{\mathrm T}\mathbf o_m\Big],
-\label{eq:c5_carrier_phase}
-\end{equation}
-连续意义下 $U_m\propto\mathcal F_m(\mathbf f_m)e^{i\Psi_m}$。其中 $\mathcal A_m$ 为单元内的光滑振幅，按单元确定性功率归一后乘以 $\sqrt{T_{ga}}$。式(\ref{eq:c5_carrier_phase})保留了入射相位、单元常相位和传播相位三部分，保证不同单元之间的相对干涉相位可追溯。
-
-数值上，振幅和残余相位先在每个单元 $25\times25$ 的网格上计算，再三次插值到自适应孔径网格。孔径采样数由二次相位的带宽决定：
-\begin{equation}
-N_d=2^{\left\lceil\log_2\max\left(N_{\min},\ 1.1\,e_d\,(|M'_m|\mathbf e)_d/\lambda_0\right)\right\rceil},
-\label{eq:c5_sampling}
-\end{equation}
-其中 $\mathbf e$ 为孔径包围框边长，$M'_m$ 为旋转到 $B_m$ 左奇异向量基下的曲率矩阵。旋转孔径和频率基可以避免近临界情况下狭长倾斜频域形成过大的轴对齐包围框。频率采样由式(\ref{eq:c2_czt})的 CZT 只在接收窗口对应的频率子集上计算。
-
-\subsection{Parseval功率守恒搬运}
-
-直接取式(\ref{eq:c5_fourier})在像素中心的模平方会在快速振荡区域引入采样误差。本文以频谱功率守恒的方式确定像素光强。每个频率单元的功率为
-\begin{equation}
-\Delta P_{m,k}=|\mathcal F_m(\mathbf f_k)|^2\Delta f_x\Delta f_y,\qquad
-\mathbf q_k=\mathbf q_{c,m}+\lambda_0\mathbf f_k,
-\label{eq:c5_bin}
-\end{equation}
-用式(\ref{eq:c5_landing})把 $\mathbf q_k$ 映射到接收平面，并把 $\Delta P_{m,k}$ 双线性分配到相邻的四个像素。由于
-\begin{equation}
-\frac{\partial\mathbf f}{\partial\mathbf x}=\frac{B}{\lambda_0},\qquad
-d^2\mathbf f=\frac{|\det B|}{\lambda_0^2}\,d^2\mathbf x,
-\label{eq:c5_parseval}
-\end{equation}
-这一搬运对应式(\ref{eq:c5_unitfield})的面积缩放，并在离散层面严格保持所搬运的功率。落在窗口外、不可传播或属于极弱单元的功率分别记账。单元在像素 $p$ 上的复数代表值为
-\begin{equation}
-\widehat U_{m,p}=\sqrt{I_{m,p}^{\mathrm{diag}}}\,e^{i[\arg\mathcal F_m(\mathbf f_m(\mathbf x_p))+\Psi_m(\mathbf x_p)]},
-\label{eq:c5_phasor}
-\end{equation}
-$I_{m,p}^{\mathrm{diag}}$ 为搬运功率除以像素面积。
-
-\subsection{像素内相干平均}
-
-不同单元的场在接收平面交叠时发生干涉。像素内把每个单元的相位近似为线性载波，记局部相位斜率为 $\mathbf k_{m,p}=\nabla_{XY}\arg U_m$，对矩形像素积分得到像素平均光强：
-\begin{equation}
-\overline I_{b,p}=\sum_m|\widehat U_{m,p}|^2+2\sum_{m<n}\Re\{\widehat U_{m,p}\widehat U_{n,p}^*\}\,
-\operatorname{sinc}\!\Big(\frac{\Delta k_{mn,x}\Delta x}{2\pi}\Big)\operatorname{sinc}\!\Big(\frac{\Delta k_{mn,y}\Delta y}{2\pi}\Big),
-\label{eq:c5_pixel}
-\end{equation}
-其中 $\operatorname{sinc}(t)=\sin(\pi t)/(\pi t)$，$\Delta\mathbf k_{mn}=\mathbf k_{m,p}-\mathbf k_{n,p}$。sinc 因子来自指数载波在像素矩形上的积分：两单元载波方向差异越大，干涉条纹越密，在像素内的平均效应越强。由式(\ref{eq:c5_freq})和(\ref{eq:c5_carrier_phase})，局部相位斜率为
-\begin{equation}
-\mathbf k_m=k_0\mathbf s_m+B_m^{\mathrm T}\Big(\frac{\nabla_{\mathbf f}\arg\mathcal F_m}{\lambda_0}-k_0\mathbf o_m\Big),
-\label{eq:c5_slope}
-\end{equation}
-Fourier 相位的导数由相邻频点的相位差估计。1600 个单元两两之间的交叉项数量很大，对载波方向差异显著的单元对，其交叉项被 sinc 包络压低。设单元场在图域的峰值振幅为 $A_m^{\max}$，两单元相位斜率区间的最小间隔为 $g_{mn,x}$、$g_{mn,y}$，由 $|\sin x/x|\le\min(1,1/|x|)$ 得交叉项的逐像素上界
-\begin{equation}
-E_{mn}\le2A_m^{\max}A_n^{\max}\min\Big(1,\frac{2}{g_{mn,x}\Delta x}\Big)\min\Big(1,\frac{2}{g_{mn,y}\Delta y}\Big).
-\label{eq:c5_bound}
-\end{equation}
-将上界由小到大排序，在累计上界不超过 $2\times10^{-4}$ 倍最小光强容差时省略对应交叉项，其余交叉项精确计算。
-
-\subsection{弹道与散射光强合成}
-
-接收平面像素 $p$ 的总光强为弹道光的相干平均与散射光的非相干累加：
-\begin{equation}
-I_p=\overline I_{b,p}+\frac{1}{\Delta A_p}\sum_{j\in\mathcal S}P_jT_{ga}(\mathbf q_j)\,\mathbf 1\{\operatorname{Landing}_j\in p\},
-\label{eq:c5_total}
-\end{equation}
-集合 $\mathcal S$ 为穿过下表面并落入液晶通光区的散射光子包，每个光子包在液晶层按其所在单元的相位梯度改变切向量，经上层玻璃折射后直线传播到接收平面。
-
-\section{光斑统计量}
-\label{sec:c5_spot}
-
-以接收平面有限图域内的功率归一，定义光斑的一、二阶矩：
-\begin{equation}
-\pi_p=\frac{I_p}{\sum_jI_j},\qquad
-\overline{\mathbf x}=\sum_p\pi_p\mathbf x_p,\qquad
-\Sigma_R=\sum_p\pi_p(\mathbf x_p-\overline{\mathbf x})(\mathbf x_p-\overline{\mathbf x})^{\mathrm T}.
-\label{eq:c5_moments}
-\end{equation}
-设 $\lambda_1\ge\lambda_2$ 为 $\Sigma_R$ 的特征值，定义长轴、短轴、等效半径和轴比：
-\begin{equation}
-w_{\mathrm{maj}}=2\sqrt{\lambda_1},\qquad w_{\mathrm{min}}=2\sqrt{\lambda_2},\qquad
-w_{\mathrm{eq}}=\sqrt{2\operatorname{tr}\Sigma_R},\qquad \chi=\frac{w_{\mathrm{maj}}}{w_{\mathrm{min}}}.
-\label{eq:c5_widths}
-\end{equation}
-对圆高斯光斑 $I\propto e^{-2r^2/w^2}$，$w_{\mathrm{eq}}=w$；对半径为 $R$ 的均匀圆盘，$w_{\mathrm{eq}}=R$。图中的束腰椭圆为二阶矩椭圆 $(\mathbf x-\overline{\mathbf x})^{\mathrm T}\Sigma_R^{-1}(\mathbf x-\overline{\mathbf x})=4$，主轴由 $\Sigma_R$ 的特征向量给出。包围能量半径和能量集中度定义为
-\begin{equation}
-F_R(r)=\frac{\sum_{|\mathbf x_p-\overline{\mathbf x}|\le r}I_p}{\sum_pI_p},\qquad
-R_f=\inf\{r:F_R(r)\ge f\},\qquad \mathcal C=\frac{R_{0.5}}{R_{0.9}}.
-\label{eq:c5_encircled}
-\end{equation}
+直达链路不针对接收机作任何调整，光照到哪里即在哪里被接收。静水时 $40^\circ$ 入射的折射光偏离竖直方向 $58.8^\circ$，而共同接收机位于 RIS 可达锥内偏离竖直约 $30^\circ$ 的方向上，在 $z=30\,\mathrm m$ 处两者水平相距约 30\,m。直达链路在接收机处收到的只是粗糙海面偶然折射过来的光和水中散射光，这正是 RIS 需要解决的问题。
 
 \section{接收端随机扰动与链路性能模型}
 \label{sec:c5_receiver}
@@ -420,7 +168,7 @@ $G=0$ 时条件误码率为 $1/2$，条件中断概率为 1。为了避免依赖
 \end{equation}
 即视场失收概率构成误码率和中断概率的平台。
 
-\section{相位方案的优化选择}
+\section{方案选择与最优方法判定}
 \label{sec:c5_opt}
 
 \subsection{可行性约束}
@@ -430,125 +178,112 @@ $G=0$ 时条件误码率为 $1/2$，条件中断概率为 1。为了避免依赖
 w_{\mathrm{min}}\ge0.04\,\mathrm m,\qquad w_{\mathrm{eq}}\ge0.04\,\mathrm m,\qquad \chi\le1.35,\qquad R_{0.5}\ge0.02\,\mathrm m.
 \label{eq:c5_feasible}
 \end{equation}
-前两项限制光斑的二阶矩宽度，第三项限制光斑的椭圆度，第四项限制半能量半径。第四项防止方案依靠低能量的宽尾部满足二阶矩约束、同时把主要能量压缩为一个窄焦点。目标宽度 $w_t$ 与实际宽度并不相同，约束一律作用于实际传播结果。主阶段还要求光斑质心偏离竖直方向的角度
-\begin{equation}
-\theta_{\mathcal D}=\arctan\frac{|\overline{\mathbf x}_{\mathcal D}-\mathbf p_{b,xy}|}{z}\le\min_{\mathcal D\in\mathcal F_0}\theta_{\mathcal D}+1.5^\circ,
-\label{eq:c5_direction}
-\end{equation}
-$\mathcal F_0$ 为满足形状约束的鲁棒族和平顶族候选，即在器件能力范围内尽量接近竖直方向，并允许 $1.5^\circ$ 的方向余量用于换取性能。
+前两项限制光斑的二阶矩宽度，第三项限制光斑的椭圆度，第四项限制半能量半径，防止方案依靠低能量的宽尾部满足二阶矩约束、同时把主要能量压缩为一个窄焦点。目标宽度 $w_t$ 与实际宽度并不相同，约束一律作用于实际传播结果。Steering-only 只有一个相位，不受该约束。
 
-\subsection{三类通信目标}
+\subsection{各方案的选择规则}
 
-在可行候选集 $\mathcal F$ 上分别求解
+在每个发射功率 $P_t$ 上，各 RIS 方案在各自的设计池中选择相位：
 \begin{equation}
-\mathcal D_{\mathrm{BER}}^\star=\arg\min_{\mathcal D\in\mathcal F}\mathrm{ABER}_{\mathcal D},\qquad
-\mathcal D_{\mathrm{OP}}^\star=\arg\min_{\mathcal D\in\mathcal F}\mathrm{OP}_{\mathcal D},\qquad
-\mathcal D_P^\star=\arg\max_{\mathcal D\in\mathcal F}\overline P_{r,\mathcal D},
+\mathcal D_{\mathrm{Flat}}^\star(P_t)=\arg\min_{\mathcal D\in\mathcal F_{\mathrm{flat}}}\mathcal M_{\mathcal D}(P_t),\qquad
+\mathcal D_{\mathrm{Rob}}^\star(P_t)=\arg\min_{\mathcal D\in\mathcal F_{\mathrm{rob}}}\mathcal M_{\mathcal D}(P_t),\qquad
+\mathcal D_P^\star=\arg\max_{\mathcal D\in\mathcal F_{\mathrm{flat}}\cup\mathcal F_{\mathrm{rob}}}\overline P_{r,\mathcal D},
 \label{eq:c5_objectives}
 \end{equation}
-对应的方案分别记为 Robust ABER、Robust OP 和 Max mean power；平顶族内的最优方案记为 Flat top。平均功率只描述接收功率分布的一阶矩，两个平均功率相同的候选可能具有完全不同的低功率尾部，因此三个目标的最优解可以不同。排序指标相等到机器精度时，依次比较另一风险指标、平均功率和候选编号，保证选择结果确定。
+其中 $\mathcal M$ 为 ABER（Robust ABER）或 OP（Robust OP），Flat top 在 ABER 图中取 ABER 最小、在 OP 图中取 OP 最小；$\mathcal F_{\mathrm{flat}}$ 与 $\mathcal F_{\mathrm{rob}}$ 分别为平顶族和鲁棒族满足式(\ref{eq:c5_feasible})的相位。逐功率选择代表可调相位库的性能包络：低功率时噪声主导，较窄的光斑更有利；高功率时低功率尾部主导，较宽的光斑更有利。Flat top 与 Robust 的设计池互不重叠，两者的差别只来自目标光斑族，比较结果反映的是光斑形状本身的作用。Max mean power 以平均接收功率为目标，与发射功率无关。平均功率只描述接收功率分布的一阶矩，两个平均功率相同的候选可能具有完全不同的低功率尾部，因此三类目标的最优解一般不同。排序指标相等时，依次比较另一风险指标和平均功率。相位选择只使用复光场结果，MC 验证曲线沿用同一组选择。
 
-\subsection{候选构造与搜索流程}
+\subsection{最优方法的判定}
 
-候选构造与选择过程如算法\ref{alg:c5_search}所示。对每个接收距离，先计算水下 MC 与单元弹道功率，传播未调相和 Steering-only 基准；然后对高斯、平顶和鲁棒三个光斑族，在目标宽度 4--20\,cm（步长 2\,cm）和三种方向余量上生成实际相位。方向余量先用快速代理模型预筛选：每单元每轴 3 个确定性光线点落点直方图与衍射模糊核卷积得到代理光斑，按代理 ABER 选出最佳余量，再对选中的相位执行完整波动传播。平顶族和鲁棒族另外补充 1、2、3\,cm 和 22--32\,cm 的宽度，7.5\,m 处上限扩展到 40\,cm，以保证最优宽度不落在扫描边界上。
+对每个条件、每组湍流和每个指标，计算达到目标值（ABER $=10^{-3}$，OP $=10^{-3}$）所需的发射功率 $P_{\mathrm{req}}$，在功率网格上以对数线性插值求得，在 $-10$--90\,dBm 范围内达不到目标时记为无穷大。在 Flat top、Robust 和 Max mean power 三个优化方案中，$P_{\mathrm{req}}$ 不超过最小值 0.5\,dB 的方案记为最优方法，可以是 1 个或 2 个；若最优方法比其余所有链路都至少低 1\,dB，则判定为明显最优，在图中以粗线标出。该判定完全由计算结果决定，不预设优胜方案。
 
-\begin{algorithm}[htbp]
-\caption{有限宽度光斑相位候选构造与选择}
-\label{alg:c5_search}
-\KwIn{入射单元功率 $P_m^{(b)}$、参考点 $\mathbf r_m$、入射切向量 $\mathbf q_{\mathrm{in},m}$、散射光子包；接收距离 $z$；接收与信道参数}
-\KwOut{三类目标下的最优可加载相位 $\{\mathbf b_m,\phi_{0m}\}$ 及其性能}
-传播未调相 RIS 与 Steering-only 基准\;
-\For{光斑族 $\in\{$高斯，平顶，鲁棒$\}$}{
-  \For{目标宽度 $w_t\in\mathcal W$}{
-    \For{方向余量 $\eta_c\in\{0,0.012,0.03\}$}{
-      由式(\ref{eq:c5_carrier})确定光斑中心 $\mathbf x_c$\;
-      由式(\ref{eq:c5_whiten})--(\ref{eq:c5_target})为各单元分配目标落点 $\mathbf x_m^\star$\;
-      由式(\ref{eq:c5_inverse})--(\ref{eq:c5_piston})反解可加载梯度与常相位\;
-      以代理光斑计算代理 ABER\;
-    }
-    选择代理 ABER 最优的 $\eta_c$，按式(\ref{eq:c5_unitfield})--(\ref{eq:c5_total})执行完整波动传播\;
-  }
-}
-按式(\ref{eq:c5_feasible})和(\ref{eq:c5_direction})筛选可行候选集 $\mathcal F$\;
-对 $\mathcal F$ 中每个候选按式(\ref{eq:c5_aber_fov})和(\ref{eq:c5_op_fov})计算 ABER、OP 与平均功率\;
-按式(\ref{eq:c5_objectives})分别选出 Robust ABER、Robust OP、Max mean power 与 Flat top\;
-\end{algorithm}
-
-候选库给出的是在已生成并通过约束的方案中的最优解。相位空间的维度为 1600 个单元的梯度与常相位，本文以光斑族、目标宽度和方向余量三个参数对其进行低维参数化，使搜索在完整波动传播的计算代价下可行。
-
-\section{数值结果与分析}
+\section{冻结粗糙海面下的数值结果}
 \label{sec:c5_results}
 
 \subsection{接收平面光强分布}
 
-图\ref{fig:c5_irradiance}给出了三个接收距离上无 RIS 直接传播、Steering-only、Flat top 和 Robust ABER 四种情况的接收平面光强，坐标相对各自光斑质心，虚线为二阶矩束腰椭圆，点线为主轴。表\ref{tab:c5_fig1}列出了对应的光斑统计量。
+图\ref{fig:c5_irradiance}给出了主条件（$z=30\,\mathrm m$，$U=9\,\mathrm{m/s}$）下六种情况在接收机周围 $\pm60\,\mathrm{cm}$ 内的光强，六幅图共用一个对数色标。RIS 方案使用 30\,dBm 设计功率下各方案选中的相位；白色实线圆为接收孔径，白色虚线为二阶矩光斑椭圆，左上角为视场内平均增益 $\langle G\rangle$，即 1\,W 发射时的平均接收功率（W）。
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{c5/Fig1_irradiance.png}
-\caption{$z=5$、7.5、10\,m 接收平面上的光强分布（1\,W发射功率）}
+\includegraphics[width=\textwidth]{c5/dyn_fig1_irradiance_rx.png}
+\caption{接收平面光强分布（$z=30\,\mathrm m$，$U=9\,\mathrm{m/s}$，$t^\ast=15\,\mathrm s$，1\,W 参考发射功率）}
 \label{fig:c5_irradiance}
 \end{figure}
 
-\begin{table}[htbp]
-\caption{接收平面光斑统计量}
-\label{tab:c5_fig1}
-\centering
-\begin{tabular}{cccccc}
-\toprule
-距离 & 方案 & 图域功率/mW & 峰值光强/$\mathrm{W\,m^{-2}}$ & $w_{\mathrm{maj}}/w_{\mathrm{min}}$/cm & 质心偏离角 \\
-\midrule
-\multirow{4}{*}{5\,m} & 无RIS & 217.6 & 1.14 & 54.1/29.4 & $58.8^\circ$ \\
- & Steering-only & 71.7 & 3.69 & 21.3/18.3 & $29.3^\circ$ \\
- & Flat top & 73.7 & 4.09 & 12.5/12.3 & $31.6^\circ$ \\
- & Robust ABER & 71.8 & 3.96 & 21.0/20.9 & $32.7^\circ$ \\
-\midrule
-\multirow{4}{*}{7.5\,m} & 无RIS & 217.1 & 0.65 & 73.6/38.2 & $58.8^\circ$ \\
- & Steering-only & 71.4 & 2.57 & 25.2/22.1 & $29.3^\circ$ \\
- & Flat top & 72.6 & 4.94 & 12.0/11.8 & $31.6^\circ$ \\
- & Robust ABER & 71.2 & 3.32 & 20.8/20.7 & $32.7^\circ$ \\
-\midrule
-\multirow{4}{*}{10\,m} & 无RIS & 216.8 & 0.42 & 93.0/46.9 & $58.8^\circ$ \\
- & Steering-only & 71.2 & 1.89 & 29.1/25.9 & $29.3^\circ$ \\
- & Flat top & 72.0 & 5.26 & 11.7/11.5 & $31.6^\circ$ \\
- & Robust ABER & 70.9 & 4.31 & 20.7/20.6 & $32.7^\circ$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+无 RIS 直达链路在接收机附近只有稀疏的散射光和粗糙海面偶然折射过来的光点，$\langle G\rangle=1.92\times10^{-7}$。Steering-only 把光束中心对准了接收机，但光斑保持原光束经界面后的发散，在 30\,m 处远大于 $\pm60\,\mathrm{cm}$ 的显示范围，并呈现每个单元出射光形成的方格状亮斑，接收机只收到其中一小部分，$\langle G\rangle=9.66\times10^{-4}$，比直达链路高约 37\,dB。Flat top 把各单元的出射光会聚为半径约 15\,cm 的均匀圆盘，$\langle G\rangle=4.56\times10^{-3}$；Robust ABER 与 Robust OP 在该功率下选中同一个相位，形成中心最亮、向外缓慢衰减的光斑，$\langle G\rangle=6.24\times10^{-3}$，比直达链路高约 45\,dB；Max mean power 把功率会聚为半径约 5\,cm 的亮斑，$\langle G\rangle=1.22\times10^{-2}$，平均功率最高。RIS 的逐单元调制同时完成了两件事：把光从约 30\,m 外的直射方向拉到接收机，把光斑尺寸控制到与接收端抖动相当的范围。
 
-注：质心偏离角为光斑质心相对RIS的水平距离与接收高度之比的反正切。
-
-由图\ref{fig:c5_irradiance}和表\ref{tab:c5_fig1}可以得到以下结论。
-
-第一，RIS 把光束方向拉向竖直。无 RIS 时，$40^\circ$ 水中入射经裸水面折射后，光斑质心的偏离角为 $58.8^\circ$，与 Snell 定律给出的 $58.75^\circ$ 一致，接收高度 10\,m 时质心水平距离达到 16.5\,m。Steering-only 逐单元选择最接近竖直的方向，把偏离角降到 $29.3^\circ$；Flat top 和 Robust ABER 为了给单元落点的分散预留梯度余量，偏离角分别为 $31.6^\circ$ 和 $32.7^\circ$，10\,m 高度上的质心水平距离分别约为 6.2\,m 和 6.4\,m。偏离角在三个距离上保持不变，说明光斑中心沿直线方向传播。
-
-第二，RIS 显著压缩了光斑并抑制了像散。无 RIS 光斑的轴比约为 1.84--1.98，且长短轴随距离线性增长；Flat top 和 Robust ABER 的轴比均低于 1.03，光斑尺寸几乎不随距离变化，Flat top 的半径保持在约 12\,cm，Robust ABER 保持在约 21\,cm。这是因为每个单元的目标落点是按接收距离单独计算的，相位设计吸收了传播距离带来的展宽。Steering-only 不控制光斑尺寸，其光斑随距离由 21.3\,cm 增大到 29.1\,cm。
-
-第三，RIS 以总功率换取峰值光强和方向。液晶单元的通光面积占面板面积的 33.2\%，单元间隙遮挡了约三分之二的入射功率，RIS 方案的图域功率约为 71--74\,mW，为无 RIS 的 0.33 倍，与填充率一致。光斑压缩带来的增益超过了这一损失：10\,m 处 Flat top 的峰值光强为 $5.26\,\mathrm{W/m^2}$，是无 RIS 的 12.6 倍；Robust ABER 为 10.3 倍。距离越远，无 RIS 光斑越大，RIS 的峰值光强增益越高。
-
-第四，光斑中的周期性格点结构来自单元排布。Steering-only 和 Robust ABER 的光强图呈现明显的方格状亮斑，每个亮斑对应一个 14.4\,mm 单元的出射光，间距由单元间距和各单元的偏转方向决定；Flat top 把各单元的出射光交叠成均匀圆盘，格点结构被交叠平均。
-
-图\ref{fig:c5_radial}给出了各方案实际光强的环带平均剖面和包围能量曲线。Max mean power 方案在约 5\,cm 半径内集中了 90\% 以上的功率，其半能量半径接近 $R_{0.5}\ge2\,\mathrm{cm}$ 的约束下限，是约束允许的最集中光斑；Flat top 的剖面在半径约 10\,cm 处陡降，95\% 包围能量半径约为 10--11\,cm；Robust ABER 与 Robust OP 的剖面重合，中心最高、向外单调缓慢下降，80\% 包围能量半径约为 20\,cm，符合式(\ref{eq:c5_robust_density})的“尖峰加宽尾”形态；Steering-only 的剖面在多个半径处出现由单元排布引起的起伏；未调相 RIS 的包围能量增长最慢，在 40\,cm 半径内只收集了 57\%--87\% 的功率。
+\subsection{主条件下的平均误码率与中断概率}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{c5/Fig8_radial_profiles.png}
-\caption{实际光斑的环带平均剖面（上）与包围能量（下）}
-\label{fig:c5_radial}
+\includegraphics[width=\textwidth]{c5/dyn_fig2_aber_op_main.png}
+\caption{主条件下五条链路的ABER与OP（$z=30\,\mathrm m$，$U=9\,\mathrm{m/s}$，弱海洋EGG与弱大气GG）。实线为复光场，空心标记为同一组相位的MC结果，点线为无RIS直达链路}
+\label{fig:c5_main}
 \end{figure}
 
-图\ref{fig:c5_phasemap}给出了 10\,m 处 Robust ABER 方案实际加载的单元常相位。常相位在 $[0,2\pi)$ 内分布，没有可见的连续结构。原因在于式(\ref{eq:c5_piston})在每个单元自身的目标点上校准相位，而各单元的目标点按能量分位数和方位角分散排列，常相位反映的是各单元到其目标点的光程差对波长取模的结果，对光程变化的敏感度达到纳米量级。这也说明，即使目标光斑在空间上是平滑的，实际可加载相位仍需逐单元精确计算。
+图\ref{fig:c5_main}给出了主条件下的 ABER 和 OP。各 RIS 方案的 MC 标记点都落在复光场曲线上，说明第四章的复光场模型在整个功率范围内给出了与独立 MC 一致的链路统计。
+
+RIS 方案相对直达链路的增益最为显著。直达链路在 90\,dBm 时 ABER 仍约为 $8\times10^{-3}$、OP 约为 $2\times10^{-2}$，在仿真功率范围内达不到 $10^{-3}$；Robust ABER 达到 ABER $=10^{-3}$ 只需约 42\,dBm，Robust OP 达到 OP $=10^{-3}$ 约需 48\,dBm，RIS 带来的功率增益超过 48\,dB。
+
+在 RIS 方案之间，达到 ABER $=10^{-3}$ 所需的发射功率依次约为：Robust ABER 42\,dBm，Flat top 42.7\,dBm，Steering-only 48.5\,dBm，Max mean power 56\,dBm；达到 OP $=10^{-3}$ 依次约为：Robust OP 48\,dBm，Flat top 49\,dBm，Steering-only 55\,dBm，Max mean power 62\,dBm。Robust ABER/OP 与 Flat top 相差不到 1\,dB，两者共同构成最优的一组，比 Steering-only 低约 6.5\,dB，比 Max mean power 低约 14\,dB，比直达链路低 48\,dB 以上。
+
+各方案的差别可以从光斑形态解释。Max mean power 的光斑半径约 5\,cm，与孔径半径相当，而每轴 80\,mm 的位置抖动使孔径频繁移出亮斑，接收功率在很宽的范围内波动，平均功率最高，低功率事件也最多；在 20\,dBm 以下的低功率区，它的 ABER 低于 Steering-only，在中高功率区则成为 RIS 方案中最差的一个。Steering-only 的光斑足够宽，抖动不会使孔径离开光斑，但功率被分散到远大于孔径的区域，平均功率偏低。Flat top 和 Robust 的光斑宽度与抖动范围相当，在平均功率和低功率尾部之间取得了平衡；鲁棒光斑的缓慢衰减尾部使孔径偏离较大时仍能收集一定功率，因而在 OP 上比平顶光斑更有优势。
+
+高功率区的 ABER 和 OP 分别趋于约 $1.8\times10^{-5}$ 和 $3.6\times10^{-5}$ 的平台，平台由视场失收概率 $p_F=Q_1(1,5.2)\approx3.6\times10^{-5}$ 决定（式(\ref{eq:c5_floor})），与链路方案无关。
+
+\subsection{湍流强度的影响}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{c5/Fig6_objective_phase.png}
-\caption{$z=10\,\mathrm m$ 处Robust ABER方案的实际单元常相位分布}
-\label{fig:c5_phasemap}
+\includegraphics[width=0.9\textwidth]{c5/dyn_fig3_turbulence.png}
+\caption{弱/强海洋EGG与弱/强大气GG组合下的ABER与OP（$z=30\,\mathrm m$，$U=9\,\mathrm{m/s}$）。实线为弱大气湍流，虚线为强大气湍流；粗线为该湍流组合下的明显最优方法}
+\label{fig:c5_turb}
 \end{figure}
 
-\subsection{共同固定接收机下的误码率与中断概率}
+图\ref{fig:c5_turb}给出了主条件下四种湍流组合的结果，每组湍流都重新按式(\ref{eq:c5_objectives})选择相位。强大气湍流使各条曲线右移并变缓，强海洋湍流的 EGG 指数分量带来更多深衰落，曲线同样右移。湍流强度改变了达到目标所需的功率，但不改变方案之间的排序：在四种组合下，Robust ABER/OP 与 Flat top 始终位于最左侧，其后依次为 Steering-only、Max mean power 和直达链路。强海洋湍流下，鲁棒光斑的优势进一步扩大，在 OP 上领先 Flat top 超过 1\,dB，被判定为明显最优方法。这说明鲁棒光斑减少的低功率事件来自几何抖动，与湍流衰落相互独立，在衰落更深时仍然有效。
 
-实际系统中，空中接收平台的位置一般预先确定，不随相位方案移动。为此构造共同固定接收机的比较：10\,m 高度上，以方向余量 $\eta_c=0.012$ 确定一个共同的接收目标，所有方案共用相同的孔径中心和指向，孔径半径 5\,cm，视场半角 130\,mrad。候选库包括 Steering-only 一份以及平顶族和鲁棒族各 18 个目标宽度（1、2、3、4、6、$\ldots$、32\,cm），共 37 份实际相位。在 0--100\,dBm 的每个发射功率点上，按式(\ref{eq:c5_objectives})重新选择相位，得到可调相位库的风险包络。未调相 RIS 的光斑远离共同接收目标，接收区只有散射光和衍射远尾，其远尾以两次分部积分得到的非驻相积分包络估计，散射光以 $6\times10^8$ 光子的加密 MC 估计，图中记为 U-RIS*，表示该基准的乐观风险包络。
+\subsection{接收距离与风速的影响}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c5/dyn_fig4_aber_distance_wind.png}
+\caption{不同接收距离（列）与风速（行）下五条链路的ABER（弱海洋EGG与弱大气GG），纵轴范围为 $10^{-5}$--$10^0$}
+\label{fig:c5_grid_aber}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c5/dyn_fig5_op_distance_wind.png}
+\caption{不同接收距离（列）与风速（行）下五条链路的OP（弱海洋EGG与弱大气GG），纵轴范围为 $10^{-5}$--$10^0$}
+\label{fig:c5_grid_op}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c5/dyn_fig7_required_power.png}
+\caption{达到 ABER $=10^{-3}$（上）与 OP $=10^{-3}$（下）所需的发射功率随接收距离的变化（弱海洋EGG与弱大气GG）}
+\label{fig:c5_required}
+\end{figure}
+
+图\ref{fig:c5_grid_aber}和图\ref{fig:c5_grid_op}给出了 4 个接收距离与 3 个风速组合下的 ABER 和 OP，每个格子有各自的冻结位姿和各自的共同接收机。图\ref{fig:c5_required}把每条曲线达到 $10^{-3}$ 所需的发射功率汇总为距离的函数。
+
+Robust ABER/OP 与 Flat top 所需的功率几乎不随接收距离变化：Robust 达到 ABER $=10^{-3}$ 约需 42\,dBm、达到 OP $=10^{-3}$ 约需 48\,dBm，Flat top 比其高 0.5--1\,dB。原因在于每个单元的目标落点按接收距离单独计算，相位设计吸收了传播距离带来的展宽，光斑尺寸始终保持在与抖动匹配的宽度。Steering-only 的光斑随距离按发散角线性增大，所需功率随距离持续上升：达到 ABER $=10^{-3}$ 所需功率从 10\,m 处的约 42.5\,dBm 增加到 20\,m 处的约 45.5\,dBm、30\,m 处的约 48.5\,dBm 和 50\,m 处的约 55.5\,dBm。10\,m 处 Steering-only 的光斑尺寸恰好与抖动范围相当，因此与最优方法接近；距离增大后，最优方法相对 Steering-only 的增益依次扩大到约 3.5、6.5 和 13.5\,dB。Max mean power 在各距离上都需要 54--56\,dBm（ABER）和 60--62\,dBm（OP），比最优方法高 12--14\,dB；在 50\,m 处它与 Steering-only 相近，二者分别代表过窄和过宽两个极端。
+
+直达链路只在近距离可用：达到 ABER $=10^{-3}$ 在 10\,m 处约需 76\,dBm，20\,m 处约需 83\,dBm，30\,m 和 50\,m 处在 90\,dBm 以内达不到；达到 OP $=10^{-3}$ 在 10\,m 处约需 82\,dBm。与之相比，最优 RIS 方法在 10\,m 处节省约 34\,dB，20\,m 处节省约 41\,dB，在 30\,m 及以上的距离把不可用的链路变为可用。
+
+风速对 RIS 方案的影响很小，三个风速下各方案的所需功率曲线基本重合。这一结果来自两方面：发射机跟踪 RIS，保证面板在各个海况下都被完整照亮；相位在冻结位姿下设计，RIS 的倾斜和漂移被相位设计吸收，接收机始终位于各单元的可达范围内。这正是第三章预测调相的作用：只要位姿可以预测，RIS 的米级运动不会转化为接收端的指向损失。直达链路的所需功率则随海面形态略有变化，因为到达接收机的光强取决于冻结海面上坡度合适的局部区域。
+
+\subsection{最优方法}
+
+综合图\ref{fig:c5_main}--图\ref{fig:c5_required}，在 Flat top、Robust ABER/OP 和 Max mean power 三个优化方案中，Robust ABER/OP 与 Flat top 是明显优于其他方案的两个方法：二者之间相差不到 1\,dB，在全部 12 个条件和四种湍流组合下都位于性能最好的一组；在 $z\ge20\,\mathrm m$ 时，二者所需的发射功率比 Steering-only、Max mean power 和直达链路都低约 3\,dB 及以上，在主条件下分别低约 6.5、14 和 48\,dB 以上。两者之中 Robust ABER/OP 在每个条件下都略优，在强海洋湍流下的 OP 指标上领先超过 1\,dB，是本文推荐的相位方案。Max mean power 虽然平均接收功率最高，却因低功率事件多而成为 RIS 方案中可靠性最差的一个，这说明在存在接收端抖动的水空链路中，相位设计的目标应当是接收功率分布的低功率尾部，而不是平均功率。
+
+\section{静水水平RIS下的机理分析}
+\label{sec:c5_calm}
+
+上一节在动态海面下比较了各方案的性能。为了分离光斑宽度、接收端扰动和入射角各自的作用，本节在静水水平 RIS（$R=I_3$）和平静海面条件下作补充分析。场景与上一节的区别为：接收距离取 5、7.5、10\,m，相对 RIS 上表面计算；入射面方位角与上一节相同；接收孔径半径 5\,cm（逐抖动研究取 3\,cm）；视场半角在主研究、固定接收机和敏感性分析中分别取 240、130 和 90\,mrad；候选库额外包括高斯族，目标宽度为 1--32\,cm；方向余量 $\eta_c\in\{0,0.012,0.03\}$ 先以快速代理模型预筛选，再对选中的相位执行完整波动传播。除共同固定接收机的比较外，本节各方案的接收机对准自身光斑质心，用于考察光斑本身的性质。其余参数与表\ref{tab:c5_param}相同。
+
+\subsection{相位调制相对未调相RIS的增益}
+
+实际系统中，空中接收平台的位置一般预先确定，不随相位方案移动。为此构造共同固定接收机的比较：10\,m 高度上，以方向余量 $\eta_c=0.012$ 确定一个共同的接收目标，所有方案共用相同的孔径中心和指向，孔径半径 5\,cm，视场半角 130\,mrad。候选库包括 Steering-only 一份以及平顶族和鲁棒族各 18 个目标宽度（1、2、3、4、6、$\ldots$、32\,cm），共 37 份实际相位。在 0--100\,dBm 的每个发射功率点上，按式(\ref{eq:c5_objectives})重新选择相位，得到可调相位库的风险包络。未调相 RIS 的光斑远离共同接收目标，接收区只有散射光和衍射远尾，其远尾以两次分部积分得到的非驻相积分包络估计（第\ref{sec:c4_tail}节，取散射加远尾包络增益 $G_U$），散射光以 $6\times10^8$ 光子的加密 MC 估计，图中记为 U-RIS*，表示该基准的乐观风险包络。
 
 \begin{figure}[htbp]
 \centering
@@ -595,21 +330,6 @@ $\mathcal F_0$ 为满足形状约束的鲁棒族和平顶族候选，即在器�
 
 强海洋湍流使所有方案的 ABER 和 OP 整体升高，各方案之间的相对排序基本不变。
 
-\subsection{湍流强度的影响}
-
-图\ref{fig:c5_turb}给出了 7.5\,m 处、弱/强海洋 EGG 与弱/强大气 Gamma-Gamma 四种组合下的 ABER 和 OP 随发射功率的变化。每组湍流条件下在 1\,W 处重新选择相位，然后固定相位扫描功率；各方案对准自身光斑质心。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{c5/Fig9_turbulence.png}
-\caption{不同海洋与大气湍流强度下的ABER与OP（$z=7.5\,\mathrm m$）}
-\label{fig:c5_turb}
-\end{figure}
-
-在 RIS 方案之间，Robust ABER 与 Robust OP 在全部湍流组合下性能最好，Max mean power 最差；在弱海洋、弱大气湍流下，45\,dBm 时 Robust ABER 的误码率约为 $5\times10^{-4}$，Steering-only 约为 $1.6\times10^{-3}$，Flat top 约为 $3\times10^{-3}$，Max mean power 更高。强大气湍流使曲线斜率变缓，强海洋湍流使曲线整体右移。
-
-对准自身质心的无 RIS 直接传播在 $40^\circ$ 入射下取得了最低的 ABER 和 OP，弱湍流下 45\,dBm 时约为 $2.5\times10^{-4}$。这一结果有两个原因：直接传播没有 RIS 填充率带来的约 4.8\,dB 功率损失；其接收机被放置在偏离竖直方向 $58.8^\circ$、水平距离 12.4\,m 处的光斑质心上，并沿该倾斜方向指向。在这种几何下，裸水面链路的低仰角代价没有体现在 ABER 和 OP 中。RIS 在亚临界入射下的作用是把接收位置拉回到约 $30^\circ$ 的偏离角，在接收平台位置受限时，这一作用体现为图\ref{fig:c5_fixed}中的功率增益；在接收平台可以任意布置的条件下，直接传播在亚临界入射角时具有功率优势。下一小节的入射角扫描将给出两者的分界。
-
 \subsection{入射角的影响}
 
 图\ref{fig:c5_angle}给出了 1\,W 发射功率下 ABER 和 OP 随水中入射角的变化，接收距离为 7.5\,m 和 10\,m。随入射角变化，RIS 方案的公共载波按式(\ref{eq:c5_carrier})重新计算，光斑宽度沿用 $40^\circ$ 下选定的名义值；直接传播的弹道光逐方向判断传播条件，保留亚临界的角度尾部。
@@ -644,7 +364,7 @@ RIS 方案的性能随入射角变化平缓。Robust ABER 的 ABER 从 $20^\circ
 
 图\ref{fig:c5_adapt}\subref{fig:c5_adapt_aber}和\subref{fig:c5_adapt_op}给出了对应的 ABER 和 OP。$\sigma_p\le20\,\mathrm{mm}$ 时，所有方案的 ABER 约为 $10^{-3}$，差别很小；抖动增大后，Max mean power 的 ABER 迅速上升，50\,mm 时约为 0.11，120\,mm 时约为 0.35；逐抖动选宽的鲁棒族和平顶族 ABER 上升缓慢，120\,mm 时分别约为 0.063 和 0.072。逐抖动选宽时，平顶族与鲁棒族的性能接近，鲁棒族在大抖动区间略优。为区分这一差异是否超出数值误差，以 8 次独立 Sobol 扰乱（每次 32768 点）计算两族指标差值的配对 $t$ 置信区间，并对 31 个抖动点和 2 个指标作 Bonferroni 校正，同时把孔径求积由 $4\times16$ 加密到 $8\times32$ 引起的差值变化计入区间半宽。
 
-\subsection{冻结设计的抖动鲁棒性}
+\subsection{冻结相位的抖动鲁棒性}
 
 实际系统中，相位一旦加载，抖动统计量可能在一段时间内偏离设计值。图\ref{fig:c5_frozen}冻结 $\sigma_p=80\,\mathrm{mm}$ 时选中的 Robust ABER、Max mean power 和目标宽度 10\,cm 的平顶相位，在抖动和发射功率上扫描。
 
@@ -687,7 +407,7 @@ RIS 方案的性能随入射角变化平缓。Robust ABER 的 ABER 从 $20^\circ
 \end{tabular}
 \end{table}
 
-\subsection{数值验证}
+\subsection{静水分析的数值验证}
 
 为了确认上述结果不依赖于数值离散，对相位、功率账本、传播和接收统计分别进行了独立检查，判据如表\ref{tab:c5_validation}所示。全部已选方案均满足这些判据。此外，三组独立的物理测试共 24 个测试实例全部通过，包括：裸水面的 Snell 折射、Fresnel 能量守恒、全反射与椭圆光斑几何；角度量化、零信号、确定性 OOK、瑞利尾概率、高斯光斑的孔径积分解析解、倾斜面积因子、视场平台、像素干涉与单调性；坐标刚体不变性、下表面到液晶层及液晶层到接收面的散射输运一致性，以及电场与通量的归一化关系。
 
@@ -715,8 +435,6 @@ RIS 方案的性能随入射角变化平缓。Robust ABER 的 ABER 从 $20^\circ
 
 \section{本章小结}
 
-本章建立了受器件约束的有限宽度光斑整形相位设计方法和从 RIS 到接收端的完整性能评估模型。相位设计方面，以入射能量的白化径向分位数为各单元分配目标落点，比较了平顶、高斯和径向 Weibull 型鲁棒三类目标分布，通过分层 Fermat 路径反解梯度，经逐轴限幅量化和实际落点上的常相位校准得到可加载相位，并以半能量半径约束避免聚焦为单点。传播方面，采用二阶光程展开下的逐单元标量衍射积分、CZT、Parseval 功率守恒搬运和像素内相干平均计算弹道光强，并叠加散射光子包的非相干贡献。接收端联合计及瑞利位置抖动、Rice 角度误差、倾斜有限孔径、有限视场和 EGG--Gamma-Gamma 联合衰落，给出了平均功率、ABER 和 OP 的完整积分式及其视场尾部的精确处理。
+本章在冻结的动态海面下评估了 RIS 对水空直接链路性能的增强。对风速 3、9、12\,m/s 和接收距离 10--50\,m 的 12 个条件，无 RIS 直达链路以粗糙海面 MC 计算，Steering-only、Flat top、Robust ABER/OP 和 Max mean power 四个 RIS 方案以第四章的复光场计算并由独立 MC 验证；五条链路在同一冻结海面下共用同一个位于 RIS 可达范围内的接收机和同一组抖动样本，接收端联合计及位置抖动、角度误差、倾斜有限孔径、有限视场和 EGG--Gamma-Gamma 联合衰落。
 
-数值结果表明：液晶 RIS 把 $40^\circ$ 入射时光斑质心的偏离角由 $58.8^\circ$ 降到 $29.3^\circ$--$32.7^\circ$，消除了斜入射像散，在 10\,m 处使峰值光强提高到无 RIS 的 10.3--12.6 倍，代价是 33.2\% 的填充率带来的总功率损失；在共同固定接收机下，相位调制相对未调相 RIS 带来约 40\,dB 的功率增益；对准自身质心的直接传播在入射角低于约 $42^\circ$--$44^\circ$ 时性能更优，高于该角度时 RIS 鲁棒方案更优，超过 $48.75^\circ$ 临界角后 RIS 是唯一可用的上行通道；鲁棒光斑族在大位置抖动下优于最大平均功率方案和平顶方案，$\sigma_p=120\,\mathrm{mm}$、45\,dBm 时其 ABER 比最大平均功率方案低约一个数量级；最优光斑半径随位置抖动标准差近似线性增大，约为其 2.4--2.9 倍；角度误差主要通过视场失收形成与光斑形状无关的误码平台。
-% 【预留】本章结果基于静态水平 RIS。动态海况下 RIS 姿态时变、相位逐帧调度与链路时序统计
-% 的结果完成后，可在此之后新增一章，并在本小结末尾补充与静态结果的衔接说明。
+数值结果表明：RIS 把光从直射方向拉到接收机并把光斑控制到与抖动相当的尺寸，主条件下视场内平均增益比直达链路高约 45\,dB；直达链路在 30\,m 及以上距离、90\,dBm 以内达不到 $10^{-3}$ 的 ABER 和 OP，最优 RIS 方法只需约 42\,dBm（ABER）和 48\,dBm（OP），且所需功率几乎不随接收距离和风速变化；Robust ABER/OP 与 Flat top 是明显优于其他方案的两个方法，在 $z\ge20\,\mathrm m$ 时比 Steering-only 低 3.5--13.5\,dB，在各距离上比 Max mean power 低 12--14\,dB，其中 Robust ABER/OP 在每个条件下都略优，在强海洋湍流下的 OP 上领先超过 1\,dB；湍流强度改变所需功率，不改变方案排序。静水机理分析进一步表明：相位调制相对未调相 RIS 带来约 40\,dB 的增益；最优光斑半径随位置抖动标准差近似线性增大，约为其 2.4--2.9 倍；以平均功率为目标的聚焦光斑在大抖动下的误码率比鲁棒光斑高约一个数量级；角度误差主要通过视场失收形成与光斑形状无关的误码平台；入射角超过裸水面临界角后，RIS 是唯一可用的上行通道。

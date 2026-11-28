@@ -1,19 +1,105 @@
-\chapter{水空直接光链路的基础理论}
+\chapter{水空直接光链路的基础理论与液晶RIS器件设计}
 \label{chap:theory}
 
-水空直接光链路由水下发射机、海面漂浮液晶 RIS 和空中接收机组成，光信号依次经历水下吸收与散射、水—玻璃—液晶—玻璃—空气的分层折射与相位调制、空气中的衍射传播以及接收端的随机扰动。本章按照光信号的传播顺序介绍后续建模所需的基础理论：首先给出系统组成与坐标约定，然后依次介绍海水光学特性与水下光传输、海浪谱与随机海面、分层介质界面的折射与透射、液晶相位调制原理、高斯光束与标量衍射理论，最后介绍湍流衰落、指向误差模型与通信性能指标。
+水空直接光链路由水下发射机、海面漂浮液晶 RIS 和空中接收机组成。光信号依次经历水下吸收与散射、水—玻璃—液晶—玻璃—空气的分层折射与相位调制、空气中的传播以及接收端的随机扰动；不经过 RIS 的直达光则直接穿过随风浪起伏的海面。本章按照光信号的传播顺序给出后续建模所需的基础理论与器件方案：首先建立全文统一的坐标系，然后依次介绍海水光学特性与辐射输运方程的可解形式、海浪谱与随机海面生成、分层介质与粗糙海面上的折射及复光场传递、液晶相位调制原理，在此基础上给出液晶 RIS 的器件设计，最后介绍湍流衰落、指向误差模型与通信性能指标。
 
-\section{系统组成与坐标约定}
+\section{系统组成与坐标系}
 \label{sec:c2_system}
 
-本文研究的链路结构如下。水下发射机搭载于水下航行器，以波长 $\lambda_0=532\,\mathrm{nm}$ 的蓝绿激光作为信号光源，采用强度调制/直接检测（IM/DD）的开关键控（OOK）调制。光束沿水下斜程传播约 10\,m 后到达海面漂浮的液晶 RIS 下表面。RIS 为 $1\,\mathrm{m}\times1\,\mathrm{m}$、厚 1\,cm 的玻璃夹层面板，液晶单元位于玻璃厚度中间，面板四周由环形浮框承重。光束穿过下层玻璃到达液晶层，被逐单元施加相位调制后，经上层玻璃进入空气，在 RIS 上方 5--10\,m 的水平接收平面上由空中平台的有限孔径接收机检测。
+\subsection{系统组成}
 
-世界坐标系 $O$-$XYZ$ 的 $XY$ 平面取为静水面，$Z$ 轴竖直向上。RIS 局部坐标系的原点取在玻璃下表面中心 $\mathbf p_b$，局部 $z$ 轴指向玻璃上表面。记 $R$ 为由 RIS 局部坐标到世界坐标的旋转矩阵，则任意一点的世界坐标与局部坐标满足
+水下发射机搭载于水下航行器，以波长 $\lambda_0=532\,\mathrm{nm}$ 的蓝绿激光作为信号光源，采用强度调制/直接检测（IM/DD）的开关键控（OOK）调制。光束沿水下斜程传播约 10\,m 后到达海面漂浮的液晶 RIS 下表面。RIS 为 $1\,\mathrm{m}\times1\,\mathrm{m}$、厚 1\,cm 的玻璃夹层面板，液晶单元位于玻璃厚度中间，面板四周由环形浮框承重。光束穿过下层玻璃到达液晶层，被逐单元施加相位调制后，经上层玻璃进入空气，由位于 RIS 上方 10--50\,m 水平接收平面上的有限孔径接收机（RX）检测。作为对照，不经过 RIS 的直达光从同一发射机出发，穿过同一时刻的粗糙海面进入空气，到达同一个 RX。
+
+系统中的光源、海面、浮体、液晶层和接收机各自具有自然的描述坐标，光学计算又需要在它们之间反复变换。图\ref{fig:c2_frames}给出了全文使用的坐标系，表\ref{tab:c2_frames}汇总了各坐标系的原点、坐标轴和变换关系。全文以列向量表示坐标，旋转矩阵均为由局部坐标到世界坐标的正交矩阵。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c2/coordinate_system.pdf}
+\caption{系统坐标系示意图。(a) 世界坐标系、RIS 本体与面板坐标系、发射机光轴坐标系和接收孔径坐标系；(b) RIS 面板局部坐标系下的分层结构，$\boldsymbol\xi$ 为液晶层上的横向坐标}
+\label{fig:c2_frames}
+\end{figure}
+
+\subsection{世界坐标系与水平参考系}
+
+世界坐标系 $O$-$XYZ$ 为惯性系，$XY$ 平面取为静水面，$Z$ 轴竖直向上。海面高度 $\zeta(X,Y,t)$、RIS 的位置与姿态、发射机位置和接收平面都在该坐标系中描述。风向参数 $\phi_w$ 在 $XY$ 平面内定义，决定海浪谐波的主传播方位（第\ref{sec:c2_sea}节）。
+
+浮体水动力的附加惯性、波浪激励和辐射记忆在水平参考系 $\mathcal H$ 中定义。$\mathcal H$ 的原点为浮体初始质心，坐标轴由世界坐标绕 $Z$ 轴旋转初始偏航角 $\psi_0$ 得到，其姿态矩阵为 $R_H=R_z(\psi_0)$。$\mathcal H$ 不随浮体转动，第三章的六自由度方程在其中线性化波浪载荷。
+
+\subsection{RIS本体坐标系与面板坐标系}
+
+RIS 与浮框作为一个刚体，本体坐标系 $G$-$x_By_Bz_B$ 的原点取在组合质心 $G$，$x_B$ 轴沿面板 $L_x$ 方向，$z_B$ 轴指向面板上表面。记质心的世界坐标为 $\mathbf x_G$，由欧拉角 $(\phi,\theta,\psi)$ 按 $ZYX$ 顺序给出的姿态矩阵为 $R$，则本体上一点 $\mathbf r_B$ 的世界坐标为
 \begin{equation}
-\mathbf r=\mathbf p_b+R\mathbf r',\qquad \mathbf r'=R^{\mathrm T}(\mathbf r-\mathbf p_b).
+\mathbf x_W=\mathbf x_G+R\,\mathbf r_B.
+\label{eq:c2_body}
+\end{equation}
+
+光学计算在面板局部坐标系 $\mathbf p_b$-$x'y'z'$ 中进行。其原点取在玻璃下表面中心 $\mathbf p_b$，坐标轴与本体坐标轴平行，$z'$ 轴指向玻璃上表面。由于面板与浮框刚性连接，$\mathbf p_b$ 在本体坐标中是一个常向量 $\mathbf r_{b,B}$，两者满足
+\begin{equation}
+\mathbf p_b=\mathbf x_G+R\,\mathbf r_{b,B},\qquad
+\mathbf r=\mathbf p_b+R\mathbf r',\qquad \mathbf r'=R^{\mathrm T}(\mathbf r-\mathbf p_b),
 \label{eq:c2_frame}
 \end{equation}
-发射机光轴坐标系以发射点 $\mathbf p_T$ 为原点、光轴方向为局部 $z$ 轴，$R_T$ 为其到世界坐标的旋转矩阵。玻璃厚度记为 $t_g$，液晶层距下表面的高度为 $h_i$，液晶层到上表面的玻璃厚度为 $h_o=t_g-h_i$。接收平面位于 $Z=Z_R$，本文中的接收距离 $z$ 指接收平面相对 RIS 上表面的竖直高度。
+其中 $\mathbf r$ 与 $\mathbf r'$ 分别为同一点的世界坐标与面板坐标。面板法向为 $\mathbf n_R=R\mathbf e_z$。玻璃总厚度记为 $t_g$，液晶层位于 $z'=h_i$，液晶层到上表面的玻璃厚度为 $h_o=t_g-h_i$。液晶层上的横向坐标记为 $\boldsymbol\xi=(x',y')$，液晶单元中心 $\mathbf c_{ij}$、通光区 $D_m$ 和相位 $\phi_m(\boldsymbol\xi)$ 都在该平面上定义。光线在面板内的切向波矢 $\mathbf q$（第\ref{sec:c2_refraction}节）同样在面板坐标中表示；由于各层界面与 $x'y'$ 平面平行，$\mathbf q$ 在穿过各层时保持不变，只在液晶层被相位梯度改变。
+
+\subsection{发射机光轴坐标系}
+
+发射机光轴坐标系 $\mathbf p_T$-$x_Ty_Tz_T$ 以发射点 $\mathbf p_T$ 为原点，$z_T$ 轴沿光轴方向，$R_T$ 为其到世界坐标的旋转矩阵：
+\begin{equation}
+\mathbf r=\mathbf p_T+R_T\mathbf r_T,\qquad \hat{\mathbf d}_T=R_T\mathbf e_z.
+\label{eq:c2_tx}
+\end{equation}
+光源的束腰位置和横向斜率在该坐标系中抽样（第四章）。光轴与面板法向的夹角为实际入射角 $\theta_{\mathrm{in}}=\arccos(\hat{\mathbf d}_T\cdot\mathbf n_R)$。在面板坐标中计算入射光场时，需要发射机坐标到面板坐标的相对旋转
+\begin{equation}
+S=R^{\mathrm T}R_T,\qquad \mathbf s'=R^{\mathrm T}(\mathbf p_T-\mathbf p_b),
+\label{eq:c2_relative}
+\end{equation}
+$\mathbf s'$ 为光源在面板坐标中的位置。发射机跟踪 RIS 时，光轴由初始方向 $\hat{\mathbf d}_{T,0}$ 转到指向冻结时刻下表面中心的方向 $\hat{\mathbf d}_T=(\mathbf p_b-\mathbf p_T)/|\mathbf p_b-\mathbf p_T|$，对应的旋转取绕 $\hat{\mathbf d}_{T,0}\times\hat{\mathbf d}_T$ 的最小旋转，由 Rodrigues 公式给出（第四章式(\ref{eq:c4_track})）。
+
+\subsection{接收平面与接收孔径坐标系}
+
+接收平面为水平面 $Z=Z_R$。本文的接收距离 $z$ 定义为接收平面相对静水状态下液晶层中心的竖直高度：
+\begin{equation}
+Z_R=p^{\mathrm{calm}}_{b,Z}+h_i+z,
+\label{eq:c2_zr}
+\end{equation}
+其中 $p^{\mathrm{calm}}_{b,Z}$ 为静水平衡时玻璃下表面中心的高度。接收平面固定在世界坐标系中，不随 RIS 的升沉改变。RX 中心 $\mathbf x_{\mathrm{RX}}$ 位于该平面内，名义来光方向（视轴）取为由 RIS 上表面中心指向 RX 中心的单位向量
+\begin{equation}
+\hat{\mathbf s}=\frac{\mathbf x_{\mathrm{RX}}-\mathbf o_R}{|\mathbf x_{\mathrm{RX}}-\mathbf o_R|},\qquad
+\mathbf o_R=(p_{b,X},\ p_{b,Y},\ p_{b,Z}+t_g)^{\mathrm T}.
+\label{eq:c2_boresight}
+\end{equation}
+接收孔径坐标系以 RX 中心为原点，两个孔径基向量取 $\mathbf e_1\propto\mathbf e_Y\times\hat{\mathbf s}$、$\mathbf e_2=\hat{\mathbf s}\times\mathbf e_1$，孔径法向为 $\hat{\mathbf s}$。接收机存在角度误差时，孔径基向量绕垂直于 $\hat{\mathbf s}$ 的轴旋转误差角 $\psi$，得到实际孔径基 $(\mathbf u,\mathbf v)$ 和实际法向 $\hat{\mathbf n}_{\mathrm{RX}}$；存在位置抖动时，孔径中心平移到 $\mathbf x_{\mathrm{RX}}+\mathbf j$（第五章）。
+
+\subsection{海面局部坐标与坐标系汇总}
+
+直达光在海面上一点 $(X,Y,\zeta)$ 处的折射在局部切平面中描述。该点的单位法向为
+\begin{equation}
+\hat{\mathbf n}_s=\frac{(-\partial_X\zeta,\ -\partial_Y\zeta,\ 1)^{\mathrm T}}{\sqrt{1+(\partial_X\zeta)^2+(\partial_Y\zeta)^2}},
+\label{eq:c2_surface_normal}
+\end{equation}
+切向波矢在垂直于 $\hat{\mathbf n}_s$ 的平面内定义（式(\ref{eq:c2_vector_snell})）。静水时 $\hat{\mathbf n}_s=\mathbf e_Z$，局部切平面退化为 $XY$ 平面。
+
+\begin{table}[htbp]
+\caption{全文使用的坐标系}
+\label{tab:c2_frames}
+\centering
+\small
+\begin{tabular}{llll}
+\toprule
+坐标系 & 原点与坐标轴 & 与世界坐标的关系 & 主要用途 \\
+\midrule
+世界坐标系 $O$-$XYZ$ & 静水面，$Z$ 竖直向上 & -- & 海面、位姿、接收平面 \\
+水平参考系 $\mathcal H$ & 初始质心，绕 $Z$ 转 $\psi_0$ & $R_H=R_z(\psi_0)$ & 水动力线性化 \\
+本体坐标系 $G$-$x_By_Bz_B$ & 组合质心，随浮体转动 & $\mathbf x_W=\mathbf x_G+R\mathbf r_B$ & 六自由度运动 \\
+面板坐标系 $\mathbf p_b$-$x'y'z'$ & 玻璃下表面中心，轴同本体 & $\mathbf r=\mathbf p_b+R\mathbf r'$ & 分层折射、相位、衍射 \\
+光轴坐标系 $\mathbf p_T$-$x_Ty_Tz_T$ & 发射点，$z_T$ 沿光轴 & $\mathbf r=\mathbf p_T+R_T\mathbf r_T$ & 光源抽样、弹道光 \\
+接收孔径坐标系 & RX 中心，法向 $\hat{\mathbf s}$ & 基向量 $\mathbf e_1,\mathbf e_2,\hat{\mathbf s}$ & 孔径积分、视场 \\
+海面局部坐标 & 海面点，法向 $\hat{\mathbf n}_s$ & 式(\ref{eq:c2_surface_normal}) & 直达光折射 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+各坐标系之间的变换链为：光源样本由光轴坐标经 $R_T$ 变换到世界坐标，再经 $R^{\mathrm T}$ 变换到面板坐标，在面板坐标中完成水—玻璃—液晶—玻璃—空气的分层计算；出射光线由 $R$ 变换回世界坐标，与接收平面 $Z=Z_R$ 求交，最后在接收孔径坐标中完成孔径积分。$R$ 与 $\mathbf x_G$ 由第三章的运动模型给出，$R_T$ 与 $\mathbf p_T$ 由第四章的发射端模型给出。
 
 \section{海水固有光学特性与水下光传输}
 \label{sec:c2_water}
@@ -30,7 +116,25 @@ c=a+b.
 P_b(L)=P_0\,e^{-cL}.
 \label{eq:c2_beer}
 \end{equation}
-式中 $P_0$ 为发射功率，$e^{-cL}$ 是光子在路径 $L$ 上不发生任何碰撞的生存概率。本文采用 Petzold 测量给出的两类典型水体参数\citing{petzold1972vsf}：清澈大洋水 $a=0.114\,\mathrm{m^{-1}}$、$b=0.037\,\mathrm{m^{-1}}$、$c=0.151\,\mathrm{m^{-1}}$；近岸水 $a=0.179\,\mathrm{m^{-1}}$、$b=0.219\,\mathrm{m^{-1}}$、$c=0.398\,\mathrm{m^{-1}}$。前者的单次散射反照率 $b/c\approx0.245$，散射光在 10\,m 量级距离上主要表现为弹道光斑周围的弱背景；后者 $b/c\approx0.55$，散射光占比显著提高。
+式中 $P_0$ 为发射功率，$e^{-cL}$ 是光子在路径 $L$ 上不发生任何碰撞的生存概率。单次散射反照率 $\omega_0=b/c$ 表示一次碰撞后光子存活的概率，它决定了散射光在总光强中的比重，也决定了第\ref{sec:c2_rte}小节中碰撞级数的收敛速度。表\ref{tab:c2_iop}列出了 Petzold 测量给出的四类典型水体参数\citing{petzold1972vsf,mobley1994light}。
+
+\begin{table}[htbp]
+\caption{典型水体的吸收、散射与消光系数（$\lambda_0\approx530\,\mathrm{nm}$）}
+\label{tab:c2_iop}
+\centering
+\begin{tabular}{cccccc}
+\toprule
+水体类型 & $a/\mathrm{m^{-1}}$ & $b/\mathrm{m^{-1}}$ & $c/\mathrm{m^{-1}}$ & $\omega_0=b/c$ & 10\,m 弹道透过率 $e^{-10c}$ \\
+\midrule
+纯海水 & 0.053 & 0.003 & 0.056 & 0.054 & 0.571 \\
+清澈大洋水 & 0.114 & 0.037 & 0.151 & 0.245 & 0.221 \\
+近岸水 & 0.179 & 0.219 & 0.398 & 0.550 & $1.87\times10^{-2}$ \\
+浑浊港湾水 & 0.366 & 1.824 & 2.190 & 0.833 & $3.1\times10^{-10}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+本文的链路仿真采用清澈大洋水。此时 10\,m 斜程上弹道光保留约 22\% 的功率，$\omega_0\approx0.245$，散射光在 10\,m 量级距离上主要表现为弹道光斑周围的弱背景；近岸水的 $\omega_0$ 提高到 0.55，散射光占比显著增加；浑浊港湾水中弹道光在 10\,m 内几乎完全消失，链路只能依靠散射光，已不适合依赖相干相位调制的 RIS 方案。
 
 \subsection{体散射函数与 Henyey--Greenstein 相函数}
 
@@ -46,23 +150,46 @@ p_g(\mu)=\frac{1-g^2}{4\pi\left(1+g^2-2g\mu\right)^{3/2}},\qquad \mu=\mathbf s\c
 \end{equation}
 方位角在 $[0,2\pi)$ 内均匀分布。$g\to0$ 时退化为各向同性散射 $\mu=2U-1$。
 
-\subsection{辐射输运方程与蒙特卡洛方法}
+相函数决定了光场中哪一部分可以用确定的复振幅描述。弹道光的振幅只由消光系数决定，按 $e^{-cL/2}$ 衰减，其相位由光程确定，因而具有确定的复振幅；一旦光子发生散射，其路径长度随散射位置和方向随机变化，到达 RIS 时的相位在 $[0,2\pi)$ 内随机分布，散射场的系综平均为零，只保留强度。因此 RIS 下表面的复光强写为
+\begin{equation}
+\mathbb E\big[|U|^2\big]=|U_b|^2+I_s,\qquad \mathbb E[U]=U_b,
+\label{eq:c2_coherent_split}
+\end{equation}
+其中 $U_b$ 为弹道光复振幅，$I_s$ 为散射光强。HG 相函数通过 $I_s$ 进入这一表达式：$g$ 越接近 1，散射光越集中在原传播方向附近，$I_s$ 在弹道光斑周围形成一个较窄的晕，且与 $|U_b|^2$ 在 RIS 上重叠的比例越大；$g$ 越小，散射光越快地扩散到整个面板之外。相函数的形状不改变弹道光的复振幅，只改变散射晕的空间分布和到达 RIS 的散射功率。RIS 的相位设计只能对 $U_b$ 进行相干整形，散射光以非相干强度形式随单元梯度偏折后叠加到接收面上（第四章）。
+
+\subsection{辐射输运方程及其可解形式}
+\label{sec:c2_rte}
 
 水下光场的完整描述由辐射输运方程（Radiative Transfer Equation，RTE）给出\citing{mobley1994light}。对稳态、无内部光源的情况，辐亮度 $L(\mathbf r,\mathbf s)$ 满足
 \begin{equation}
 \mathbf s\cdot\nabla L(\mathbf r,\mathbf s)=-c\,L(\mathbf r,\mathbf s)+b\int_{S^2}p_g(\mathbf s\cdot\mathbf s')L(\mathbf r,\mathbf s')\,d\Omega'.
 \label{eq:c2_rte}
 \end{equation}
-式(\ref{eq:c2_rte})右侧第一项表示沿传播方向的吸收与散射损失，第二项表示其他方向散射进入 $\mathbf s$ 方向的增益。将散射项视为源项并沿特征线积分，可以把辐亮度展开为按碰撞次数排列的级数：零次项为弹道光，第 $m$ 项为恰好经历 $m$ 次散射的光。该展开是第四章建立光束扩展函数的出发点。
+式(\ref{eq:c2_rte})右侧第一项表示沿传播方向的吸收与散射损失，第二项表示其他方向散射进入 $\mathbf s$ 方向的增益。对一般的非均匀介质、复杂边界和有反射的界面，该积分微分方程难以解析求解。
 
-对一般几何边界，RTE 难以解析求解，蒙特卡洛（Monte Carlo，MC）方法通过追踪大量光子包的随机游走来估计光场\citing{gabriel2013mc,wang1995mcml,tang2014impulse}。每个光子包携带权重 $w$，其自由程按指数分布抽样：
+本文的水下问题具有三个简化条件：水体均匀，$a$、$b$、$g$ 为常数；光源为光轴坐标系中给定分布的高斯光束；RIS 下表面是吸收边界，光子首次到达即被记分，不再返回水中。在这些条件下，RTE 可以沿特征线化为第二类 Volterra--Fredholm 积分方程
+\begin{equation}
+L(\mathbf r,\mathbf s)=L_0(\mathbf r,\mathbf s)
++\int_0^{\ell_B(\mathbf r,\mathbf s)}e^{-c\ell}\,b\int_{S^2}p_g(\mathbf s\cdot\mathbf s')\,L(\mathbf r-\ell\mathbf s,\mathbf s')\,d\Omega'\,d\ell
+\triangleq L_0+\mathcal K L,
+\label{eq:c2_rte_integral}
+\end{equation}
+其中 $\ell_B$ 为从 $\mathbf r$ 沿 $-\mathbf s$ 回溯到光源平面的距离，$L_0$ 为光源直接贡献、只经 $e^{-c\ell}$ 衰减的弹道辐亮度。积分算子 $\mathcal K$ 表示“散射一次并继续传输”。由于每次碰撞保留的功率比例为 $b/c$，且 $p_g$ 归一，$\mathcal K$ 在功率范数下满足 $\|\mathcal K\|\le\omega_0<1$，因此式(\ref{eq:c2_rte_integral})的解存在、唯一，并由收敛的 Neumann 级数给出：
+\begin{equation}
+L=\sum_{m=0}^{\infty}\mathcal K^mL_0,\qquad
+\Big\|L-\sum_{m=0}^{M}\mathcal K^mL_0\Big\|\le\frac{\omega_0^{M+1}}{1-\omega_0}\|L_0\|.
+\label{eq:c2_neumann_series}
+\end{equation}
+级数第 $m$ 项为恰好经历 $m$ 次散射的光，零次项即弹道光。对清澈大洋水 $\omega_0=0.245$，保留到 $M=5$ 次散射的相对截断误差已小于 $2.9\times10^{-4}$。式(\ref{eq:c2_neumann_series})就是本文所用 RTE 的解：零次项对高斯源和任意倾斜面板有闭式（第四章式(\ref{eq:c4_Ib})和(\ref{eq:c4_Ib_point})）；第 $m\ge1$ 项是 $m$ 段自由程和 $m$ 个散射方向上的显式多重积分（第四章式(\ref{eq:c4_Is})），可以用无偏的随机求积在给定精度下求值；在小角近似下，各阶散射项在横向 Fourier 域中可以逐阶求和，得到 Fourier--Bessel 形式的闭式解（第四章式(\ref{eq:c4_sbsf_s})）。该展开是第四章建立光束扩展函数的出发点。
+
+蒙特卡洛（Monte Carlo，MC）方法通过追踪大量光子包的随机游走直接对式(\ref{eq:c2_neumann_series})抽样\citing{gabriel2013mc,wang1995mcml,tang2014impulse}。每个光子包携带权重 $w$，其自由程按指数分布抽样：
 \begin{equation}
 \ell=-\frac{\ln U_1}{c}.
 \label{eq:c2_freepath}
 \end{equation}
-每次碰撞时，权重中比例为 $a/c$ 的部分被吸收，其余部分按 HG 相函数改变方向继续传播，即 $w^+=w\,b/c$。当权重低于阈值时采用俄罗斯轮盘赌：以概率 $p_s$ 保留并将权重放大为 $w/p_s$，否则终止，从而在不引入偏差的前提下控制计算量。光子包到达记分平面时，其功率 $P_0w/N_\gamma$ 累加到对应像素，除以像素面积即得光强估计，$N_\gamma$ 为发射光子包总数。MC 方法物理假设清晰、适用于任意几何，代价是统计噪声随像素和光子数变化，弱光区域需要大量样本才能稳定。
+每次碰撞时，权重中比例为 $a/c$ 的部分被吸收，其余部分按 HG 相函数改变方向继续传播，即 $w^+=w\,b/c$。当权重低于阈值时采用俄罗斯轮盘赌：以概率 $p_s$ 保留并将权重放大为 $w/p_s$，否则终止，从而在不引入偏差的前提下控制计算量。光子包到达记分平面时，其功率 $P_0w/N_\gamma$ 累加到对应像素，除以像素面积即得光强估计，$N_\gamma$ 为发射光子包总数。MC 方法适用于任意几何，包括后文无 RIS 直达链路所穿过的粗糙海面；其统计噪声随像素和光子数变化，弱光区域需要较多样本才能稳定。
 
-\section{海浪谱与随机海面}
+\section{海浪谱与随机海面生成}
 \label{sec:c2_sea}
 
 \subsection{海浪频谱与方向扩展}
@@ -93,9 +220,63 @@ a_{ij}=\sqrt{2S(\omega_i)D(\vartheta_j)\,\Delta\omega_i\,\Delta\vartheta_j}
 \end{equation}
 其中 $(k_{x,ij},k_{y,ij})=k_i(\cos\theta_{ij},\sin\theta_{ij})$，$\theta_{ij}$ 为第 $(i,j)$ 个谐波在世界坐标系中的传播方位角，$\epsilon_{ij}$ 为 $[0,2\pi)$ 内均匀分布的随机初相。这种方法称为双叠加法\citing{tessendorf2001ocean}。
 
-离散海面的方差应等于连续谱在所选频带内的积分 $\sigma_\zeta^2=\int\!\!\int S(\omega)D(\vartheta)\,d\omega\,d\vartheta$。式(\ref{eq:c2_amplitude})中各单元的权重 $\Delta\omega_i$ 若取为非均匀网格的梯形积分权重，端点应只计半个区间；若误将端点权重加倍，频带边缘的能量会被系统地高估。第三章将以连续谱数值积分审计离散方差，作为海面生成正确性的检查。
+\subsection{风向映射与谱离散}
 
-\section{分层介质界面的折射与透射}
+海面由式(\ref{eq:c2_neumann})--(\ref{eq:c2_superposition})生成。设风向参数为 $\phi_w$，谐波主传播方向相对世界 $+X$ 轴的方位角取为 $90^\circ-\phi_w$，第 $(i,j)$ 个谐波的传播方位角为
+\begin{equation}
+\theta_{ij}=\vartheta_j+\frac{\pi}{2}-\phi_w.
+\label{eq:c3_wind}
+\end{equation}
+用复数形式表示，海面高度写为
+\begin{equation}
+\zeta(X,Y,t)=\Re\sum_{l}c_l\,e^{i(\omega_lt-k_{xl}X-k_{yl}Y)},\qquad c_l=a_le^{i\epsilon_l},
+\label{eq:c3_complex}
+\end{equation}
+其中 $l$ 遍历全部频率—方向单元。海面生成器与浮体载荷求解共用同一组谐波分量 $\{c_l,\omega_l,k_{xl},k_{yl}\}$，保证海面形貌和 RIS 受到的波浪力来自同一个随机实现。随机初相由独立的 MT19937 随机流生成，随机种子取 600。
+
+频率区间取 0.05--4\,Hz，在对数等距网格上取 50 个频率点；方向区间 $[-\pi/2,\pi/2]$ 取 36 个方向点。频率和方向的积分权重均采用梯形公式，端点取半权重。
+
+
+\subsection{离散谱方差审计}
+
+离散谱的方差应与连续谱在同一频带内的积分一致。以独立的自适应数值积分计算连续谱方差作为参照，表\ref{tab:c3_audit}给出了离散方差的相对误差。早期实现在频率端点处采用了加倍的权重，对 $U=12\,\mathrm{m/s}$、0.1--4\,Hz 的算例产生 5.689\% 的频带方差误差；修正为梯形半权重后，误差降为 0.176\%，剩余部分来自 50 点梯形积分本身的离散误差。在默认的 0.05--4\,Hz 频带下，四组风速的最大方差误差为 0.133\%；将频率点加密到 400 个后，误差降至 0.0021\%，表明离散方案随网格加密收敛。
+
+\begin{table}[htbp]
+\caption{海浪谱离散方差审计结果}
+\label{tab:c3_audit}
+\centering
+\begin{tabular}{lcc}
+\toprule
+算例 & 频率点数 & 方差相对误差 \\
+\midrule
+$U=12\,\mathrm{m/s}$，0.1--4\,Hz，端点权重加倍（修正前） & 50 & 5.689\% \\
+$U=12\,\mathrm{m/s}$，0.1--4\,Hz，梯形半权重 & 50 & 0.176\% \\
+$U=3,5,9,12\,\mathrm{m/s}$，0.05--4\,Hz（四组最大值） & 50 & 0.133\% \\
+$U=3,5,9,12\,\mathrm{m/s}$，0.05--4\,Hz（四组最大值） & 400 & 0.0021\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+对式(\ref{eq:c2_neumann})在全频带上积分可以得到零阶矩的闭式。令 $x=1/\omega$，有
+\begin{equation}
+m_0=\int_0^\infty S(\omega)\,d\omega=C\frac{\pi}{4}\cdot\frac{3\sqrt\pi}{8}\left(\frac{U^2}{2g^2}\right)^{5/2},\qquad H_s=4\sqrt{m_0}.
+\label{eq:c3_m0}
+\end{equation}
+按式(\ref{eq:c3_m0})，风速 3、5、9、12\,m/s 对应的全频带有效波高约为 0.11、0.39、1.71 和 3.51\,m，谱峰角频率 $\omega_p=\sqrt{2/3}\,g/U$ 对应的周期约为 2.4、3.9、7.1 和 9.4\,s。有效波高随风速的五次方根增长，谱峰向低频移动，这一特征决定了高风速下 RIS 的运动以大幅度、长周期的随波升沉为主。
+
+\subsection{冻结海面与局部斜率}
+
+光在水下 10\,m 斜程和空中数十米距离上的传播时间为纳秒至百纳秒量级，远小于海浪周期，因此在任一时刻 $t^\ast$ 可以把海面冻结为静态边界。冻结海面由式(\ref{eq:c3_complex})在 $t=t^\ast$ 处给出，其斜率由同一组谐波解析求导得到：
+\begin{equation}
+\partial_X\zeta=\Re\sum_l(-ik_{xl})c_le^{i(\omega_lt^\ast-k_{xl}X-k_{yl}Y)},\qquad
+\partial_Y\zeta=\Re\sum_l(-ik_{yl})c_le^{i(\omega_lt^\ast-k_{xl}X-k_{yl}Y)},
+\label{eq:c2_slope}
+\end{equation}
+代入式(\ref{eq:c2_surface_normal})即得局部法向。数值上，在 RIS 周围 $\pm3\,\mathrm m$、步长 1.25\,cm 的网格上用 Fourier 求和精确计算高度与斜率，网格内三次插值，网格外直接按式(\ref{eq:c3_complex})求和。
+
+同一组谐波分量 $\{c_l,\omega_l,k_{xl},k_{yl}\}$ 同时用于两件事：驱动第三章的 RIS 六自由度运动，给出冻结时刻 RIS 的位置与姿态；给出无 RIS 直达光所穿过的海面。因此 RIS 链路与直达链路面对的是同一个随机海况的同一个时刻，两者的比较只反映链路结构的差别。
+
+\section{分层介质与粗糙海面上的折射与复光场传递}
 \label{sec:c2_refraction}
 
 \subsection{切向波矢守恒与 Snell 定律}
@@ -157,6 +338,32 @@ R_p=\left(\frac{n_2^2\kappa_1-n_1^2\kappa_2}{n_2^2\kappa_1+n_1^2\kappa_2}\right)
 \end{equation}
 对非偏振光取平均，功率透射率为 $T_{12}=1-(R_s+R_p)/2$；当 $q^2\ge\min(n_1^2,n_2^2)$ 时取 $T_{12}=0$。对于水—玻璃界面（$n_w=1.33$，$n_g=1.50$），光从低折射率进入高折射率介质，不存在全反射；玻璃—空气界面的可传播条件为 $q<n_a$。
 
+\subsection{分层介质中的复光场传递}
+\label{sec:c2_complex_transfer}
+
+式(\ref{eq:c2_fq})--(\ref{eq:c2_fresnel})给出的是几何光学量：Fermat 路径确定光线的方向和光程，Jacobian 确定光线管截面积的变化，Fresnel 公式确定界面上的功率分配。它们本身是实数量，并不构成复光场；把它们组合起来，才得到具有振幅和相位的复光场传递关系。
+
+在几何光学（程函）近似下，标量场写为 $U=Ae^{i\Phi}$，振幅 $A$ 沿光线管满足能量守恒，相位 $\Phi$ 沿光线按光程累积。本文采用通量振幅规范，即 $|U|^2$ 等于穿过参考平面的法向功率密度（第四章式(\ref{eq:c4_flux})）。设光线从平面 $\Pi_1$ 上的点 $\mathbf x_1$ 穿过若干平行界面到达平面 $\Pi_2$ 上的点 $\mathbf x_2$，光线管在两平面上的截面积之比为 $dA_2/dA_1$，则
+\begin{equation}
+U_2(\mathbf x_2)=\Big[\prod_{\text{界面}}t_{jk}(\mathbf q)\Big]\sqrt{\frac{dA_1}{dA_2}}\;U_1(\mathbf x_1)\,\exp\!\big[ik_0L(\mathbf x_1,\mathbf x_2)\big],\qquad
+t_{jk}=\sqrt{T_{jk}(\mathbf q)},
+\label{eq:c2_complex_transfer}
+\end{equation}
+其中 $L$ 为式(\ref{eq:c2_fermat_sol})的光程，$t_{jk}$ 为通量振幅透射系数。对点源，$dA_1/dA_2$ 由式(\ref{eq:c2_jacobian})的行列式之比给出；对平面上的扩展场，它是两个平面之间光线映射的 Jacobian 行列式的倒数。式(\ref{eq:c2_complex_transfer})的模平方给出 $|U_2|^2dA_2=\prod T_{jk}\,|U_1|^2dA_1$，即功率守恒；其辐角 $\arg U_2=\arg U_1+k_0L$ 给出传播相位。亚临界入射时 Fresnel 透射系数为正实数，不引入附加相位；超过临界角时透射波为倏逝波，取 $t_{jk}=0$。
+
+式(\ref{eq:c2_complex_transfer})是后文两类复光场的共同基础：第四章液晶层上的入射复场（式(\ref{eq:c4_Ih})和(\ref{eq:c4_phase})）直接是它在水—玻璃两层上的具体形式；RIS 到接收平面的衍射积分（第四章式(\ref{eq:c5_unitfield})）以它为积分核，把每个孔径点的复振幅沿精确分层光程传到接收点，再对孔径积分以计入衍射与单元间干涉。
+
+\subsection{粗糙海面上的矢量折射}
+
+无 RIS 的直达光在冻结海面上一点处折射。设入射单位方向为 $\hat{\mathbf d}$，局部法向为式(\ref{eq:c2_surface_normal})的 $\hat{\mathbf n}_s$，将入射方向分解为法向与切向分量，切向波矢守恒给出矢量形式的 Snell 定律：
+\begin{equation}
+\mathbf q=n_w\big[\hat{\mathbf d}-(\hat{\mathbf d}\cdot\hat{\mathbf n}_s)\hat{\mathbf n}_s\big],\qquad
+\hat{\mathbf d}_a=\frac{\mathbf q+\sqrt{n_a^2-|\mathbf q|^2}\,\hat{\mathbf n}_s}{n_a},\qquad
+P\leftarrow P\,T_{wa}(|\mathbf q|).
+\label{eq:c2_vector_snell}
+\end{equation}
+$|\mathbf q|\ge n_a$ 时发生全反射，光线不进入空气。与静水面相比，粗糙海面使局部入射角随位置变化：海面坡度可以使轴向入射角超过 $48.75^\circ$ 的部分光线在局部满足透射条件，也可以使原本可以透射的光线在局部发生全反射；透射光线还可能在离开波浪层之前被相邻波峰遮挡而重新进入水中。直达链路在接收平面上的光强因此由大量折射方向不同的光线叠加而成，第五章以 MC 方法计算这一过程。
+
 \section{液晶相位调制与广义 Snell 定律}
 \label{sec:c2_lc}
 
@@ -192,44 +399,121 @@ R_p=\left(\frac{n_2^2\kappa_1-n_1^2\kappa_2}{n_2^2\kappa_1+n_1^2\kappa_2}\right)
 \end{equation}
 其中 $b_x=(\partial\phi/\partial x)/k_0$ 为归一化相位梯度，$\theta_{\max}$ 为空气中对应的最大偏转角。$y$ 方向同理。式(\ref{eq:c2_nyquist})表明，偏转角上限只由波长与电极周期决定。
 
-\section{高斯光束与标量衍射理论}
-\label{sec:c2_diffraction}
+\section{液晶RIS的器件设计}
+\label{sec:c3_device}
 
-\subsection{高斯光束}
+\subsection{面板结构与单元排布}
 
-激光器输出的基模光束可用高斯光束描述。在折射率为 $n$ 的介质中，束腰半径 $w_0$ 的高斯光束的瑞利距离、光斑半径、波面曲率半径和 Gouy 相位分别为
+RIS 的器件结构参考 Kim 等研制的大面积透射式液晶光束偏转器\citing{kim2020lcdeflector}。该器件在两片玻璃基板之间夹持液晶层，下基板上以光刻工艺制作微米级周期的 ITO 条形电极，上基板为公共电极，单个器件的有效通光区为 14.4\,mm $\times$ 14.4\,mm。单个器件的面积远小于水空链路所需的米级口径，本文将多个器件以阵列方式拼接在一块光学玻璃夹层中构成 RIS 面板，设计参数如表\ref{tab:c3_device}所示。
+
+\begin{table}[htbp]
+\caption{液晶RIS器件设计参数}
+\label{tab:c3_device}
+\centering
+\begin{tabular}{ll}
+\toprule
+参数 & 数值 \\
+\midrule
+面板尺寸与厚度 & $1\,\mathrm{m}\times1\,\mathrm{m}$，厚 10\,mm，液晶单元位于厚度中间 \\
+液晶单元外形尺寸 & $15\,\mathrm{mm}\times15\,\mathrm{mm}$ \\
+单元通光区尺寸 & $14.4\,\mathrm{mm}\times14.4\,\mathrm{mm}$ \\
+相邻单元边缘间隙 & 10\,mm \\
+相邻单元中心间距 & 25\,mm \\
+单元数量 & $40\times40=1600$ \\
+单元叠层结构 & 0.55\,mm 玻璃 / ITO / 2.5\,$\mu$m 液晶 / ITO / 0.55\,mm 玻璃 \\
+微电极周期 & 1\,$\mu$m（电极宽 0.7\,$\mu$m，间隙 0.3\,$\mu$m） \\
+相位调制范围 & $0\sim2\pi$\,rad \\
+工作波长 & 532\,nm \\
+单轴最大偏转角 & $15.426^\circ$（连续值），$15.414^\circ$（量化网格最大值） \\
+偏转角控制步长 & $0.021^\circ$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+以面板中心为原点，第 $(i,j)$ 个单元的中心坐标为
 \begin{equation}
-z_{\mathrm R}=\frac{\pi nw_0^2}{\lambda_0},\quad
-w(z)=w_0\sqrt{1+\Big(\frac{z}{z_{\mathrm R}}\Big)^2},\quad
-\frac{1}{\mathcal R(z)}=\frac{z}{z^2+z_{\mathrm R}^2},\quad
-\zeta_G(z)=\arctan\frac{z}{z_{\mathrm R}}.
-\label{eq:c2_gauss}
+\mathbf c_{ij}=\left(\Big[i-\frac{N_x+1}{2}\Big]p_x,\ \Big[j-\frac{N_y+1}{2}\Big]p_y\right),\qquad i,j=1,\ldots,40,
+\label{eq:c3_centers}
 \end{equation}
-远场发散半角为 $\theta_d=\lambda_0/(\pi nw_0)$。在距束腰 $z$、横向距离 $\rho$ 处，高斯光束的相位为
+其中 $N_x=N_y=40$，$p_x=p_y=25\,\mathrm{mm}$ 为单元中心间距。记以 $\mathbf c_m$ 为中心、边长 $d=14.4\,\mathrm{mm}$ 的正方形为第 $m$ 个单元的通光区 $D_m$，则面板的通光掩模为
 \begin{equation}
-\Phi(\rho,z)=k_0n\left(z+\frac{\rho^2}{2\mathcal R(z)}\right)-\zeta_G(z).
-\label{eq:c2_gauss_phase}
+M(\boldsymbol\xi)=\sum_{m=1}^{1600}\mathbf 1_{D_m}(\boldsymbol\xi),
+\label{eq:c3_mask}
 \end{equation}
-本文水下光源取 $\theta_d=0.01\,\mathrm{rad}$，由 $w_0\theta_d=\lambda_0/(\pi n_w)$ 得到 $w_0\approx12.7\,\mu\mathrm m$，瑞利距离仅约 1.3\,mm，10\,m 处的光束已处于远场。
+面积填充率为 $\eta_{\mathrm{fill}}=(14.4/25)^2\approx0.332$。单元之间的间隙用于布置驱动走线和过孔，第四章的接收平面复光场计算将完整计及这一填充率：未落在通光区内的光不参与相位调制，也不进入空气侧链路。
 
-\subsection{Fresnel 衍射积分}
+液晶层厚 2.5\,$\mu$m。由式(\ref{eq:c2_lc_phase})，实现 $2\pi$ 相位调制要求液晶双折射率满足 $\Delta n\ge\lambda_0/d_{\mathrm{LC}}\approx0.213$，常用的高双折射率向列相液晶可以满足这一条件。
 
-对标量光场 $U$，从孔径平面 $\Sigma$ 传播到观察点 $\mathbf x$ 的场由 Fresnel--Kirchhoff 衍射积分给出\citing{goodman2005fourier}。在近轴条件下，同一介质中距离为 $z$ 的传播可写为
+\subsection{偏转角预算与角度量化}
+
+单元内的微电极周期 $d_e=1\,\mu\mathrm m$ 决定了每个单元能够加载的最大相位梯度。由式(\ref{eq:c2_nyquist})，归一化相位梯度的上限为
 \begin{equation}
-U(\mathbf x)=\frac{n\,e^{ik_0nz}}{i\lambda_0z}\int_\Sigma U(\boldsymbol\xi)
-\exp\!\left[\frac{ik_0n}{2z}|\mathbf x-\boldsymbol\xi|^2\right]d^2\boldsymbol\xi.
-\label{eq:c2_fresnel_int}
+B=\frac{\lambda_0}{2d_e}=0.266,\qquad
+\theta_{\max}=\arcsin\frac{\lambda_0}{2n_ad_e}\approx15.426^\circ.
+\label{eq:c3_budget}
 \end{equation}
-展开平方项后，积分核分为与 $\boldsymbol\xi$ 相关的二次相位、与 $\mathbf x$ 相关的二次相位和交叉线性项 $-k_0n\,\mathbf x\cdot\boldsymbol\xi/z$，后者使衍射积分成为孔径场的 Fourier 变换。对于穿过多层倾斜界面的一般情况，二次相位的系数由分层介质的光程 Hessian 矩阵替代，相应的积分核前因子由交叉项矩阵的行列式确定，第五章将给出这一推广形式。
+参考器件的电极周期为 2\,$\mu$m，对应的最大偏转角为 $7.643^\circ$\citing{kim2020lcdeflector}；本文将电极周期设计为 1\,$\mu$m，使偏转角上限提高约一倍。
 
-\subsection{Chirp-$z$ 变换}
-
-衍射积分的数值实现通常采用快速 Fourier 变换（FFT）。当只需要接收平面上一个有限窗口内的场时，FFT 必须补零到很大的长度才能使频率采样落在所需区域并达到所需分辨率。Chirp-$z$ 变换（CZT）\citing{rabiner1969czt}可在任意起始频率 $f_0$ 和任意步长 $\Delta f$ 上计算离散 Fourier 和
+二维电极矩阵在 $x$、$y$ 两个方向上分别控制相位梯度，控制指令以偏转角表示，步长为 $\Delta\theta=0.021^\circ$。每个轴上可用的离散指令数为 $K=\lfloor\theta_{\max}/\Delta\theta\rfloor=734$，最大量化偏转角为 $734\times0.021^\circ=15.414^\circ$。对目标归一化梯度 $b_d^\star$（$d\in\{x,y\}$），可加载的梯度由逐轴限幅与量化得到：
 \begin{equation}
-F(f_k)=\Delta x\sum_{j=0}^{N-1}v_je^{-i2\pi f_kx_j},\qquad f_k=f_0+k\Delta f,\quad k=0,\ldots,M-1,
-\label{eq:c2_czt}
+\bar b_d=\operatorname{clip}(b_d^\star,-B,B),\quad
+k_d=\operatorname{clip}\!\left(\operatorname{round}\frac{\arcsin(\bar b_d/n_a)}{\Delta\theta},-K,K\right),\quad
+b_d=n_a\sin(k_d\Delta\theta).
+\label{eq:c3_quant}
 \end{equation}
-其计算量为 $O[(N+M)\log(N+M)]$，适合在接收窗口内对大量单元分别计算衍射场。
+记该映射为 $\mathbf b=\mathcal Q(\mathbf b^\star)$。可加载梯度构成一个逐轴独立的矩形可行域；叠加入射切向波矢后，出射切向波矢还必须落在空气可传播圆盘 $|\mathbf q|<n_a$ 内。
+
+每个单元的相位以单元参考点 $\mathbf r_m$ 为中心写为
+\begin{equation}
+\phi_m(\boldsymbol\xi)=\phi_{0m}+k_0\Big[\mathbf b_m^{\mathrm T}(\boldsymbol\xi-\mathbf r_m)+\frac12(\boldsymbol\xi-\mathbf r_m)^{\mathrm T}H_m(\boldsymbol\xi-\mathbf r_m)\Big],
+\label{eq:c3_phase}
+\end{equation}
+其中 $\phi_{0m}$ 为单元常相位，$\mathbf b_m$ 为单元的线性梯度，$H_m$ 为对称的曲率矩阵。由于 $H_m$ 对称，相位梯度场 $\nabla\phi_m/k_0=\mathbf b_m+H_m(\boldsymbol\xi-\mathbf r_m)$ 无旋，可由同一个标量函数积分得到。实际加载值为 $\operatorname{mod}(\phi_m,2\pi)$。本文的生产方案取 $H_m=0$，即每个单元加载一个仿射相位：单元内的线性梯度控制该单元出射光的方向，单元间的常相位差控制各单元光场在接收平面上的相干叠加。这一设计使每个单元只需要两个量化角度指令和一个常相位，单元内的 14400 列微电极由线性相位按周期 $d_e$ 采样后取模得到。
+
+若需要在单元内引入曲率而又不突破梯度上限，可采用可积的双曲正切型分离相位：
+\begin{equation}
+\frac{\phi_d(\delta_d)-\phi_d(0)}{k_0}=\frac{B}{\alpha_d}\Big[\ln\cosh(c_d+\alpha_d\delta_d)-\ln\cosh c_d\Big],\quad
+c_d=\operatorname{atanh}\frac{b_d}{B},\quad
+\alpha_d=\frac{H_{dd}}{B\,[1-(b_d/B)^2]},
+\label{eq:c3_tanh}
+\end{equation}
+其导数为 $B\tanh(c_d+\alpha_d\delta_d)$，在任意位置都严格不超过 $B$，并在参考点处给出梯度 $b_d$ 和曲率 $H_{dd}$。该形式为后续研究单元内聚焦提供了满足器件约束的相位族。
+
+\subsection{贴水安装与全反射规避}
+
+RIS 的安装方式决定了它能否改善水空链路的全反射问题。若 RIS 位于水面上方的空气中，光束在到达 RIS 之前就要先穿过裸露的水—空气界面，入射角超过 $48.75^\circ$ 的光线已在水面全反射，RIS 无法挽回。本文将 RIS 下层玻璃贴近水面，使光线经历的界面序列变为
+\begin{equation*}
+\text{水}(n_w=1.33)\ \rightarrow\ \text{下层玻璃}(n_g=1.50)\ \rightarrow\ \text{液晶层}\ \rightarrow\ \text{上层玻璃}(n_g)\ \rightarrow\ \text{空气}(n_a=1).
+\end{equation*}
+水—玻璃界面由低折射率进入高折射率介质，不发生全反射；光线在玻璃内部的液晶层获得相位梯度，切向波矢由 $\mathbf q_{\mathrm{in}}$ 变为 $\mathbf q_{\mathrm{in}}+\mathbf b$，此后才到达玻璃—空气界面。只要调制后的切向波矢满足 $|\mathbf q_{\mathrm{in}}+\mathbf b|<n_a$，光线即可进入空气。
+
+表\ref{tab:c3_angles}给出了入射面与电极轴对齐、加载单轴最大梯度 $b=-0.266$ 时各层传播角的对应关系。水中入射角为 $40^\circ$ 时，切向波矢 $q_{\mathrm{in}}=1.33\sin40^\circ=0.855$，裸水面出射角为 $58.75^\circ$；经 RIS 调相后切向波矢降为 0.589，空气中出射角降为 $36.1^\circ$。全反射的起始入射角由裸水面的 $48.75^\circ$ 推迟到 $72.15^\circ$，此时 $1.33\sin72.15^\circ-0.266\approx1$。当入射面沿单元的对角方向时，两轴梯度叠加，可补偿的切向波矢上限进一步提高到 $\sqrt2B$。
+
+\begin{table}[htbp]
+\caption{RIS贴水安装时各层传播角（单轴最大偏转）}
+\label{tab:c3_angles}
+\centering
+\begin{tabular}{ccccc}
+\toprule
+水中入射角 & 玻璃内调相前 & 玻璃内调相后 & 空气中出射角 & 裸水面出射角 \\
+\midrule
+$0^\circ$  & $0^\circ$     & $0^\circ$     & $0^\circ$     & $0^\circ$ \\
+$10^\circ$ & $8.86^\circ$  & $0^\circ$     & $0^\circ$     & $13.35^\circ$ \\
+$20^\circ$ & $17.65^\circ$ & $7.23^\circ$  & $10.89^\circ$ & $27.06^\circ$ \\
+$30^\circ$ & $26.32^\circ$ & $15.43^\circ$ & $23.52^\circ$ & $41.68^\circ$ \\
+$40^\circ$ & $34.75^\circ$ & $23.12^\circ$ & $36.08^\circ$ & $58.75^\circ$ \\
+$45^\circ$ & $38.83^\circ$ & $26.72^\circ$ & $42.41^\circ$ & $70.13^\circ$ \\
+$50^\circ$ & $42.78^\circ$ & $30.13^\circ$ & $48.84^\circ$ & 全反射 \\
+$60^\circ$ & $50.16^\circ$ & $36.20^\circ$ & $62.35^\circ$ & 全反射 \\
+$70^\circ$ & $56.43^\circ$ & $40.98^\circ$ & $79.67^\circ$ & 全反射 \\
+$72.15^\circ$ & -- & -- & 全反射 & 全反射 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+注：$10^\circ$ 入射时所需梯度小于上限，调相后可使光线沿法向出射。
+
+表\ref{tab:c3_angles}说明了贴水安装的两项作用：在亚临界入射范围内，RIS 把空气侧出射方向向竖直方向拉回，降低空中接收平台对低仰角的需求；在超临界入射范围内，RIS 使原本全反射的光束重新获得透射通道。第五章将在完整波动传播模型中定量评估这两项作用。
 
 \section{信道衰落与接收端随机扰动}
 \label{sec:c2_fading}
@@ -281,8 +565,8 @@ P_e(P_r)=Q\!\left(\frac{\mathcal RP_r}{2\sigma_n}\right)=\frac12\operatorname{er
 P_{\mathrm{th}}=\frac{\sigma_n\sqrt{\gamma_{\mathrm{th}}}}{\mathcal R}.
 \label{eq:c2_pth}
 \end{equation}
-链路性能由三类统计量刻画：平均接收功率 $\overline P_r=\mathbb E[P_r]$；平均误码率（Average Bit Error Rate，ABER）$\mathbb E[P_e(P_r)]$；中断概率（Outage Probability，OP）$\Pr(P_r<P_{\mathrm{th}})$。三者的期望均对湍流衰落、位置抖动和角度误差的联合分布求取。平均接收功率描述能量收集能力，ABER 和 OP 则对接收功率分布的低功率尾部更为敏感；两类指标的最优设计一般并不相同，这一差异是第五章相位设计的核心问题之一。
+链路性能由三类统计量刻画：平均接收功率 $\overline P_r=\mathbb E[P_r]$；平均误码率（Average Bit Error Rate，ABER）$\mathbb E[P_e(P_r)]$；中断概率（Outage Probability，OP）$\Pr(P_r<P_{\mathrm{th}})$。三者的期望均对湍流衰落、位置抖动和角度误差的联合分布求取。平均接收功率描述能量收集能力，ABER 和 OP 则对接收功率分布的低功率尾部更为敏感；两类指标的最优设计一般并不相同，这一差异是第三章相位设计与第五章方案比较的核心问题之一。
 
 \section{本章小结}
 
-本章按照光信号的传播顺序介绍了水空直接光链路建模所需的基础理论。在水下传输方面，给出了海水吸收、散射与消光的定义、HG 相函数及其抽样方法、辐射输运方程的碰撞次数展开思想和蒙特卡洛光子追踪的基本步骤；在海面方面，介绍了 Neumann 频率谱、余弦平方方向扩展和双叠加法海面生成；在界面方面，从 Fermat 原理推导了平行分层介质中的路径方程、唯一性条件与面积 Jacobian，并给出 Fresnel 透射率与全反射条件；在 RIS 方面，介绍了液晶相位调制原理、广义 Snell 定律以及电极周期决定的偏转角上限；在传播方面，介绍了高斯光束参数、Fresnel 衍射积分和 CZT 算法；在接收端，介绍了 EGG 海洋湍流、Gamma-Gamma 大气湍流、瑞利位置抖动与 Rice 角度误差模型，以及 OOK 系统的误码率与中断概率。上述理论为第三章至第五章的系统建模提供了基础。
+本章建立了全文统一的坐标体系，并按光信号的传播顺序给出了后续建模所需的基础理论与器件方案。坐标方面，定义了世界坐标系、水平参考系、RIS 本体与面板坐标系、发射机光轴坐标系、接收孔径坐标系和海面局部坐标，给出了它们之间的变换链。水下传输方面，列出了典型水体的吸收、散射与消光系数，说明了 HG 相函数只通过散射光强进入复光强表达式，而弹道光保留确定的复振幅；在均匀水体、高斯光源和吸收型 RIS 边界下，把 RTE 化为积分方程，证明其解为按碰撞次数展开、以单次散射反照率为公比收敛的 Neumann 级数。海面方面，给出了 Neumann 方向谱、双叠加法、风向映射、离散方差审计和冻结海面的解析斜率。界面方面，从 Fermat 原理推导了分层介质中的路径方程、面积 Jacobian 与 Fresnel 透射率，并把它们组合为具有振幅和相位的复光场传递关系，给出了粗糙海面上的矢量折射。RIS 方面，介绍了液晶相位调制与广义 Snell 定律，给出了 $40\times40$ 单元液晶 RIS 的器件参数、偏转角预算、角度量化与逐单元仿射相位模型，论证了贴水安装对规避全反射的作用。接收端方面，介绍了 EGG 与 Gamma-Gamma 湍流、位置抖动与角度误差模型，以及 OOK 系统的误码率与中断概率。

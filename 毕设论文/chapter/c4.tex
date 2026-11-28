@@ -1,9 +1,9 @@
-\chapter{RIS下表面入射光场的光束扩展函数建模与验证}
+\chapter{RIS入射光场与调制后接收端复光场建模}
 \label{chap:bsf}
 
-RIS 的相位设计以 RIS 下表面和液晶层上的入射光场为输入。入射光场决定了每个液晶单元接收到的功率、入射方向和入射相位，进而决定相位方案能把多少功率、以怎样的方向分布送往接收平面。水下光束在到达 RIS 之前经历了吸收和多次前向散射，RIS 本身随海浪倾斜和平移，水下发射机也随航行器缓慢漂移，入射光场需要在真实三维几何下计算。
+RIS 的相位设计以液晶层上的入射光场为输入，链路性能又取决于 RIS 调制后接收平面上的光场。入射光场决定了每个液晶单元接收到的功率、入射方向和入射相位；调制后的光场决定了这些功率以怎样的方向、尺寸和干涉结构到达接收机。水下光束在到达 RIS 之前经历了吸收和多次前向散射，RIS 本身随海浪倾斜和平移，水下发射机也随航行器缓慢漂移，两部分光场都需要在真实三维几何下计算。
 
-本章首先建立水下发射端的运动模型，与第三章的 RIS 运动共同构成冻结快照几何；然后把 RIS 下表面的光强分解为弹道分量与散射分量，分别推导有限束腰源在倾斜面板上的精确弹道光强表达式，以及完整 HG 相函数下的散射光束扩展函数（Beam Spread Function，BSF）；接着给出散射分量的无偏数值估计方法和自适应精度控制策略，在 18 个冻结快照上与独立 MC 结果及小角近似解析式进行比较；最后给出从 RIS 下表面经下层玻璃到液晶层的入射复光场与单元功率，作为第五章相位设计的输入。
+本章首先建立水下发射端的运动与跟踪模型，与第三章的 RIS 运动共同构成冻结快照几何；然后把 RIS 下表面的光强分解为弹道分量与散射分量，分别推导有限束腰源在倾斜面板上的精确弹道光强表达式，以及完整 HG 相函数下的散射光束扩展函数（Beam Spread Function，BSF），给出散射分量的无偏数值估计方法，并在 18 个冻结快照上与独立 MC 结果及小角近似解析式进行比较；接着介绍高斯光束与标量衍射理论，给出从 RIS 下表面经下层玻璃到液晶层的入射复光场；最后对任意可加载相位建立 RIS 调制后接收平面上的复光场表达式，包括逐单元衍射积分、功率守恒的数值实现、单元间相干叠加和散射光的非相干叠加，并以独立 MC 验证其正确性。本章的接收端复光场只依赖相位本身，不针对特定接收机作优化，第五章在其上叠加接收端模型并比较各相位方案。
 
 \section{水下发射端运动与冻结快照几何}
 \label{sec:c4_geometry}
@@ -33,6 +33,16 @@ y_{k}&=y_{k-1}+\Delta t\,(u_{k-1}\sin\psi_{k-1}+v_{k-1}\cos\psi_{k-1}),\\
 本章的快照集合按如下方式构造。发射机与 RIS 中心的初始距离为 10\,m；发射光轴的初始方向由先绕世界 $x$ 轴、再绕世界 $y$ 轴的两次主动旋转确定，取 6 组旋转角：$(0^\circ,30^\circ)$、$(0^\circ,60^\circ)$、$(0^\circ,80^\circ)$、$(45^\circ,45^\circ)$、$(-60^\circ,30^\circ)$ 和 $(30^\circ,80^\circ)$，覆盖从中等入射到掠入射、从入射面沿面板主轴到斜交的几何。每组旋转对应 3 种条件：静止平板、风速 3\,m/s 和风速 5\,m/s（风向 $50^\circ$）。有风条件下，RIS 运动由第三章的模型在 0.02--3\,Hz、200 个频率点、36 个方向点的谱离散下计算，与发射机运动在同一时钟下取样，形成共 18 个快照。表\ref{tab:c4_results}中的实际入射角显示，风速 3\,m/s 和 5\,m/s 时 RIS 姿态使入射角偏离静态值约 $0.2^\circ$ 和 $0.6^\circ$。
 
 RIS 下表面以 1\,cm 网格划分为 $100\times100$ 个记分单元，光强 $I$ 一律指面板法向的辐照度，单位为 $\mathrm{W/m^2}$。
+
+\subsection{发射机对RIS的跟踪}
+
+风速较高时，RIS 的升沉和水平漂移达到米级（第三章）。若发射机光轴保持初始指向，10\,m 斜程上发散角 0.01\,rad 的光束在 RIS 处的光斑尺度约为 0.1\,m，会整体离开 1\,m 的面板。为使比较在 RIS 被照亮的条件下进行，发射机位置保持不变，光轴转向冻结时刻的下表面中心：
+\begin{equation}
+\hat{\mathbf d}_T=\frac{\mathbf p_b(t^\ast)-\mathbf p_T}{|\mathbf p_b(t^\ast)-\mathbf p_T|},\qquad
+R_T=\mathcal R\big(\hat{\mathbf d}_{T,0}\to\hat{\mathbf d}_T\big)R_{T,0},
+\label{eq:c4_track}
+\end{equation}
+其中 $\mathcal R(\mathbf a\to\mathbf b)$ 为把单位向量 $\mathbf a$ 转到 $\mathbf b$ 的最小旋转，旋转轴为 $\mathbf a\times\mathbf b/|\mathbf a\times\mathbf b|$，转角为 $\arccos(\mathbf a\cdot\mathbf b)$，由 Rodrigues 公式给出。静水时初始光轴在水中的入射角为 $40^\circ$，入射面方位角为 $\arctan(-\sqrt2)\approx-54.7^\circ$，即入射面与面板的两个电极轴均不对齐，两轴梯度同时参与偏转。无 RIS 直达链路使用同一个发射机位姿，因此两类链路的光源完全相同。
 
 \section{入射光强的弹道—散射分解}
 \label{sec:c4_decomp}
@@ -253,10 +263,49 @@ S-BSF 相对完整 HG 模型的二维 $L_2$ 偏差随入射角增大而增大：
 
 综合上述结果：在入射角不超过约 $65^\circ$ 时，S-BSF 与完整 HG 模型的偏差在 0.4\% 以内，可以作为快速计算的解析近似；在掠入射场景，尤其是 RIS 姿态随风浪变化的掠入射场景，应采用完整 HG 模型。第五章采用清澈大洋水与 $40^\circ$ 入射，介于 $30^\circ$ 与 $60^\circ$ 两组场景之间，两种模型在这一范围内的偏差为 0.16\%--0.33\%。
 
+\section{高斯光束与标量衍射理论}
+\label{sec:c2_diffraction}
+
+\subsection{高斯光束}
+
+激光器输出的基模光束可用高斯光束描述。在折射率为 $n$ 的介质中，束腰半径 $w_0$ 的高斯光束的瑞利距离、光斑半径、波面曲率半径和 Gouy 相位分别为
+\begin{equation}
+z_{\mathrm R}=\frac{\pi nw_0^2}{\lambda_0},\quad
+w(z)=w_0\sqrt{1+\Big(\frac{z}{z_{\mathrm R}}\Big)^2},\quad
+\frac{1}{\mathcal R(z)}=\frac{z}{z^2+z_{\mathrm R}^2},\quad
+\zeta_G(z)=\arctan\frac{z}{z_{\mathrm R}}.
+\label{eq:c2_gauss}
+\end{equation}
+远场发散半角为 $\theta_d=\lambda_0/(\pi nw_0)$。在距束腰 $z$、横向距离 $\rho$ 处，高斯光束的相位为
+\begin{equation}
+\Phi(\rho,z)=k_0n\left(z+\frac{\rho^2}{2\mathcal R(z)}\right)-\zeta_G(z).
+\label{eq:c2_gauss_phase}
+\end{equation}
+本文水下光源取 $\theta_d=0.01\,\mathrm{rad}$，由 $w_0\theta_d=\lambda_0/(\pi n_w)$ 得到 $w_0\approx12.7\,\mu\mathrm m$，瑞利距离仅约 1.3\,mm，10\,m 处的光束已处于远场。
+
+\subsection{Fresnel 衍射积分}
+
+对标量光场 $U$，从孔径平面 $\Sigma$ 传播到观察点 $\mathbf x$ 的场由 Fresnel--Kirchhoff 衍射积分给出\citing{goodman2005fourier}。在近轴条件下，同一介质中距离为 $z$ 的传播可写为
+\begin{equation}
+U(\mathbf x)=\frac{n\,e^{ik_0nz}}{i\lambda_0z}\int_\Sigma U(\boldsymbol\xi)
+\exp\!\left[\frac{ik_0n}{2z}|\mathbf x-\boldsymbol\xi|^2\right]d^2\boldsymbol\xi.
+\label{eq:c2_fresnel_int}
+\end{equation}
+展开平方项后，积分核分为与 $\boldsymbol\xi$ 相关的二次相位、与 $\mathbf x$ 相关的二次相位和交叉线性项 $-k_0n\,\mathbf x\cdot\boldsymbol\xi/z$，后者使衍射积分成为孔径场的 Fourier 变换。对于穿过多层倾斜界面的一般情况，二次相位的系数由分层介质的光程 Hessian 矩阵替代，相应的积分核前因子由交叉项矩阵的行列式确定，第\ref{sec:c4_rx_field}节将给出这一推广形式。
+
+\subsection{Chirp-$z$ 变换}
+
+衍射积分的数值实现通常采用快速 Fourier 变换（FFT）。当只需要接收平面上一个有限窗口内的场时，FFT 必须补零到很大的长度才能使频率采样落在所需区域并达到所需分辨率。Chirp-$z$ 变换（CZT）\citing{rabiner1969czt}可在任意起始频率 $f_0$ 和任意步长 $\Delta f$ 上计算离散 Fourier 和
+\begin{equation}
+F(f_k)=\Delta x\sum_{j=0}^{N-1}v_je^{-i2\pi f_kx_j},\qquad f_k=f_0+k\Delta f,\quad k=0,\ldots,M-1,
+\label{eq:c2_czt}
+\end{equation}
+其计算量为 $O[(N+M)\log(N+M)]$，适合在接收窗口内对大量单元分别计算衍射场。
+
 \section{液晶层入射复光场}
 \label{sec:c4_lc_field}
 
-第五章的相位设计和波动传播需要液晶层上的入射复光场，而不仅是 RIS 下表面的光强。本节给出从下表面经下层玻璃到液晶层的光强映射、相位模型以及单元功率的计算方法。
+第三章的相位设计和第\ref{sec:c4_rx_field}节的波动传播需要液晶层上的入射复光场，而不仅是 RIS 下表面的光强。本节给出从下表面经下层玻璃到液晶层的光强映射、相位模型以及单元功率的计算方法。
 
 \subsection{下层玻璃中的光强映射}
 
@@ -316,7 +365,7 @@ P_m^{(b)}=\int_{D_m}I_{h_i}(\boldsymbol\xi)\,d^2\boldsymbol\xi,\qquad
 \int_{D_m}f\,dA\approx\frac{d_xd_y}{4}\sum_{r,s}w_rw_sf\!\left(\mathbf c_m+\Big(\frac{d_xx_r}{2},\frac{d_yx_s}{2}\Big)\right).
 \label{eq:c4_gl}
 \end{equation}
-为了降低 MC 弹道光子的统计抖动，每个单元的总功率取为“MC 总功率 $-$ MC 弹道功率 $+$ 确定性弹道功率”，散射光子包保留其原始功率 $P_0w/N_\gamma$。这一替换不引入任何依据接收结果拟合的系数。每个单元的入射切向量 $\mathbf q_{\mathrm{in},m}$ 和入射几何曲率 $H_{\mathrm{in},m}=J_{wg}^{-1}$ 也在参考点 $\mathbf r_m$ 处计算，作为第五章相位反解与衍射传播的输入。
+为了降低 MC 弹道光子的统计抖动，每个单元的总功率取为“MC 总功率 $-$ MC 弹道功率 $+$ 确定性弹道功率”，散射光子包保留其原始功率 $P_0w/N_\gamma$。这一替换不引入任何依据接收结果拟合的系数。每个单元的入射切向量 $\mathbf q_{\mathrm{in},m}$ 和入射几何曲率 $H_{\mathrm{in},m}=J_{wg}^{-1}$ 也在参考点 $\mathbf r_m$ 处计算，作为第三章相位反解与第\ref{sec:c4_rx_field}节衍射传播的输入。
 
 单元功率满足以下账本关系：
 \begin{equation}
@@ -325,6 +374,227 @@ P_{\mathrm{in},b}=P_{\mathrm{pupil}}+P_{\mathrm{interface\ loss}}+P_{\mathrm{omi
 \end{equation}
 即入射弹道功率等于进入单元通光区的功率、界面反射损失与极弱单元省略功率之和，程序中该等式的残差小于 $10^{-10}\,\mathrm W$。
 
+\section{RIS调制后接收平面的复光场}
+\label{sec:c4_rx_field}
+
+本节对任意一组可加载的单元相位 $\{\phi_m\}$ 建立接收平面上的复光场。由第二章式(\ref{eq:c3_phase})，液晶层出射处的弹道复场为入射复场与单元相位、通光掩模的乘积：
+\begin{equation}
+U^{+}_{\mathrm{LC}}(\boldsymbol\xi)=\sum_{m=1}^{1600}\mathbf 1_{D_m}(\boldsymbol\xi)\,U_{h_i}(\boldsymbol\xi)\,e^{i\phi_m(\boldsymbol\xi)},
+\label{eq:c4_lc_exit}
+\end{equation}
+其中 $U_{h_i}$ 为式(\ref{eq:c4_phase})的入射复场。光场此后穿过上层玻璃和玻璃—空气界面进入空气，传播到接收平面。由于单元相位使各单元的出射方向互不相同、接收平面相对 RIS 倾斜，且传播距离从数米到数十米变化，同一介质、正轴的 Fresnel 积分式(\ref{eq:c2_fresnel_int})不能直接使用，需要以第二章式(\ref{eq:c2_complex_transfer})的分层复光场传递为核推广。
+
+\subsection{倾斜接收几何的二阶光程展开}
+
+设单元参考点为 $\mathbf r_m$，接收点的世界水平坐标为 $\mathbf x$。由分层 Fermat 路径可以精确求出从 $\mathbf r_m$ 到 $\mathbf x$ 的光程 $L_m$ 和切向量 $\mathbf q_m$。记 $T=R_{1:2,1:2}^{\mathrm T}$，$\mathbf z=(R_{13},R_{23})^{\mathrm T}$，接收点的水平微小变化 $\boldsymbol\eta$ 引起局部横向变化 $T\boldsymbol\eta$ 和高度变化 $\mathbf z^{\mathrm T}\boldsymbol\eta$。定义
+\begin{equation}
+E=T-\frac{\mathbf q\mathbf z^{\mathrm T}}{\kappa_a},\qquad
+A=J^{-1},\qquad B=AE,\qquad C=E^{\mathrm T}AE,\qquad
+\mathbf s=T^{\mathrm T}\mathbf q+\kappa_a\mathbf z,
+\label{eq:c5_matrices}
+\end{equation}
+其中 $J$ 为式(\ref{eq:c2_jacobian})的路径 Jacobian，$\mathbf s=\nabla_{XY}L$。光程在孔径点 $\mathbf r_m+\boldsymbol\delta$ 和接收点 $\mathbf x_m+\boldsymbol\eta$ 附近的二阶展开为
+\begin{equation}
+L(\mathbf r_m+\boldsymbol\delta,\mathbf x_m+\boldsymbol\eta)\simeq
+L_m-\mathbf q_m^{\mathrm T}\boldsymbol\delta+\mathbf s_m^{\mathrm T}\boldsymbol\eta
++\frac12\boldsymbol\delta^{\mathrm T}A_m\boldsymbol\delta-\boldsymbol\delta^{\mathrm T}B_m\boldsymbol\eta+\frac12\boldsymbol\eta^{\mathrm T}C_m\boldsymbol\eta.
+\label{eq:c5_opl}
+\end{equation}
+各矩阵均由精确的中心折射路径计算。为减小大接收窗口中的 Taylor 截断误差，在每个接收点重新求解 $L_m(\mathbf x)$、$\mathbf q_m(\mathbf x)$ 和 $B_m(\mathbf x)$，只冻结孔径坐标的二次项系数 $A_m^\star$。
+
+\subsection{单元标量衍射积分}
+
+在通量振幅规范下，第 $m$ 个单元在接收点 $\mathbf x$ 产生的场为
+\begin{equation}
+U_m(\mathbf x)\simeq\frac{\sqrt{|\det B_m(\mathbf x)|}}{i\lambda_0}
+\int_{D_m}\sqrt{I_{h_i}(\boldsymbol\xi)T_{ga}(\mathbf q_{\mathrm{load}})}\,
+\exp\Big\{i\Big[\Phi_{h_i}(\boldsymbol\xi)+\phi_m(\boldsymbol\xi)
++k_0\Big(L_m(\mathbf x)-\mathbf q_m(\mathbf x)^{\mathrm T}\boldsymbol\delta+\frac12\boldsymbol\delta^{\mathrm T}A_m^\star\boldsymbol\delta\Big)\Big]\Big\}\,d^2\boldsymbol\xi,
+\label{eq:c5_unitfield}
+\end{equation}
+其中 $\boldsymbol\delta=\boldsymbol\xi-\mathbf r_m$，$T_{ga}$ 为玻璃—空气界面的 Fresnel 透射率，$\mathbf q_{\mathrm{load}}=\mathbf q_{\mathrm{in},m}+H_{\mathrm{in},m}\boldsymbol\delta+\nabla\phi_m/k_0$ 为局部出射切向量。全部弹道场为 $U_b(\mathbf x)=\sum_mU_m(\mathbf x)$。前因子 $\sqrt{|\det B|}/\lambda_0$ 的量纲为 $\mathrm m^{-2}$，乘以孔径面积后保持通量振幅的量纲。对同一介质、正轴、距离为 $z$ 的近轴情形，$B=(n/z)I_2$，前因子退化为式(\ref{eq:c2_fresnel_int})中的 $n/(i\lambda_0z)$。
+
+\subsection{去载波与CZT计算}
+
+记 $H_{\mathrm{in},m}$ 为入射几何曲率，$\boldsymbol\ell=\boldsymbol\xi-\mathbf c_m$ 为相对单元中心的坐标，$\mathbf o_m=\mathbf c_m-\mathbf r_m$。定义总二次相位系数和残余入射相位
+\begin{equation}
+M_m=A_m^\star+H_{\mathrm{in},m}+H_m,\qquad
+\varepsilon_m(\boldsymbol\delta)=\Phi_{h_i}(\mathbf r_m+\boldsymbol\delta)-\Phi_{h_i}(\mathbf r_m)
+-k_0\Big(\mathbf q_{\mathrm{in},m}^{\mathrm T}\boldsymbol\delta+\frac12\boldsymbol\delta^{\mathrm T}H_{\mathrm{in},m}\boldsymbol\delta\Big),
+\label{eq:c5_residual}
+\end{equation}
+则式(\ref{eq:c5_unitfield})可写为孔径函数的 Fourier 变换：
+\begin{equation}
+\mathcal F_m(\mathbf f)=\int_{D_m-\mathbf c_m}\mathcal A_m(\boldsymbol\ell)\,
+e^{i[k_0\boldsymbol\ell^{\mathrm T}M_m\boldsymbol\ell/2+\varepsilon_m(\boldsymbol\ell+\mathbf o_m)]}\,
+e^{-i2\pi\mathbf f^{\mathrm T}\boldsymbol\ell}\,d^2\boldsymbol\ell,
+\label{eq:c5_fourier}
+\end{equation}
+\begin{equation}
+\mathbf q_{c,m}=\mathbf q_{\mathrm{in},m}+\mathbf b_m+M_m\mathbf o_m,\qquad
+\mathbf f_m(\mathbf x)=\frac{\mathbf q_m(\mathbf x)-\mathbf q_{c,m}}{\lambda_0},
+\label{eq:c5_freq}
+\end{equation}
+\begin{equation}
+\Psi_m(\mathbf x)=\Phi_{h_i}(\mathbf r_m)+\phi_{0m}+k_0L_m(\mathbf x)
++k_0\Big[\frac12\mathbf o_m^{\mathrm T}M_m\mathbf o_m+(\mathbf q_{\mathrm{in},m}+\mathbf b_m-\mathbf q_m(\mathbf x))^{\mathrm T}\mathbf o_m\Big],
+\label{eq:c5_carrier_phase}
+\end{equation}
+连续意义下 $U_m\propto\mathcal F_m(\mathbf f_m)e^{i\Psi_m}$。其中 $\mathcal A_m$ 为单元内的光滑振幅，按单元确定性功率归一后乘以 $\sqrt{T_{ga}}$。式(\ref{eq:c5_carrier_phase})保留了入射相位、单元常相位和传播相位三部分，保证不同单元之间的相对干涉相位可追溯。
+
+数值上，振幅和残余相位先在每个单元 $25\times25$ 的网格上计算，再三次插值到自适应孔径网格。孔径采样数由二次相位的带宽决定：
+\begin{equation}
+N_d=2^{\left\lceil\log_2\max\left(N_{\min},\ 1.1\,e_d\,(|M'_m|\mathbf e)_d/\lambda_0\right)\right\rceil},
+\label{eq:c5_sampling}
+\end{equation}
+其中 $\mathbf e$ 为孔径包围框边长，$M'_m$ 为旋转到 $B_m$ 左奇异向量基下的曲率矩阵。旋转孔径和频率基可以避免近临界情况下狭长倾斜频域形成过大的轴对齐包围框。频率采样由式(\ref{eq:c2_czt})的 CZT 只在接收窗口对应的频率子集上计算。
+
+\subsection{Parseval功率守恒搬运}
+
+直接取式(\ref{eq:c5_fourier})在像素中心的模平方会在快速振荡区域引入采样误差。本文以频谱功率守恒的方式确定像素光强。每个频率单元的功率为
+\begin{equation}
+\Delta P_{m,k}=|\mathcal F_m(\mathbf f_k)|^2\Delta f_x\Delta f_y,\qquad
+\mathbf q_k=\mathbf q_{c,m}+\lambda_0\mathbf f_k,
+\label{eq:c5_bin}
+\end{equation}
+用式(\ref{eq:c5_landing})把 $\mathbf q_k$ 映射到接收平面，并把 $\Delta P_{m,k}$ 双线性分配到相邻的四个像素。由于
+\begin{equation}
+\frac{\partial\mathbf f}{\partial\mathbf x}=\frac{B}{\lambda_0},\qquad
+d^2\mathbf f=\frac{|\det B|}{\lambda_0^2}\,d^2\mathbf x,
+\label{eq:c5_parseval}
+\end{equation}
+这一搬运对应式(\ref{eq:c5_unitfield})的面积缩放，并在离散层面严格保持所搬运的功率。落在窗口外、不可传播或属于极弱单元的功率分别记账。单元在像素 $p$ 上的复数代表值为
+\begin{equation}
+\widehat U_{m,p}=\sqrt{I_{m,p}^{\mathrm{diag}}}\,e^{i[\arg\mathcal F_m(\mathbf f_m(\mathbf x_p))+\Psi_m(\mathbf x_p)]},
+\label{eq:c5_phasor}
+\end{equation}
+$I_{m,p}^{\mathrm{diag}}$ 为搬运功率除以像素面积。
+
+\subsection{像素内相干平均}
+
+不同单元的场在接收平面交叠时发生干涉。像素内把每个单元的相位近似为线性载波，记局部相位斜率为 $\mathbf k_{m,p}=\nabla_{XY}\arg U_m$，对矩形像素积分得到像素平均光强：
+\begin{equation}
+\overline I_{b,p}=\sum_m|\widehat U_{m,p}|^2+2\sum_{m<n}\Re\{\widehat U_{m,p}\widehat U_{n,p}^*\}\,
+\operatorname{sinc}\!\Big(\frac{\Delta k_{mn,x}\Delta x}{2\pi}\Big)\operatorname{sinc}\!\Big(\frac{\Delta k_{mn,y}\Delta y}{2\pi}\Big),
+\label{eq:c5_pixel}
+\end{equation}
+其中 $\operatorname{sinc}(t)=\sin(\pi t)/(\pi t)$，$\Delta\mathbf k_{mn}=\mathbf k_{m,p}-\mathbf k_{n,p}$。sinc 因子来自指数载波在像素矩形上的积分：两单元载波方向差异越大，干涉条纹越密，在像素内的平均效应越强。由式(\ref{eq:c5_freq})和(\ref{eq:c5_carrier_phase})，局部相位斜率为
+\begin{equation}
+\mathbf k_m=k_0\mathbf s_m+B_m^{\mathrm T}\Big(\frac{\nabla_{\mathbf f}\arg\mathcal F_m}{\lambda_0}-k_0\mathbf o_m\Big),
+\label{eq:c5_slope}
+\end{equation}
+Fourier 相位的导数由相邻频点的相位差估计。1600 个单元两两之间的交叉项数量很大，对载波方向差异显著的单元对，其交叉项被 sinc 包络压低。设单元场在图域的峰值振幅为 $A_m^{\max}$，两单元相位斜率区间的最小间隔为 $g_{mn,x}$、$g_{mn,y}$，由 $|\sin x/x|\le\min(1,1/|x|)$ 得交叉项的逐像素上界
+\begin{equation}
+E_{mn}\le2A_m^{\max}A_n^{\max}\min\Big(1,\frac{2}{g_{mn,x}\Delta x}\Big)\min\Big(1,\frac{2}{g_{mn,y}\Delta y}\Big).
+\label{eq:c5_bound}
+\end{equation}
+将上界由小到大排序，在累计上界不超过 $2\times10^{-4}$ 倍最小光强容差时省略对应交叉项，其余交叉项精确计算。
+
+\subsection{弹道与散射光强合成}
+
+接收平面像素 $p$ 的总光强为弹道光的相干平均与散射光的非相干累加：
+\begin{equation}
+I_p=\overline I_{b,p}+\frac{1}{\Delta A_p}\sum_{j\in\mathcal S}P_jT_{ga}(\mathbf q_j)\,\mathbf 1\{\operatorname{Landing}_j\in p\},
+\label{eq:c5_total}
+\end{equation}
+集合 $\mathcal S$ 为穿过下表面并落入液晶通光区的散射光子包，每个光子包在液晶层按其所在单元的相位梯度改变切向量，经上层玻璃折射后直线传播到接收平面。
+
+\subsection{大接收距离下的数值实现}
+
+接收距离增大到 30--50\,m 时，接收窗口对应的空间频率范围远大于单个单元频谱实际占据的范围，若每个单元都在整个窗口上计算 CZT，计算量随距离近似二次增长。本文在不改变式(\ref{eq:c5_unitfield})--(\ref{eq:c5_total})的前提下，对求值方式作两处处理。
+
+第一，单元频谱窗口。单元 $m$ 的频谱集中在其驻相光线附近 $\mathbf f\approx M_m\boldsymbol\ell/\lambda_0$，$\boldsymbol\ell$ 取遍单元孔径。CZT 只在这一矩形框上计算，并在每侧加宽 64 个衍射瓣（每瓣宽 $1/d$）。窗口外只剩方孔边缘衍射的 $\operatorname{sinc}^2$ 尾部，每轴功率比例约为 $2/(64\pi^2)\approx0.3\%$；被截去的功率逐方案记账。
+
+第二，邻近单元相干。相距 $r$ 个单元间距 $p$ 的两个单元，在接收面上的相位斜率差约为 $\Delta k\approx k_0rp/L_a$，像素平均因子为 $\operatorname{sinc}(\Delta k\Delta x/2\pi)$，其中
+\begin{equation}
+\frac{\Delta k\,\Delta x}{2\pi}\approx\frac{rp\,\Delta x}{\lambda_0L_a}.
+\label{eq:c4_ring}
+\end{equation}
+$L_a\approx35\,\mathrm m$、$\Delta x=1.25\,\mathrm{cm}$ 时，$r=1$ 对应约 17，交叉项已被压低到 $1/(17\pi)\approx2\%$ 以下，且随 $r$ 按 $1/r$ 衰减并正负相消。因此式(\ref{eq:c5_pixel})中只对 Chebyshev 距离不超过 2 圈的单元对精确计算交叉项，各圈交叉项的总功率单独记账。这一处理把需要计算的单元对数目从约 128 万降到约 2 万。
+
+\subsection{非驻相远尾的分部积分包络}
+\label{sec:c4_tail}
+
+当接收点远离某个单元的几何出射方向时，式(\ref{eq:c5_unitfield})的相位在孔径内没有驻相点，接收点位于该单元衍射场的远尾。未调相 RIS 的主光斑远离接收机时，接收区域只由这类远尾和散射光构成；有限窗口的数值传播会把窗口外的场置零，需要单独给出远尾场幅度的上界。考虑矩形孔径上的振荡积分
+\begin{equation}
+\mathcal I=\int_{y_-}^{y_+}\int_{x_-}^{x_+}A(x,y)\,e^{i\Phi(x,y)}\,dx\,dy,\qquad
+g_x=\Phi_x\ne0,\quad g_y=\Phi_y\ne0,
+\label{eq:appA_int}
+\end{equation}
+其中 $A$ 为光滑振幅，$\Phi$ 为相位，下标表示偏导数。利用 $e^{i\Phi}=(ig_x)^{-1}\partial_xe^{i\Phi}$ 对 $x$ 分部积分，得到边界项与余项；再对每一项利用 $e^{i\Phi}=(ig_y)^{-1}\partial_ye^{i\Phi}$ 沿 $y$ 分部积分。令
+\begin{equation}
+C=\frac{A}{g_xg_y},\qquad D=\frac{\partial_x(A/g_x)}{g_y},
+\label{eq:appA_CD}
+\end{equation}
+对所有边界项与余项取绝对值，得到上界
+\begin{equation}
+|\mathcal I|\le\sum_{\text{四角}}|C|
++\int_{y_-}^{y_+}\big[|\partial_yC(x_-,y)|+|\partial_yC(x_+,y)|\big]dy
++\int_{x_-}^{x_+}\big[|D(x,y_-)|+|D(x,y_+)|\big]dx
++\int_{y_-}^{y_+}\!\!\int_{x_-}^{x_+}|\partial_yD|\,dx\,dy.
+\label{eq:appA_bound}
+\end{equation}
+对衍射积分，振幅 $A$ 含 $\sqrt{IT|\det B|}/\lambda_0$，相位梯度 $(g_x,g_y)$ 由单元出射切向量与指向接收点的切向量之差确定。相位梯度越大，即接收点偏离单元的几何出射方向越远，$C$、$D$ 越小，远尾场越弱。
+
+对每个单元，在目标区域的四角及中心计算式(\ref{eq:appA_bound})的振幅界 $\mathcal B_{m,n}$，其中导数与积分在 $n\times n$ 的梯形/差分网格上数值计算。按三角不等式把各单元的场界相加后平方，并取 20\% 的余量：
+\begin{equation}
+I_{\mathrm{tail,env}}=1.2\max_{n\in\{17,33\}}\Big(\sum_m\mathcal B_{m,n}\Big)^2.
+\label{eq:appA_env}
+\end{equation}
+计算要求两种网格的相对变化小于 3\%，且两轴在孔径内的最小振荡周期数均超过 100。
+
+散射光在接收区域的贡献以加密 MC 估计：每个随机流发射 100 个独立批次、每批 $10^6$ 个光子，合并 6 个独立流共 $6\times10^8$ 个光子，只收集目标周围半宽 0.65\,m 内的落点，并以加权 Scott 带宽的高斯核平滑。由于 ABER 和 OP 随接收功率单调下降，以仅散射增益 $G_L$ 和散射加尾部包络增益 $G_U$ 分别计算，有
+\begin{equation}
+\mathrm{ABER}(G_U)\le\mathrm{ABER}(G)\le\mathrm{ABER}(G_L),\qquad
+\mathrm{OP}(G_U)\le\mathrm{OP}(G)\le\mathrm{OP}(G_L).
+\label{eq:appA_sandwich}
+\end{equation}
+以该乐观包络为基准得到的相位调制增益是实际增益的下界（第五章第\ref{sec:c5_calm}节）。
+
+\section{光斑统计量}
+\label{sec:c5_spot}
+
+以接收平面有限图域内的功率归一，定义光斑的一、二阶矩：
+\begin{equation}
+\pi_p=\frac{I_p}{\sum_jI_j},\qquad
+\overline{\mathbf x}=\sum_p\pi_p\mathbf x_p,\qquad
+\Sigma_R=\sum_p\pi_p(\mathbf x_p-\overline{\mathbf x})(\mathbf x_p-\overline{\mathbf x})^{\mathrm T}.
+\label{eq:c5_moments}
+\end{equation}
+设 $\lambda_1\ge\lambda_2$ 为 $\Sigma_R$ 的特征值，定义长轴、短轴、等效半径和轴比：
+\begin{equation}
+w_{\mathrm{maj}}=2\sqrt{\lambda_1},\qquad w_{\mathrm{min}}=2\sqrt{\lambda_2},\qquad
+w_{\mathrm{eq}}=\sqrt{2\operatorname{tr}\Sigma_R},\qquad \chi=\frac{w_{\mathrm{maj}}}{w_{\mathrm{min}}}.
+\label{eq:c5_widths}
+\end{equation}
+对圆高斯光斑 $I\propto e^{-2r^2/w^2}$，$w_{\mathrm{eq}}=w$；对半径为 $R$ 的均匀圆盘，$w_{\mathrm{eq}}=R$。图中的束腰椭圆为二阶矩椭圆 $(\mathbf x-\overline{\mathbf x})^{\mathrm T}\Sigma_R^{-1}(\mathbf x-\overline{\mathbf x})=4$，主轴由 $\Sigma_R$ 的特征向量给出。包围能量半径和能量集中度定义为
+\begin{equation}
+F_R(r)=\frac{\sum_{|\mathbf x_p-\overline{\mathbf x}|\le r}I_p}{\sum_pI_p},\qquad
+R_f=\inf\{r:F_R(r)\ge f\},\qquad \mathcal C=\frac{R_{0.5}}{R_{0.9}}.
+\label{eq:c5_encircled}
+\end{equation}
+
+\section{接收端复光场的蒙特卡洛验证}
+\label{sec:c4_validation}
+
+式(\ref{eq:c5_unitfield})--(\ref{eq:c5_total})含有二阶光程展开、频谱窗口和邻近单元相干等数值处理。为检验其正确性，对同一冻结下表面独立运行一次 $10^6$ 光子的 MC，其随机流与复光场所用散射包互不相关，光子包保留原始 MC 功率。光子包经水—玻璃折射后落到液晶层，只保留落在通光区内的包；按所在单元加载的梯度改变切向量，经玻璃—空气折射后直线传播到接收平面。MC 是几何光学计算，不含衍射与单元间干涉，复光场两者都含，两者在接收孔径上积分功率的一致程度是对复光场公式及其数值处理的直接检验。
+
+对接收样本 $s$（位置抖动和角度误差的一次实现），MC 的捕获增益为
+\begin{equation}
+G_s^{\mathrm{MC}}=\frac1{P_0}\sum_jw_j\,\mathbf 1\big\{|\mathbf Y_{js}-\mathbf P_s|\le a_R\big\}\,\mathbf 1\big\{\hat{\mathbf d}_j\cdot\hat{\mathbf n}_s\ge\cos\Theta\big\},
+\label{eq:c4_mc_gain}
+\end{equation}
+其中 $\mathbf Y_{js}$ 为光子包 $j$ 的直线与样本 $s$ 的孔径平面的交点，$\mathbf P_s$ 为孔径中心，$\hat{\mathbf n}_s$ 为孔径法向，$a_R$ 为孔径半径，$\Theta$ 为视场半角，视场逐条光线判断。复光场的捕获增益由第五章式(\ref{eq:c5_pgeo})对光强图作孔径积分得到。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{c5/dyn_fig6_field_vs_mc.png}
+\caption{接收端复光场与独立MC的比较。(a) 12 个“风速—高度”条件下全部 228 个RIS相位的视场内平均增益，实线为 $y=x$，虚线为 $\pm10\%$；(b) $z=30\,\mathrm m$、$U=9\,\mathrm{m/s}$ 时过接收机中心的条带平均光强剖面，线为复光场，标记为MC}
+\label{fig:c4_field_mc}
+\end{figure}
+
+图\ref{fig:c4_field_mc}给出了比较结果。图(a)中，风速 3、9、12\,m/s 与接收距离 10、20、30、50\,m 组合下全部 228 个相位（每个条件 1 个 Steering-only 相位和平顶、鲁棒两族各 9 个宽度）的视场内平均增益跨越约两个数量级，从 Steering-only 在 50\,m 处的约 $4\times10^{-4}$ 到聚焦光斑的约 $1.3\times10^{-2}$，全部点沿 $y=x$ 分布并落在 $\pm10\%$ 带内，各方案在设计功率下选中的相位同样如此。图(b)中，三种形态差别很大的光斑——Steering-only 的方格状单元亮斑、鲁棒光斑的“尖峰加宽尾”和聚焦光斑的窄峰——在主光强区内复光场与 MC 一致；弱光区 MC 的起伏来自有限光子数的统计噪声，复光场的衍射尾更平滑。这表明本节的复光场公式及其数值处理在 10--50\,m、静水到 12\,m/s 海况的范围内给出了正确的接收功率，可以作为第五章链路性能计算的基础。
+
 \section{本章小结}
 
-本章建立了 RIS 下表面与液晶层入射光场的计算模型。以航位推算方程和 OU 速度过程描述水下发射端运动，与第三章的 RIS 运动共同构成 18 个冻结快照。将下表面光强分解为弹道分量与散射分量：弹道分量对有限束腰源在任意 RIS 姿态下给出了精确的面积 Jacobian 和闭式点源极限；散射分量以完整 HG 相函数下辐射输运的碰撞次数展开为定义，用强制首次散射估计器无偏求值，并以 0.1\% 的整体二维标准误差为目标自适应控制样本数。在全部 18 个快照上，模型与独立 MC 的差异与 MC 自身的统计噪声一致，总功率差不超过 0.317\%；小角近似 S-BSF 在入射角不超过约 $65^\circ$ 时与完整模型的偏差小于 0.4\%，在随风浪变化的掠入射场景中偏差增大到 2\%--3\%。最后给出了从下表面经玻璃到液晶层的光强映射、高斯入射相位、散射光子包的传递方式以及单元功率与参考点，为第五章的相位设计和波动传播提供了输入。
+本章建立了 RIS 入射光场和 RIS 调制后接收端复光场的计算模型。入射方面，以航位推算方程和 OU 速度过程描述水下发射端运动，并以最小旋转令光轴跟踪冻结时刻的 RIS；将下表面光强分解为弹道分量与散射分量，弹道分量对有限束腰源在任意 RIS 姿态下给出了精确的面积 Jacobian 和闭式点源极限，散射分量以完整 HG 相函数下 RTE 的碰撞次数展开为定义，用强制首次散射估计器无偏求值，并以 0.1\% 的整体二维标准误差为目标自适应控制样本数。在 18 个快照上，模型与独立 MC 的差异与 MC 自身的统计噪声一致，总功率差不超过 0.317\%；小角近似 S-BSF 在入射角不超过约 $65^\circ$ 时与完整模型的偏差小于 0.4\%。在高斯光束与标量衍射理论的基础上，给出了液晶层上的入射复场与单元功率。调制后方面，对任意可加载相位建立了二阶光程展开下的逐单元衍射积分，以去载波 CZT、Parseval 功率守恒搬运和像素内相干平均求值，叠加散射光子包的非相干贡献，并给出了大接收距离下的频谱窗口与邻近单元相干处理以及非驻相远尾的分部积分包络。在 12 个条件、228 个相位上，复光场的视场内平均增益与独立几何光学 MC 的差异均在 10\% 以内。
